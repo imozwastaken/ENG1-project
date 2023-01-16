@@ -168,7 +168,7 @@ public class MainMenuNew implements Screen{
         infoBtn.setPosition(game.GAME_WIDTH-infoBtn.getWidth(),game.GAME_HEIGHT-infoBtn.getHeight());
 
         if (playBtn.isPressed()){
-            game.setScreen(new GameScreenNew(game));
+            game.setScreen(new GameScreenNew(game,view));
         }
 
         if(exitBtn.isPressed()){

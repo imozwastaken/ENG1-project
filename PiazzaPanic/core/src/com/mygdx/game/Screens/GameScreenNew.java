@@ -4,10 +4,15 @@ package com.mygdx.game.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -18,90 +23,59 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.PiazzaPanic;
 
 public class GameScreenNew implements Screen{
     PiazzaPanic game;
-    BitmapFont font;
-    Texture backBtnTex;
-    Texture backBtnTexHover;
     
     FitViewport view;
     Stage gameStage;
-    
-    TextureRegion backBtnRegion;
-    TextureRegionDrawable backBtnDrawable;
-    ImageButton backBtn;
 
-    TextureRegion backBtnRegionHover;
-    TextureRegionDrawable backBtnDrawableHover;
+    TmxMapLoader mapLoader;
+    TiledMap map;
+    OrthogonalTiledMapRenderer renderer;
+    OrthographicCamera gameCam;
 
-    public GameScreenNew(PiazzaPanic game){
+    public GameScreenNew(PiazzaPanic game, FitViewport port){
         this.game = game;
+        this.view = port;
+
+        mapLoader = new TmxMapLoader();
+        map = mapLoader.load("KitchenMap.tmx");
+        renderer = new OrthogonalTiledMapRenderer(map);
+        gameCam = new OrthographicCamera();
+        
+        view.setCamera(gameCam);
+        view.setWorldSize(192,144);
+
+        gameCam.position.set(view.getWorldWidth()/2, view.getWorldHeight()/2,0);
+
     }
 
     @Override
     public void show() {
-        font = new BitmapFont();
-        backBtnTex = new Texture("backBtn.png");
-        backBtnTexHover = new Texture("backBtn2.png");
-
-        view = new FitViewport(game.GAME_WIDTH, game.GAME_HEIGHT);
-        view.getCamera().position.set(game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, 1f);
-        gameStage = new Stage(view, game.batch);
-
-        //Buttons
-        backBtnRegion = new TextureRegion(backBtnTex);
-        backBtnDrawable = new TextureRegionDrawable(backBtnRegion);
-        backBtn = new ImageButton(backBtnDrawable);
-
-        //hovered button
-        backBtnRegionHover = new TextureRegion(backBtnTexHover);
-        backBtnDrawableHover = new TextureRegionDrawable(backBtnRegionHover);
-
-        //listen for hover
-        backBtn.addListener(new ClickListener(){
-            ImageButton backNormal = new ImageButton(backBtnDrawable);
-            ImageButton backHover = new ImageButton(backBtnDrawableHover);
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                backBtn.setStyle(backHover.getStyle());
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                backBtn.setStyle(backNormal.getStyle());
-            }
-        });
     }
 
     @Override
     public void render(float delta) {
-        gameStage.act();
+        gameCam.update();
+        renderer.setView(gameCam);
 
         ScreenUtils.clear(0, 0, 0, 0);
-        view.apply();
+        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //game.batch.setProjectionMatrix(view.getCamera().combined);
 
-        game.batch.setProjectionMatrix(view.getCamera().combined);
-		game.batch.begin();
-        font.draw(game.batch, "This is an option screen", game.GAME_WIDTH/2-100, game.GAME_HEIGHT/2);
-        game.batch.end();
+        renderer.render();
 
-        gameStage.getViewport().apply();
         
-        gameStage.addActor(backBtn);
-        backBtn.setPosition(0,game.GAME_HEIGHT-backBtn.getHeight());
-
-        if (backBtn.isPressed()){
-            game.setScreen(new MainMenuNew(game));
-        }
-
-        Gdx.input.setInputProcessor(gameStage);
-        gameStage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        gameStage.getViewport().update(width, height);
+        view.update(width, height);
     }
 
     @Override
@@ -124,7 +98,6 @@ public class GameScreenNew implements Screen{
 
     @Override
     public void dispose() {
-        font.dispose();
         gameStage.dispose();
     }
     

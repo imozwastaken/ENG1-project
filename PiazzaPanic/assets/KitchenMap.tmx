@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="12" height="9" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="20">
+ <tileset firstgid="1" source="binTiled.tsx"/>
+ <tileset firstgid="5" source="doorTiled.tsx"/>
+ <tileset firstgid="1429" source="kitchenSetTiled.tsx"/>
+ <layer id="1" name="Ground" width="12" height="9">
+  <data encoding="csv">
+1493,1493,1493,1493,1493,1493,1493,1493,1493,1493,1493,1493,
+1493,1493,1493,1493,1493,1493,1493,1493,1493,1493,1493,1493,
+1443,1443,1443,1443,1443,1443,1443,1443,1443,1443,1493,1493,
+1443,1443,1443,1443,1443,1443,1443,1443,1478,1469,1493,1493,
+1447,1448,1448,1448,1448,1448,1448,1448,1448,1448,1493,1493,
+1456,1457,1457,1457,1457,1457,1457,1457,1457,1457,1493,1493,
+1456,1457,1457,1457,1457,1457,1457,1457,1457,1457,1493,1493,
+1456,1457,1457,1457,1457,1457,1457,1457,1457,1457,1493,1493,
+1456,1457,1457,1457,1457,1457,1457,1457,1457,1457,1493,1493
+</data>
+ </layer>
+ <layer id="2" name="Graphics" width="12" height="9">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,
+1520,1520,1521,1521,213,214,0,0,400,401,0,0,
+1529,1529,1530,1548,1532,1549,0,0,416,417,0,0,
+1538,1538,1558,1558,1559,1559,1582,1584,0,0,0,0,
+0,0,0,0,0,0,1591,1593,0,0,0,0,
+0,0,0,0,0,0,1591,1593,0,0,0,0,
+1,2,1532,1550,1532,1549,1600,1602,0,0,0,0,
+3,4,1541,1577,1577,1540,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="3" name="Entrance">
+  <object id="1" x="160" y="112" width="16" height="32"/>
+ </objectgroup>
+ <objectgroup id="4" name="Exit">
+  <object id="5" x="128" y="32" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="9" name="CuttingStation">
+  <object id="15" x="32" y="112" width="64" height="32"/>
+ </objectgroup>
+ <objectgroup id="5" name="ServingStation">
+  <object id="7" x="96" y="64" width="32" height="64"/>
+ </objectgroup>
+ <objectgroup id="6" name="BakingStation">
+  <object id="9" x="64" y="48" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="7" name="FryingStation">
+  <object id="11" x="32" y="32" width="32" height="48"/>
+ </objectgroup>
+ <objectgroup id="8" name="PantryStation">
+  <object id="13" x="0" y="48" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="10" name="RubbishStation">
+  <object id="18" x="0" y="112" width="32" height="32"/>
+ </objectgroup>
+</map>
