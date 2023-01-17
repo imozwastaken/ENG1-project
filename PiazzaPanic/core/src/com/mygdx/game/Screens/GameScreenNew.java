@@ -7,27 +7,20 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.PiazzaPanic;
 
 public class GameScreenNew implements Screen{
@@ -41,6 +34,7 @@ public class GameScreenNew implements Screen{
     OrthogonalTiledMapRenderer renderer;
     OrthographicCamera gameCam;
 
+    private TextureAtlas atlas;
     Texture cookImage;
     SpriteBatch batch;
     Vector3 touchPos = new Vector3();
@@ -64,10 +58,16 @@ public class GameScreenNew implements Screen{
 
         gameCam.position.set(view.getWorldWidth()/2, view.getWorldHeight()/2,0);
 
-        cookImage = new Texture(Gdx.files.internal("bucket.png"));
+        atlas = new TextureAtlas("charAnimations.atlas");
+
+        cookImage = new Texture(Gdx.files.internal("testChar.png"));
         batch = new SpriteBatch();
         cooks = new Array<Actor>();
         spawnCooks();
+    }
+
+    public TextureAtlas getAtlas(){
+        return atlas;
     }
 
     @Override
@@ -77,18 +77,18 @@ public class GameScreenNew implements Screen{
 
     private void spawnCooks(){
         for (int i = 0; i < 3; i++){
-            Actor bucket = new Actor();
-            bucket.setX(100 * i);
-            bucket.setY(0);
-            bucket.setWidth(64);
-            bucket.setHeight(64);
-            bucket.addListener(new InputListener(){
+            Actor cook = new Actor();
+            cook.setX(100 * i);
+            cook.setY(0);
+            cook.setWidth(16);
+            cook.setHeight(23);
+            cook.addListener(new InputListener(){
                 public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                     return true;
                 };
             });
-            cooks.add(bucket);
-            gameStage.addActor(bucket);
+            cooks.add(cook);
+            gameStage.addActor(cook);
         }
     }
 
@@ -107,7 +107,7 @@ public class GameScreenNew implements Screen{
         // draw the cooks
         batch.begin();
         for (Actor cook : cooks) {
-            batch.draw(cookImage, cook.getX(), cook.getY());
+            batch.draw(cookImage, cook.getX(), cook.getY(), 80, 115);
         }
         batch.end();
 
