@@ -51,16 +51,20 @@ public class GameScreenNew implements Screen{
     // graphics stuff
     TextureAtlas atlas;
     TextureAtlas atlasIdle;
-    Sprite bob;
+    Sprite alex;
+    Sprite amelia;
+    Sprite adam;
     String[] lines;
     FileHandle charIdles;
     Skin skin;
-    private Array<Sprite> idles;
+    ArrayList<Sprite> idles = new ArrayList<Sprite>();
     SpriteBatch batch;
     // movement stuff
     Vector3 touchPos = new Vector3();
     Float speed = 3f;
     int selected = 0;
+    // control the number of cooks
+    int cookCount = 2;
     private Array<Cook> cooks;
 
     //progress bars
@@ -87,9 +91,14 @@ public class GameScreenNew implements Screen{
         TextureAtlas atlasIdle = new TextureAtlas(Gdx.files.internal("charIdle.txt"));
         skin = new Skin();
         skin.addRegions(atlasIdle);
-        bob = skin.getSprite("Bob");
         charIdles = Gdx.files.internal("charIdle.txt");
         lines = charIdles.readString().split("\n");
+        adam = skin.getSprite("Adam");
+        alex = skin.getSprite("Alex");
+        amelia = skin.getSprite("Amelia");
+        idles.add(adam);
+        idles.add(alex);
+        idles.add(amelia);
 
         batch = new SpriteBatch();
         cooks = new Array<Cook>();
@@ -107,7 +116,7 @@ public class GameScreenNew implements Screen{
 
     //generate the cooks
     private void spawnCooks(){
-        for (int i = 0; i < 3; i++){
+        for (int i = 0; i < 2; i++){
             Sprite current = skin.getSprite(lines[i*7+6]);
             System.out.println(current);
             //idles.add(current);
@@ -116,6 +125,8 @@ public class GameScreenNew implements Screen{
             cook.CookBody.setY(240);
             cook.CookBody.setWidth(16);
             cook.CookBody.setHeight(23);
+            cook.CookBody.setScaleX(game.GAME_WIDTH/16);
+            cook.CookBody.setScaleY(game.GAME_HEIGHT/23);
             cook.CookBody.addListener(new InputListener(){
                 public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                     return true;
@@ -126,6 +137,7 @@ public class GameScreenNew implements Screen{
         }
     }
     //process user input
+    // TODO fix this pls k thanks
     private void processInput(){
         int index = 0;
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)){
@@ -172,8 +184,10 @@ public class GameScreenNew implements Screen{
     //update the cooks on the screen
     private void updateCooks(){
         batch.begin();
+        int index = 0;
         for (Cook cook : cooks) {
-            batch.draw(bob, cook.CookBody.getX(), cook.CookBody.getY(), 115, 160);
+            batch.draw(idles.get(index), cook.CookBody.getX(), cook.CookBody.getY(), 115, 160);
+            index ++;
         }
         batch.end();
         // make sure the chef stays within the screen bounds (limit to kitchen area for main game)
