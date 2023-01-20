@@ -50,7 +50,6 @@ public class GameScreenNew implements Screen{
 
     // graphics stuff
     TextureAtlas atlas;
-    TextureAtlas atlasIdle;
     Sprite alex;
     Sprite amelia;
     Sprite adam;
@@ -86,8 +85,7 @@ public class GameScreenNew implements Screen{
 
         gameCam.position.set(view.getWorldWidth()/2, view.getWorldHeight()/2,0);
 
-        atlas = new TextureAtlas("charAnimations.atlas");
-
+        // sprite information from the texture atlas
         TextureAtlas atlasIdle = new TextureAtlas(Gdx.files.internal("charIdle.txt"));
         skin = new Skin();
         skin.addRegions(atlasIdle);
@@ -114,19 +112,18 @@ public class GameScreenNew implements Screen{
 
     }
 
-    //generate the cooks
+    // generate the cooks
     private void spawnCooks(){
         for (int i = 0; i < 2; i++){
-            Sprite current = skin.getSprite(lines[i*7+6]);
-            System.out.println(current);
-            //idles.add(current);
             Cook cook = new Cook(new Actor());
             cook.CookBody.setX(110 * i);
             cook.CookBody.setY(240);
             cook.CookBody.setWidth(16);
             cook.CookBody.setHeight(23);
+            // scale information
             cook.CookBody.setScaleX(game.GAME_WIDTH/16);
             cook.CookBody.setScaleY(game.GAME_HEIGHT/23);
+            // click detection for cooks
             cook.CookBody.addListener(new InputListener(){
                 public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                     return true;
@@ -160,13 +157,13 @@ public class GameScreenNew implements Screen{
         // system for moving to user input
         if (touchPos.x - 8 != cooks.get(selected).CookBody.getX() || touchPos.y - 8 != cooks.get(selected).CookBody.getY()) {
             // calculate the difference between 2 points to move the sprite towards
-            float pathX = touchPos.x - 8 - cooks.get(selected).CookBody.getX();
-            float pathY = touchPos.y - 8 - cooks.get(selected).CookBody.getY();
-
+            float pathX = touchPos.x - cooks.get(selected).CookBody.getX();
+            float pathY = touchPos.y - cooks.get(selected).CookBody.getY();
+            // use Pythagoras to find the distance between current position and final position
             float distance = (float) Math.sqrt(pathX * pathX + pathY * pathY);
             float directionX = pathX / distance;
             float directionY = pathY / distance;
-
+            // very rough speed easing to ensure the sprites don't jitter around their coordinates
             if (distance < 3) {
                 speed = 1f;
                 if (distance < 1) {
@@ -183,6 +180,7 @@ public class GameScreenNew implements Screen{
 
     //update the cooks on the screen
     private void updateCooks(){
+        // this section assigns each cook a sprite from the list idles
         batch.begin();
         int index = 0;
         for (Cook cook : cooks) {
