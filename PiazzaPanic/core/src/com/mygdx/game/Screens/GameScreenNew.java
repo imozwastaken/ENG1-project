@@ -65,8 +65,9 @@ public class GameScreenNew implements Screen{
     Vector3 touchPos = new Vector3();
     Float speed = 3f;
     int selected = 0;
+    ArrayList<Integer> stationSelected = new ArrayList<Integer>();
     // control the number of cooks
-    int cookCount = 2;
+    int cookCount = 2; // control how many cooks spawn -> update to allow for the value to increase
     private Array<Cook> cooks;
 
     //progress bars
@@ -139,7 +140,7 @@ public class GameScreenNew implements Screen{
         pantryClickable.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("pantry clicked!");
+                stationSelected.set(selected,0);
             }
         });
         gameStage.addActor(pantryClickable);
@@ -152,7 +153,7 @@ public class GameScreenNew implements Screen{
         fryingClickable.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("frying clicked!");
+                stationSelected.set(selected,1);
             }
         });
         gameStage.addActor(fryingClickable);
@@ -165,7 +166,7 @@ public class GameScreenNew implements Screen{
         bakingClickable.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("baking clicked!");
+                stationSelected.set(selected,2);
             }
         });
         gameStage.addActor(bakingClickable);
@@ -178,7 +179,7 @@ public class GameScreenNew implements Screen{
         binClickable.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("bin clicked!");
+                stationSelected.set(selected,3);
             }
         });
         gameStage.addActor(binClickable);
@@ -192,7 +193,7 @@ public class GameScreenNew implements Screen{
         cuttingClickable.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("cutting clicked!");
+                stationSelected.set(selected, 4);
             }
         });
         gameStage.addActor(cuttingClickable);
@@ -206,7 +207,7 @@ public class GameScreenNew implements Screen{
         servingClickable.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("serving clicked!");
+                stationSelected.set(selected, 5);
             }
         });
         gameStage.addActor(servingClickable);
@@ -228,7 +229,8 @@ public class GameScreenNew implements Screen{
 
     // generate the cooks
     private void spawnCooks(){
-        for (int i = 0; i < 2; i++){
+        for (int i = 0; i < cookCount; i++){
+            System.out.println(stationSelected);
             Cook cook = new Cook(new Actor());
             cook.CookBody.setX(1 * i);
             cook.CookBody.setY(10);
@@ -246,56 +248,35 @@ public class GameScreenNew implements Screen{
             });
             cooks.add(cook);
             gameStage.addActor(cook.CookBody);
+            stationSelected.add(0);
         }
     }
     //process user input
     // TODO fix this pls k thanks
-    private void processInput(){
+    private void processInput() {
         int index = 0;
-        if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)){
+        if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
             selected = 0;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)){
+        } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
             selected = 1;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)){
-            selected = 2;
         }
-        if (Gdx.input.isTouched()) {
-            touchPos.set(Gdx.input.getX(), game.GAME_HEIGHT - Gdx.input.getY(), 0);
-            System.out.println(touchPos);
+        if (cookCount > 2);{
+            if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
+                selected = 2;
+            }
         }
         for (Cook cook : cooks) {
             if (cooks.get(index).CookBody.isTouchFocusTarget()) {
                 selected = index;
             }
-            index ++;
-        }
-        // system for moving to user input
-
-            if (touchPos.x - 8 != cooks.get(selected).CookBody.getX() || touchPos.y - 8 != cooks.get(selected).CookBody.getY()) {
-            // calculate the difference between 2 points to move the sprite towards
-            float pathX = touchPos.x - cooks.get(selected).CookBody.getX();
-            float pathY = touchPos.y - cooks.get(selected).CookBody.getY();
-            // use Pythagoras to find the distance between current position and final position
-            float distance = (float) Math.sqrt(pathX * pathX + pathY * pathY);
-            float directionX = pathX / distance;
-            float directionY = pathY / distance;
-            // very rough speed easing to ensure the sprites don't jitter around their coordinates
-            if (distance < 3) {
-                speed = 1f;
-                if (distance < 1) {
-                    speed = 0f;
-                }
-            } else {
-                speed = 3f;
-            }
-
-            cooks.get(selected).CookBody.setX(cooks.get(selected).CookBody.getX() + directionX * speed);
-            cooks.get(selected).CookBody.setY(cooks.get(selected).CookBody.getY() + directionY * speed);
+            index++;
         }
     }
+
     //update the cooks on the screen
     private void updateCooks(){
         // this section assigns each cook a sprite from the list idles
+        // you could potentially update this to allow for animations for the cooks when they move
         game.batch.begin();
         int index = 0;
         for (Cook cook : cooks) {
@@ -303,19 +284,6 @@ public class GameScreenNew implements Screen{
             index ++;
         }
         game.batch.end();
-        // make sure the chef stays within the screen bounds (limit to kitchen area for main game)
-        if (cooks.get(selected).CookBody.getX() < 8){
-            cooks.get(selected).CookBody.setX(8);
-        }
-        if (cooks.get(selected).CookBody.getX() > 565){
-            cooks.get(selected).CookBody.setX(565);
-        }
-        if (cooks.get(selected).CookBody.getY() < 100) {
-            cooks.get(selected).CookBody.setY(100);
-        }
-        if (cooks.get(selected).CookBody.getY() > 320) {
-            cooks.get(selected).CookBody.setY(320);
-        }
     }
 
     @Override
@@ -332,6 +300,9 @@ public class GameScreenNew implements Screen{
         updateCooks();
 
         processInput();
+        for (int i = 0; i < cookCount; i++) {
+            cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody);
+        }
 
         updateProgressBars();
 
