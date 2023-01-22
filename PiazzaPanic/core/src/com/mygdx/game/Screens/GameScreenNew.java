@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -248,7 +249,7 @@ public class GameScreenNew implements Screen{
             });
             cooks.add(cook);
             gameStage.addActor(cook.CookBody);
-            stationSelected.add(0);
+            stationSelected.add(MathUtils.random(0,6));
         }
     }
     //process user input
