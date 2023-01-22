@@ -9,7 +9,7 @@ import com.mygdx.game.Food.Ingredient;
 public class Cook {
     public Stack<Ingredient> CookStack;
     public Actor CookBody;
-    private float[][] locations = {{0, 64},{32,64},{64,64},{0,0},{32,0},{96,16}};
+    private float[][] locations = {{0, 64},{32,64},{64,64},{0,32},{48,28},{80,48}};
     private float speed;
 
     public Cook(Actor skin){
