@@ -9,8 +9,7 @@ import com.mygdx.game.Food.Ingredient;
 public class Cook {
     public Stack<Ingredient> CookStack;
     public Actor CookBody;
-    private float[][] locations = {{0, 64},{32,64},{64,64},{0,32},{48,28},{80,48}};
-    private float speed;
+    private final float[][] locations = {{0, 64},{32,64},{64,64},{0,32},{48,28},{80,48}};
 
     public Cook(Actor skin){
         this.CookBody = skin;
@@ -28,13 +27,14 @@ public class Cook {
             float distance = (float) Math.sqrt(pathX * pathX + pathY * pathY);
             float directionX = pathX / distance;
             float directionY = pathY / distance;
-            // very rough speed easing to ensure the sprites don't jitter around their coordinates
+            // ensure the sprites don't jitter around their coordinates
+            float speed;
             if (distance < 1) {
                 speed = 0f;
             } else {
                 speed = 1f;
             }
-
+            // because this is called for each frame in render, this is constantly updating
             cook.setX(cook.getX() + directionX * speed);
             cook.setY(cook.getY() + directionY * speed);
         }
