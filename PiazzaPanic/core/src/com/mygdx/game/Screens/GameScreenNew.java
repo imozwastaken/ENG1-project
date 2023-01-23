@@ -3,6 +3,7 @@ package com.mygdx.game.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -35,7 +36,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.Cook;
-import com.mygdx.game.Customer;
 import com.mygdx.game.PiazzaPanic;
 
 import java.io.*;
@@ -57,12 +57,11 @@ public class GameScreenNew implements Screen{
     Sprite alex;
     Sprite amelia;
     Sprite adam;
+    String[] lines;
     FileHandle charIdles;
     Skin skin;
-    Skin custSkins;
     ArrayList<Sprite> idles = new ArrayList<Sprite>();
     SpriteBatch batch;
-    private int customerCount = 0;
 
     // movement stuff
     Vector3 touchPos = new Vector3();
@@ -72,7 +71,6 @@ public class GameScreenNew implements Screen{
     // control the number of cooks
     int cookCount = 2; // control how many cooks spawn -> update to allow for the value to increase
     private Array<Cook> cooks;
-    private Array<Customer> customers;
 
     //progress bars
     ArrayList<ProgressBar> bars;
@@ -96,6 +94,21 @@ public class GameScreenNew implements Screen{
     TextureRegion servingRegion;
     ImageButton servingClickable;
 
+    TextureRegion XbtnRegion;
+    ImageButton XbtnClickable;
+
+
+    //ingredients texture testing
+    Texture test = new Texture("frame test.png");
+    Texture lettuceTest = new Texture("lettuce.png");
+    Texture bunsTest = new Texture("buns.png");
+    Texture burgerTest = new Texture("burger.png");
+    Texture tomatoTest = new Texture("tomato.png");
+    Texture pattyTest = new Texture("rawPatty.png");
+    //Texture buttonTest = new Texture("btntest.png");
+
+    Texture plateTex = new Texture("plate.png");
+
     public GameScreenNew(PiazzaPanic game, FitViewport port){
         this.game = game;
         this.view = port;
@@ -114,12 +127,10 @@ public class GameScreenNew implements Screen{
 
         // sprite information from the texture atlas
         TextureAtlas atlasIdle = new TextureAtlas(Gdx.files.internal("charIdle.txt"));
-        TextureAtlas customersLeft = new TextureAtlas(Gdx.files.internal("customersLeft.txt"));
         skin = new Skin();
         skin.addRegions(atlasIdle);
-        custSkins = new Skin();
-        custSkins.addRegions(customersLeft);
         charIdles = Gdx.files.internal("charIdle.txt");
+        lines = charIdles.readString().split("\n");
         adam = skin.getSprite("Adam");
         alex = skin.getSprite("Alex");
         amelia = skin.getSprite("Amelia");
@@ -217,7 +228,6 @@ public class GameScreenNew implements Screen{
             }
         });
         gameStage.addActor(servingClickable);
-
         //adding regions to the screen
         pantryClickable.setPosition(0, 64);
         fryingClickable.setPosition(32, 64);
@@ -226,8 +236,21 @@ public class GameScreenNew implements Screen{
         cuttingClickable.setPosition(32, 0);
         servingClickable.setPosition(96, 16);
 
-        customers = new Array<Customer>();
-        customers.add(new Customer(new Actor()));
+
+        //Xbtn for station pop ups
+        XbtnRegion = new TextureRegion(new Texture("Xbtn.png"));
+
+        XbtnClickable = new ImageButton(new TextureRegionDrawable(XbtnRegion));
+        XbtnClickable.setSize(16, 16);
+        XbtnClickable.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //stationSelected.set(selected,1);
+            }
+        });
+        XbtnClickable.setPosition(7, 88);
+        //XbtnClickable.setPosition(0, 0);
+        //createProgressBar(20, 20);
     }
 
 
@@ -241,13 +264,13 @@ public class GameScreenNew implements Screen{
         for (int i = 0; i < cookCount; i++){
             System.out.println(stationSelected);
             Cook cook = new Cook(new Actor());
-            cook.CookBody.setX(48);
-            cook.CookBody.setY(48);
+            cook.CookBody.setX(1 * i);
+            cook.CookBody.setY(10);
             cook.CookBody.setWidth(16);
             cook.CookBody.setHeight(23);
             // scale information
-            cook.CookBody.setScaleX(game.GAME_WIDTH/16f);
-            cook.CookBody.setScaleY(game.GAME_HEIGHT/23f);
+            cook.CookBody.setScaleX(game.GAME_WIDTH/16);
+            cook.CookBody.setScaleY(game.GAME_HEIGHT/23);
             // click detection for cooks
             cook.CookBody.addListener(new ClickListener(){
                 @Override
@@ -260,24 +283,8 @@ public class GameScreenNew implements Screen{
             stationSelected.add(MathUtils.random(0,5));
         }
     }
-
-    private void customerOperations(){
-        // TODO make an else statement which ends the game once all 5 customers have been served
-        // move the customers to the counter
-        if (!customers.get(customerCount).atCounter){
-            customers.get(customerCount).move();
-        } else if (customers.get(customerCount).orderComplete){
-            // make the customer leave
-            customers.get(customerCount).move();
-            if (customers.get(customerCount).body.getX()>160){
-                customers.get(customerCount).body.remove();
-                customers.add(new Customer(new Actor()));
-                customerCount += 1;
-            }
-        }
-    }
-
     //process user input
+    // TODO fix this pls k thanks
     private void processInput() {
         int index = 0;
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
@@ -296,14 +303,10 @@ public class GameScreenNew implements Screen{
             }
             index++;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)){
-            // debug option to mark the current customers order as complete, moving them on
-            customers.get(customerCount).orderComplete = true;
-        }
     }
 
     //update the cooks on the screen
-    private void updateBatch(){
+    private void updateCooks(){
         // this section assigns each cook a sprite from the list idles
         // you could potentially update this to allow for animations for the cooks when they move
         game.batch.begin();
@@ -312,7 +315,6 @@ public class GameScreenNew implements Screen{
             game.batch.draw(idles.get(index), cook.CookBody.getX(), cook.CookBody.getY());
             index ++;
         }
-        game.batch.draw(custSkins.getSprite(customers.get(customerCount).name),customers.get(customerCount).body.getX(),customers.get(customerCount).body.getY());
         game.batch.end();
     }
 
@@ -327,34 +329,51 @@ public class GameScreenNew implements Screen{
 
         renderer.render();
 
-        updateBatch();
+        gameStage.act();
+        updateProgressBars();
+        gameStage.draw();
+
+        updateCooks();
 
         processInput();
         for (int i = 0; i < cookCount; i++) {
-            if (i < cooks.size) {
-                cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody);
-            }
+            cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody);
         }
 
-        customerOperations();
+        
 
-        updateProgressBars();
-
-        gameStage.act();
-        //adding station regions
         Gdx.input.setInputProcessor(gameStage);
-        gameStage.draw();
 
+        game.batch.begin();
+        
+        game.batch.draw(plateTex,164,5);
+        //game.batch.draw(bunsTest,164,12);
+        //game.batch.draw(tomatoTest,164,30);
+        //game.batch.draw(bunsTest,164,48);
+        //game.batch.draw(lettuceTest,164,66);
+        //game.batch.draw(pattyTest,164,84);
+        game.batch.end();
+        updateStations();
     }
 
-    private void updateProgressBars(){
-        for (ProgressBar bar : bars){
-            bar.setValue(bar.getValue()-0.05f);
-            if(bar.getValue() == 0){
-                gameStage.getActors().removeValue(bar,false);
+    private void updateStations() {
+        for (Cook cook : cooks){
+            if((Math.abs(cook.CookBody.getY()-64f) < 2) && (Math.abs(cook.CookBody.getX()-0f) < 2)){
+                //gameStage.addActor(XbtnClickable);
+                game.batch.begin();
+                game.batch.draw(test,10,10);
+                game.batch.draw(XbtnRegion,7,88);
+                game.batch.end();
+            } else {
+                //System.out.println("Bezaz");
+                //gameStage.getActors().removeValue(XbtnClickable,false);
+            }
+            if((Math.abs(cook.CookBody.getY()-28f) < 2) && (Math.abs(cook.CookBody.getX()-48f) < 2)){
+                createProgressBar(40, 50);
             }
         }
     }
+
 
     @Override
     public void resize(int width, int height) {
@@ -382,7 +401,6 @@ public class GameScreenNew implements Screen{
     @Override
     public void dispose() {
         gameStage.dispose();
-        game.batch.dispose();
     }
 
     private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
@@ -413,6 +431,16 @@ public class GameScreenNew implements Screen{
 
         gameStage.addActor(bar);
         bars.add(bar);
+    }
+
+    private void updateProgressBars(){
+        for (ProgressBar bar : bars){
+            bar.setValue(bar.getValue()-0.05f);
+            if(bar.getValue() == 0){
+                gameStage.getActors().removeValue(bar,false);
+                //Gdx.input.setInputProcessor(gameStage);
+            }
+        }
     }
     
 }

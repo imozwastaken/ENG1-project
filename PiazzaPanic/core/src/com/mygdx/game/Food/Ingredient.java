@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 //Class for an ingredient
 public class Ingredient {
+    //patty, buns, lettuce, tomato
     public String name;
     public Texture prepdTex;
     public Texture notPrepdTex;
