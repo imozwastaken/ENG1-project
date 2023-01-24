@@ -465,6 +465,8 @@ public class GameScreenNew implements Screen{
             game.batch.draw(idles.get(index), cook.CookBody.getX(), cook.CookBody.getY());
             index ++;
         }
+        game.batch.draw(plateTex,164,23);
+        game.batch.draw(idles.get(selected),168, 1);
         game.batch.draw(custSkins.getSprite(customers.get(customerCount).name),customers.get(customerCount).body.getX(),customers.get(customerCount).body.getY());
         game.batch.end();
     }
@@ -479,10 +481,6 @@ public class GameScreenNew implements Screen{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         renderer.render();
-        //plate
-        game.batch.begin();
-        game.batch.draw(plateTex,164,23);
-        game.batch.end();
 
         gameStage.act();
         updateProgressBars();
