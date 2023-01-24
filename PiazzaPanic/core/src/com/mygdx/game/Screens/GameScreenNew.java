@@ -38,6 +38,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.Cook;
 import com.mygdx.game.Customer;
 import com.mygdx.game.PiazzaPanic;
+import com.mygdx.game.Food.Ingredient;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -98,20 +99,40 @@ public class GameScreenNew implements Screen{
     TextureRegion servingRegion;
     ImageButton servingClickable;
 
+    //pantryScreen clickables
     TextureRegion XbtnRegion;
     ImageButton XbtnClickable;
 
+    TextureRegion pantryScreenFrameRegion;
+    ImageButton pantryScreenFrame;   
+    
+    TextureRegion lettuceRegion;
+    ImageButton lettuceClickable;
+    
+    TextureRegion tomatoRegion;
+    ImageButton tomatoClickable;
 
-    //ingredients texture testing
-    Texture test = new Texture("frame test.png");
-    Texture lettuceTest = new Texture("lettuce.png");
-    Texture bunsTest = new Texture("buns.png");
-    Texture burgerTest = new Texture("burger.png");
-    Texture tomatoTest = new Texture("tomato.png");
-    Texture pattyTest = new Texture("rawPatty.png");
-    //Texture buttonTest = new Texture("btntest.png");
+    TextureRegion bunsRegion;
+    ImageButton bunsClickable;
+
+    TextureRegion pattyRegion;
+    ImageButton pattyClickable;
+
+    //servingScreen clickables
+    TextureRegion servingScreenFrameRegion;
+    ImageButton servingScreenFrame;
+
+    TextureRegion burgerRegion;
+    ImageButton burgerClickable;
+    
+    TextureRegion saladRegion;
+    ImageButton saladClickable;
+    //plate texture used to show the cooks current inventory
 
     Texture plateTex = new Texture("plate.png");
+
+    Boolean showPantryScreen = false;
+    Boolean showServingScreen = false;
 
     public GameScreenNew(PiazzaPanic game, FitViewport port){
         this.game = game;
@@ -164,6 +185,7 @@ public class GameScreenNew implements Screen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected,0);
+                showPantryScreen = true;
             }
         });
         gameStage.addActor(pantryClickable);
@@ -203,6 +225,11 @@ public class GameScreenNew implements Screen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected,3);
+                if((Math.abs(cooks.get(selected).CookBody.getY()-32f) < 2) && (Math.abs(cooks.get(selected).CookBody.getX()-0f) < 2)){
+                    if(cooks.get(selected).CookStack.size() > 0){
+                        cooks.get(selected).CookStack.pop();
+                    }
+                }
             }
         });
         gameStage.addActor(binClickable);
@@ -231,6 +258,7 @@ public class GameScreenNew implements Screen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected, 5);
+                showServingScreen = true;
             }
         });
         gameStage.addActor(servingClickable);
@@ -243,6 +271,11 @@ public class GameScreenNew implements Screen{
         servingClickable.setPosition(96, 16);
 
 
+        customers = new Array<Customer>();
+        customers.add(new Customer(new Actor()));
+
+        //pantry screen pop up clickables
+
         //Xbtn for station pop ups
         XbtnRegion = new TextureRegion(new Texture("Xbtn.png"));
 
@@ -252,14 +285,103 @@ public class GameScreenNew implements Screen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 //stationSelected.set(selected,1);
+                showPantryScreen = false;
+                hidePantryScreen();
+                hideServingScreen();
             }
         });
-        XbtnClickable.setPosition(100000, 88);
-        gameStage.addActor(XbtnClickable);
-        customers = new Array<Customer>();
-        customers.add(new Customer(new Actor()));
-        //XbtnClickable.setPosition(0, 0);
-        //createProgressBar(20, 20);
+
+        //pantry screen frame
+        pantryScreenFrameRegion = new TextureRegion(new Texture("pantryFrame.png"));
+
+        pantryScreenFrame = new ImageButton(new TextureRegionDrawable(pantryScreenFrameRegion));
+        pantryScreenFrame.setSize(140, 92);
+
+        //unprepd lettuce button
+        lettuceRegion = new TextureRegion(new Texture("lettuce.png"));
+
+        lettuceClickable = new ImageButton(new TextureRegionDrawable(lettuceRegion));
+        lettuceClickable.setSize(24, 24);
+        lettuceClickable.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(cooks.get(selected).CookStack.size() < 5){
+                    cooks.get(selected).CookStack.push(new Ingredient("lettuce", new Texture("lettuce.png"), new Texture("prepdLettuce.png")));
+                }
+            }
+        });
+
+        //unprepd tomato button
+        tomatoRegion = new TextureRegion(new Texture("tomato.png"));
+
+        tomatoClickable = new ImageButton(new TextureRegionDrawable(tomatoRegion));
+        tomatoClickable.setSize(24, 24);
+        tomatoClickable.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(cooks.get(selected).CookStack.size() < 5){
+                    cooks.get(selected).CookStack.push(new Ingredient("tomato", new Texture("tomato.png"), new Texture("prepdTomato.png")));
+                }
+            }
+        });
+
+        //unprepd buns button
+        bunsRegion = new TextureRegion(new Texture("buns.png"));
+
+        bunsClickable = new ImageButton(new TextureRegionDrawable(bunsRegion));
+        bunsClickable.setSize(24, 24);
+        bunsClickable.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(cooks.get(selected).CookStack.size() < 5){
+                    cooks.get(selected).CookStack.push(new Ingredient("buns", new Texture("buns.png"), new Texture("buns.png")));
+                }
+            }
+        });
+
+        pattyRegion = new TextureRegion(new Texture("rawPatty.png"));
+
+        pattyClickable = new ImageButton(new TextureRegionDrawable(pattyRegion));
+        pattyClickable.setSize(24, 24);
+        pattyClickable.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(cooks.get(selected).CookStack.size() < 5){
+                    cooks.get(selected).CookStack.push(new Ingredient("patty", new Texture("rawPatty.png"), new Texture("prepdPatty.png")));
+                }
+            }
+        });
+
+        //serving screen clickables
+        //serving screen frame
+        servingScreenFrameRegion = new TextureRegion(new Texture("servingFrame.png"));
+
+        servingScreenFrame = new ImageButton(new TextureRegionDrawable(servingScreenFrameRegion));
+        servingScreenFrame.setSize(140, 92);
+
+        //burger button
+        burgerRegion = new TextureRegion(new Texture("burger.png"));
+
+        burgerClickable = new ImageButton(new TextureRegionDrawable(burgerRegion));
+        burgerClickable.setSize(24, 24);
+        burgerClickable.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("burger pressed");
+            }
+        });
+
+        //salad button
+        saladRegion = new TextureRegion(new Texture("salad.png"));
+
+        saladClickable = new ImageButton(new TextureRegionDrawable(saladRegion));
+        saladClickable.setSize(24, 24);
+        saladClickable.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("salad pressed");
+            }
+        });
     }
 
     private void customerOperations(){
@@ -357,14 +479,23 @@ public class GameScreenNew implements Screen{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         renderer.render();
+        //plate
+        game.batch.begin();
+        game.batch.draw(plateTex,164,23);
+        game.batch.end();
 
         gameStage.act();
         updateProgressBars();
-        gameStage.draw();
+        
+        showCookStack();
+
+        showStationScreens();
 
         updateBatch();
 
         customerOperations();
+        
+        gameStage.draw();
 
         processInput();
         for (int i = 0; i < cookCount; i++) {
@@ -375,37 +506,91 @@ public class GameScreenNew implements Screen{
 
         Gdx.input.setInputProcessor(gameStage);
 
-        game.batch.begin();
         
-        game.batch.draw(plateTex,164,5);
-        //game.batch.draw(bunsTest,164,12);
-        //game.batch.draw(tomatoTest,164,30);
-        //game.batch.draw(bunsTest,164,48);
-        //game.batch.draw(lettuceTest,164,66);
-        //game.batch.draw(pattyTest,164,84);
-        game.batch.end();
-        updateStations();
     }
 
-    private void updateStations() {
+    private void showCookStack() {
+        float x = 164;
+        float y = 30;
+        game.batch.begin();
+        //game.batch.draw(cooks.get(selected).CookBody.getTouchable(),176,0);
+            for(Ingredient ingredient : cooks.get(selected).CookStack){
+                game.batch.draw(ingredient.currentTex,x,y);
+                y += 18;
+            }
+        game.batch.end();
+    }
+
+    private void showStationScreens() {
         for (Cook cook : cooks){
             if((Math.abs(cook.CookBody.getY()-64f) < 2) && (Math.abs(cook.CookBody.getX()-0f) < 2)){
-                //gameStage.addActor(XbtnClickable);
-                game.batch.begin();
-                game.batch.draw(test,10,10);
-                game.batch.draw(XbtnRegion,7,88);
-                game.batch.end();
-            } else {
-                //XbtnClickable.setPosition(10000000, 5);
-                //System.out.println("Bezaz");
-                //gameStage.getActors().removeValue(XbtnClickable,false);
+                showPantryScreen();
             }
             if((Math.abs(cook.CookBody.getY()-28f) < 2) && (Math.abs(cook.CookBody.getX()-48f) < 2)){
                 createProgressBar(40, 50);
             }
+            if((Math.abs(cook.CookBody.getY()-48f) < 2) && (Math.abs(cook.CookBody.getX()-80f) < 2)){
+                showServingScreen();
+            }
         }
     }
 
+    private void showServingScreen() {
+        if(showServingScreen){
+            gameStage.addActor(servingScreenFrame);
+            gameStage.addActor(XbtnClickable);
+            XbtnClickable.toFront();
+            gameStage.addActor(burgerClickable);
+            gameStage.addActor(saladClickable);
+            
+            servingScreenFrame.setPosition(10, 10);
+            XbtnClickable.setPosition(7, 88);
+            burgerClickable.setPosition(25,66);
+            saladClickable.setPosition(53,66);
+
+            showServingScreen = false;
+        }
+    }
+
+    private void showPantryScreen() {
+        if(showPantryScreen){
+            gameStage.addActor(pantryScreenFrame);
+            gameStage.addActor(XbtnClickable);
+            XbtnClickable.toFront();
+            gameStage.addActor(lettuceClickable);
+            gameStage.addActor(tomatoClickable);
+            gameStage.addActor(bunsClickable);
+            gameStage.addActor(pattyClickable);
+            
+            pantryScreenFrame.setPosition(10, 10);
+            XbtnClickable.setPosition(7, 88);
+            lettuceClickable.setPosition(25,66);
+            tomatoClickable.setPosition(53,66);
+            bunsClickable.setPosition(81, 66);
+            pattyClickable.setPosition(110, 72);
+            showPantryScreen = false;
+        }
+        
+    }
+
+    private void hidePantryScreen() {
+        //moves pantry screen offscreen
+        
+        pantryScreenFrame.setPosition(10000, -1);
+        XbtnClickable.setPosition(10000, -1);
+        lettuceClickable.setPosition(10000,-1);
+        tomatoClickable.setPosition(10000,-1);
+        bunsClickable.setPosition(10000,-1);
+        pattyClickable.setPosition(10000,-1);
+    }
+    private void hideServingScreen() {
+        //moves serving screen offscreen
+        
+        servingScreenFrame.setPosition(10000, -1);
+        XbtnClickable.setPosition(10000, -1);
+        burgerClickable.setPosition(10000,-1);
+        saladClickable.setPosition(10000,-1);
+    }
 
     @Override
     public void resize(int width, int height) {

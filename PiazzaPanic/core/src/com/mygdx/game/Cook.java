@@ -1,6 +1,8 @@
 package com.mygdx.game;
 
 import java.util.Stack;
+
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Food.Ingredient;
 
@@ -39,11 +41,13 @@ public class Cook {
     }
 
     public boolean pickUp(Ingredient ingredient){
-        if(this.CookStack.size() == 10){
+        if(this.CookStack.size() >= 5){
             return false;
+        } else {
+            CookStack.push(ingredient);
+            return true;
         }
-        CookStack.push(ingredient);
-        return true;
+        
     }
 
     public boolean drop(){
