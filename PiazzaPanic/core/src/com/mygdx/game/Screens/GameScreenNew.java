@@ -392,7 +392,7 @@ public class GameScreenNew implements Screen{
         } else if (customers.get(customerCount).orderComplete){
             // make the customer leave
             customers.get(customerCount).move();
-            if (customers.get(customerCount).body.getX()>160){
+            if (customers.get(customerCount).body.getX()>148){
                 customers.get(customerCount).body.remove();
                 customers.add(new Customer(new Actor()));
                 customerCount += 1;
