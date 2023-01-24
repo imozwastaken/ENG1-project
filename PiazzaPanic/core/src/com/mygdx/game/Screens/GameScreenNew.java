@@ -254,7 +254,8 @@ public class GameScreenNew implements Screen{
                 //stationSelected.set(selected,1);
             }
         });
-        XbtnClickable.setPosition(7, 88);
+        XbtnClickable.setPosition(100000, 88);
+        gameStage.addActor(XbtnClickable);
         customers = new Array<Customer>();
         customers.add(new Customer(new Actor()));
         //XbtnClickable.setPosition(0, 0);
@@ -395,6 +396,7 @@ public class GameScreenNew implements Screen{
                 game.batch.draw(XbtnRegion,7,88);
                 game.batch.end();
             } else {
+                //XbtnClickable.setPosition(10000000, 5);
                 //System.out.println("Bezaz");
                 //gameStage.getActors().removeValue(XbtnClickable,false);
             }
@@ -445,22 +447,32 @@ public class GameScreenNew implements Screen{
 		return drawable;
 	}
 
-    private void createProgressBar(float x, float y){
-        ProgressBarStyle style = new ProgressBarStyle();
-        style.background = getColoredDrawable(20, 5, Color.GREEN);
-        style.knob = getColoredDrawable(0, 5, Color.WHITE);
-        style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
+    public void createProgressBar(float x, float y){
+        Boolean createTheBar = true;
+        for (ProgressBar bar : bars){
+            if(bar.getValue() > 0){
+                createTheBar = false;
+                break;
+            }
+        }
+        if(createTheBar){
+            ProgressBarStyle style = new ProgressBarStyle();
+            style.background = getColoredDrawable(20, 5, Color.GREEN);
+            style.knob = getColoredDrawable(0, 5, Color.WHITE);
+            style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
 
-        ProgressBar bar = new ProgressBar(0, 15, 0.05f, false, style);
-        bar.setWidth(30);
-        bar.setHeight(5);
-        
-        bar.setValue(15f);
-        bar.setX(x);
-        bar.setY(y);
+            ProgressBar bar = new ProgressBar(0, 15, 0.05f, false, style);
+            bar.setWidth(30);
+            bar.setHeight(5);
+            
+            bar.setValue(15f);
+            bar.setX(x);
+            bar.setY(y);
 
-        gameStage.addActor(bar);
-        bars.add(bar);
+            gameStage.addActor(bar);
+            
+            bars.add(bar);
+        }
     }
 
     private void updateProgressBars(){
@@ -468,6 +480,7 @@ public class GameScreenNew implements Screen{
             bar.setValue(bar.getValue()-0.05f);
             if(bar.getValue() == 0){
                 gameStage.getActors().removeValue(bar,false);
+                //bars.remove(bar);
                 //Gdx.input.setInputProcessor(gameStage);
             }
         }

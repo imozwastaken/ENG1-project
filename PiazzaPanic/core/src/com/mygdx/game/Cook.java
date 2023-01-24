@@ -1,9 +1,7 @@
 package com.mygdx.game;
 
-import java.util.ArrayList;
 import java.util.Stack;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.mygdx.game.Food.Ingredient;
 
 public class Cook {
