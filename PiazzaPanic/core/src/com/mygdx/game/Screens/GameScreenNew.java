@@ -516,7 +516,13 @@ public class GameScreenNew implements Screen{
         //game.batch.draw(cooks.get(selected).CookBody.getTouchable(),176,0);
             for(Ingredient ingredient : cooks.get(selected).CookStack){
                 game.batch.draw(ingredient.currentTex,x,y);
-                y += 18;
+                //patty is a smaller texture hence decreasing the distance between the coming ingredient
+                if(ingredient.name == "patty"){
+                    y += 10;
+                } else {
+                    y += 18;
+                }
+                
             }
         game.batch.end();
     }
