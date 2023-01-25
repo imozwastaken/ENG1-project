@@ -67,7 +67,6 @@ public class GameScreenNew implements Screen{
     Skin skin;
     Skin custSkins;
     ArrayList<Sprite> idles = new ArrayList<Sprite>();
-    SpriteBatch batch;
 
     // movement stuff
     Vector3 touchPos = new Vector3();
@@ -134,6 +133,8 @@ public class GameScreenNew implements Screen{
 
     Texture plateTex = new Texture("plate.png");
     Texture cookStackTile = new Texture("cookStackTitle.png");
+    Texture orderTest = new Texture("orderBurger.png");
+    Texture orderTest2 = new Texture("orderSalad.png");
 
     Boolean showPantryScreen = false;
     Boolean showServingScreen = false;
@@ -141,14 +142,13 @@ public class GameScreenNew implements Screen{
     public GameScreenNew(PiazzaPanic game, FitViewport port){
         this.game = game;
         this.view = port;
-
         gameStage = new Stage(view, game.batch);
 
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("KitchenMap.tmx");
         renderer = new OrthogonalTiledMapRenderer(map);
         gameCam = new OrthographicCamera();
-        
+
         view.setCamera(gameCam);
         view.setWorldSize(192,144);
 
@@ -592,6 +592,12 @@ public class GameScreenNew implements Screen{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         renderer.render();
+
+        game.batch.begin();
+        game.batch.draw(orderTest,1,112);
+        game.batch.draw(orderTest2,42,112);
+        game.batch.draw(orderTest2,83,112);
+        game.batch.end();
 
         gameStage.act();
         updateProgressBars();
