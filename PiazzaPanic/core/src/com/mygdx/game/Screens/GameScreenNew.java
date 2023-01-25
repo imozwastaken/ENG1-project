@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -42,6 +43,8 @@ import com.mygdx.game.Food.Ingredient;
 
 import java.io.*;
 import java.util.ArrayList;
+
+import org.w3c.dom.Text;
 
 public class GameScreenNew implements Screen{
     PiazzaPanic game;
@@ -130,6 +133,7 @@ public class GameScreenNew implements Screen{
     //plate texture used to show the cooks current inventory
 
     Texture plateTex = new Texture("plate.png");
+    Texture cookStackTile = new Texture("cookStackTitle.png");
 
     Boolean showPantryScreen = false;
     Boolean showServingScreen = false;
@@ -183,6 +187,14 @@ public class GameScreenNew implements Screen{
         pantryClickable.setSize(32, 32);
         pantryClickable.addListener(new ClickListener(){
             @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
+            @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected,0);
                 showPantryScreen = true;
@@ -197,6 +209,14 @@ public class GameScreenNew implements Screen{
         fryingClickable.setSize(32, 32);
         fryingClickable.addListener(new ClickListener(){
             @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
+            @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected,1);
             }
@@ -209,6 +229,14 @@ public class GameScreenNew implements Screen{
         bakingClickable = new ImageButton(new TextureRegionDrawable(bakingRegion));
         bakingClickable.setSize(32, 32);
         bakingClickable.addListener(new ClickListener(){
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected,2);
@@ -223,7 +251,16 @@ public class GameScreenNew implements Screen{
         binClickable.setSize(32, 32);
         binClickable.addListener(new ClickListener(){
             @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
+            @Override
             public void clicked(InputEvent event, float x, float y) {
+                
                 stationSelected.set(selected,3);
                 if((Math.abs(cooks.get(selected).CookBody.getY()-32f) < 2) && (Math.abs(cooks.get(selected).CookBody.getX()-0f) < 2)){
                     if(cooks.get(selected).CookStack.size() > 0){
@@ -242,6 +279,14 @@ public class GameScreenNew implements Screen{
         cuttingClickable.setSize(64, 32);
         cuttingClickable.addListener(new ClickListener(){
             @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
+            @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected, 4);
             }
@@ -255,6 +300,14 @@ public class GameScreenNew implements Screen{
         servingClickable = new ImageButton(new TextureRegionDrawable(servingRegion));
         servingClickable.setSize(32, 56);
         servingClickable.addListener(new ClickListener(){
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected, 5);
@@ -283,6 +336,14 @@ public class GameScreenNew implements Screen{
         XbtnClickable.setSize(16, 16);
         XbtnClickable.addListener(new ClickListener(){
             @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
+            @Override
             public void clicked(InputEvent event, float x, float y) {
                 //stationSelected.set(selected,1);
                 showPantryScreen = false;
@@ -304,6 +365,14 @@ public class GameScreenNew implements Screen{
         lettuceClickable.setSize(24, 24);
         lettuceClickable.addListener(new ClickListener(){
             @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
+            @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(cooks.get(selected).CookStack.size() < 5){
                     cooks.get(selected).CookStack.push(new Ingredient("lettuce", new Texture("lettuce.png"), new Texture("prepdLettuce.png")));
@@ -318,7 +387,16 @@ public class GameScreenNew implements Screen{
         tomatoClickable.setSize(24, 24);
         tomatoClickable.addListener(new ClickListener(){
             @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
+            @Override
             public void clicked(InputEvent event, float x, float y) {
+                
                 if(cooks.get(selected).CookStack.size() < 5){
                     cooks.get(selected).CookStack.push(new Ingredient("tomato", new Texture("tomato.png"), new Texture("prepdTomato.png")));
                 }
@@ -332,6 +410,14 @@ public class GameScreenNew implements Screen{
         bunsClickable.setSize(24, 24);
         bunsClickable.addListener(new ClickListener(){
             @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
+            @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(cooks.get(selected).CookStack.size() < 5){
                     cooks.get(selected).CookStack.push(new Ingredient("buns", new Texture("buns.png"), new Texture("buns.png")));
@@ -344,6 +430,14 @@ public class GameScreenNew implements Screen{
         pattyClickable = new ImageButton(new TextureRegionDrawable(pattyRegion));
         pattyClickable.setSize(24, 24);
         pattyClickable.addListener(new ClickListener(){
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(cooks.get(selected).CookStack.size() < 5){
@@ -366,6 +460,14 @@ public class GameScreenNew implements Screen{
         burgerClickable.setSize(24, 24);
         burgerClickable.addListener(new ClickListener(){
             @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
+            @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("burger pressed");
             }
@@ -377,6 +479,14 @@ public class GameScreenNew implements Screen{
         saladClickable = new ImageButton(new TextureRegionDrawable(saladRegion));
         saladClickable.setSize(24, 24);
         saladClickable.addListener(new ClickListener(){
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("salad pressed");
@@ -465,7 +575,8 @@ public class GameScreenNew implements Screen{
             game.batch.draw(idles.get(index), cook.CookBody.getX(), cook.CookBody.getY());
             index ++;
         }
-        game.batch.draw(plateTex,164,23);
+        game.batch.draw(plateTex,164,25);
+        game.batch.draw(cookStackTile,164,120);
         game.batch.draw(idles.get(selected),168, 1);
         game.batch.draw(custSkins.getSprite(customers.get(customerCount).name),customers.get(customerCount).body.getX(),customers.get(customerCount).body.getY());
         game.batch.end();
@@ -484,12 +595,12 @@ public class GameScreenNew implements Screen{
 
         gameStage.act();
         updateProgressBars();
+
+        updateBatch();
         
         showCookStack();
 
         showStationScreens();
-
-        updateBatch();
 
         customerOperations();
         
@@ -509,7 +620,7 @@ public class GameScreenNew implements Screen{
 
     private void showCookStack() {
         float x = 164;
-        float y = 30;
+        float y = 32;
         game.batch.begin();
         //game.batch.draw(cooks.get(selected).CookBody.getTouchable(),176,0);
             for(Ingredient ingredient : cooks.get(selected).CookStack){
