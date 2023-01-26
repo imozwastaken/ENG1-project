@@ -4,6 +4,7 @@ package com.mygdx.game.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -72,6 +73,9 @@ public class GameScreenNew implements Screen{
     private Array<Customer> customers;
     private int customerCount = 0;
 
+    // music composed by Ridley Coyte
+    private Music alienJazz = Gdx.audio.newMusic(Gdx.files.internal("Alien_Jazz_Ridley_Coyte.mp3"));
+
     //list of active orders
     ArrayList<Order> orders = new ArrayList<Order>();
 
@@ -138,6 +142,7 @@ public class GameScreenNew implements Screen{
     Boolean showPantryScreen = false;
     Boolean showServingScreen = false;
 
+
     public GameScreenNew(PiazzaPanic game, FitViewport port){
         this.game = game;
         this.view = port;
@@ -167,6 +172,10 @@ public class GameScreenNew implements Screen{
         idles.add(adam);
         idles.add(alex);
         idles.add(amelia);
+
+        // music control
+        alienJazz.setLooping(true);
+        alienJazz.play();
 
         //batch = new SpriteBatch();
         cooks = new Array<Cook>();
@@ -491,6 +500,7 @@ public class GameScreenNew implements Screen{
                 System.out.println("salad pressed");
             }
         });
+
     }
 
     private void customerOperations(){
