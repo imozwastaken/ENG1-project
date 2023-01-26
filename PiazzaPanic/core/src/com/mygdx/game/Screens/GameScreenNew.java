@@ -3,7 +3,6 @@ package com.mygdx.game.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -14,7 +13,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -24,14 +22,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -41,11 +37,7 @@ import com.mygdx.game.Customer;
 import com.mygdx.game.PiazzaPanic;
 import com.mygdx.game.Food.Ingredient;
 import com.mygdx.game.Food.Order;
-
-import java.io.*;
 import java.util.ArrayList;
-
-import org.w3c.dom.Text;
 
 public class GameScreenNew implements Screen{
     PiazzaPanic game;
@@ -137,6 +129,7 @@ public class GameScreenNew implements Screen{
     //UI elements
     Texture plateTex = new Texture("plate.png");
     Texture cookStackTitle = new Texture("cookStackTitle.png");
+    Texture selectedCook = new Texture("selected.png");
 
     //Order Textures
     Texture burgerOrderTexture = new Texture("orderBurger.png");
@@ -593,6 +586,7 @@ public class GameScreenNew implements Screen{
         game.batch.draw(cookStackTitle,164,120);
         game.batch.draw(idles.get(selected),168, 1);
         game.batch.draw(custSkins.getSprite(customers.get(customerCount).name),customers.get(customerCount).body.getX(),customers.get(customerCount).body.getY());
+        game.batch.draw(selectedCook, cooks.get(selected).CookBody.getX(), cooks.get(selected).CookBody.getY() + 26);
         game.batch.end();
     }
 
