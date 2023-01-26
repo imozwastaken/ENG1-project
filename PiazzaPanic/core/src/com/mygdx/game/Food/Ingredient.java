@@ -9,7 +9,7 @@ public class Ingredient {
     public Texture prepdTex;
     public Texture notPrepdTex;
     public Texture currentTex;
-    public Boolean prepared = false;
+    private Boolean prepared = false;
 
     public Ingredient(String name,Texture notPreparedTexture, Texture preparedTexture){
         this.name = name;
@@ -43,8 +43,7 @@ public class Ingredient {
         return false;
     }
 
-@Override
-    public String toString(){
-        return name;
+    public Texture getCurrentTexture(){
+        return currentTex;
     }
 }

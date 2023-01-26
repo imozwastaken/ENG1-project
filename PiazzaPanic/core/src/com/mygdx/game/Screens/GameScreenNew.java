@@ -40,6 +40,7 @@ import com.mygdx.game.Cook;
 import com.mygdx.game.Customer;
 import com.mygdx.game.PiazzaPanic;
 import com.mygdx.game.Food.Ingredient;
+import com.mygdx.game.Food.Order;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -78,6 +79,9 @@ public class GameScreenNew implements Screen{
     private Array<Cook> cooks;
     private Array<Customer> customers;
     private int customerCount = 0;
+
+    //list of active orders
+    ArrayList<Order> orders = new ArrayList<Order>();
 
     //progress bars
     ArrayList<ProgressBar> bars;
@@ -129,12 +133,14 @@ public class GameScreenNew implements Screen{
     
     TextureRegion saladRegion;
     ImageButton saladClickable;
-    //plate texture used to show the cooks current inventory
-
+    
+    //UI elements
     Texture plateTex = new Texture("plate.png");
-    Texture cookStackTile = new Texture("cookStackTitle.png");
-    Texture orderTest = new Texture("orderBurger.png");
-    Texture orderTest2 = new Texture("orderSalad.png");
+    Texture cookStackTitle = new Texture("cookStackTitle.png");
+
+    //Order Textures
+    Texture burgerOrderTexture = new Texture("orderBurger.png");
+    Texture saladOrderTexture = new Texture("orderSalad.png");
 
     Boolean showPantryScreen = false;
     Boolean showServingScreen = false;
@@ -563,6 +569,14 @@ public class GameScreenNew implements Screen{
             // debug option to mark the current customers order as complete, moving them on
             customers.get(customerCount).orderComplete = true;
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.M)){
+            // used for debugging
+            // preps all ingredients in current cook's stack
+            for(Ingredient ingredient : cooks.get(selected).CookStack){
+                ingredient.prepare();
+                ingredient.updateCurrentTexture();
+            }
+        }
     }
 
     //update the cooks on the screen
@@ -576,7 +590,7 @@ public class GameScreenNew implements Screen{
             index ++;
         }
         game.batch.draw(plateTex,164,25);
-        game.batch.draw(cookStackTile,164,120);
+        game.batch.draw(cookStackTitle,164,120);
         game.batch.draw(idles.get(selected),168, 1);
         game.batch.draw(custSkins.getSprite(customers.get(customerCount).name),customers.get(customerCount).body.getX(),customers.get(customerCount).body.getY());
         game.batch.end();
@@ -593,12 +607,6 @@ public class GameScreenNew implements Screen{
 
         renderer.render();
 
-        game.batch.begin();
-        game.batch.draw(orderTest,1,112);
-        game.batch.draw(orderTest2,42,112);
-        game.batch.draw(orderTest2,83,112);
-        game.batch.end();
-
         gameStage.act();
         updateProgressBars();
 
@@ -607,6 +615,8 @@ public class GameScreenNew implements Screen{
         showCookStack();
 
         showStationScreens();
+
+        showOrders();
 
         customerOperations();
         
@@ -624,19 +634,30 @@ public class GameScreenNew implements Screen{
         
     }
 
+    private void showOrders() {
+        int x = 1;
+        int y = 112;
+        for(Customer customer : customers){
+            if((customer.atCounter) && (!customer.orderComplete)){
+                game.batch.begin();
+                game.batch.draw(customer.customerOrder.getOrderTexture(),x,y);
+                game.batch.draw(customer.customerOrder.getRecipe().getSpeechBubbleTexture(), customer.body.getX()-10, customer.body.getY()+17);
+                game.batch.end();
+                //increase x value if there is more than one current order
+                x += 41;
+            }
+        }
+    }
+
     private void showCookStack() {
         float x = 164;
         float y = 32;
         game.batch.begin();
         //game.batch.draw(cooks.get(selected).CookBody.getTouchable(),176,0);
             for(Ingredient ingredient : cooks.get(selected).CookStack){
-                game.batch.draw(ingredient.currentTex,x,y);
+                game.batch.draw(ingredient.getCurrentTexture(),x,y);
                 //patty is a smaller texture hence decreasing the distance between the coming ingredient
-                if(ingredient.name == "patty"){
-                    y += 10;
-                } else {
-                    y += 18;
-                }
+                y += 18;
                 
             }
         game.batch.end();
