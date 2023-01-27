@@ -1,6 +1,7 @@
 package com.mygdx.game.Food;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import com.badlogic.gdx.graphics.Texture;
 
@@ -34,5 +35,25 @@ public class Salad implements Recipe{
     @Override
     public Texture getSpeechBubbleTexture() {
         return speechBubble;
+    }
+    public Boolean has(Stack<Ingredient> ingredients) {
+        boolean foundTomato = false;
+        boolean foundLettuce = false;
+        Ingredient tomato = new Ingredient("tomato", null,null);
+        tomato.prepare();
+        Ingredient lettuce = new Ingredient("lettuce", null,null);
+        lettuce.prepare();
+        for(Ingredient ingredient : ingredients){
+            if(ingredient.equals(tomato)){
+                foundTomato = true;
+            }
+            if(ingredient.equals(lettuce)){
+                foundLettuce = true;
+            }
+        }
+        if(foundTomato&&foundLettuce){
+            return true;
+        }
+        return false;
     }
 }

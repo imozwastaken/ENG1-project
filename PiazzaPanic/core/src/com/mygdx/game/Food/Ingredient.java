@@ -33,10 +33,11 @@ public class Ingredient {
             currentTex = this.notPrepdTex;
         }
     }
-
-    public boolean equals(Ingredient ingredient){
-        if(this.name == ingredient.name){
-            if(this.prepared == ingredient.prepared){
+    @Override
+    public boolean equals(Object ingredient){
+        Ingredient compare = (Ingredient) ingredient;
+        if(this.name == compare.name){
+            if(this.prepared == compare.prepared){
                 return true;
             }
         }

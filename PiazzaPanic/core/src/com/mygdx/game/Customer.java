@@ -30,8 +30,8 @@ public class Customer {
         this.body.setY(80);
 
         //
-        orderOptions.add(new Order(new Texture("orderBurger.png"), new Burger()));
-        orderOptions.add(new Order(new Texture("orderSalad.png"), new Salad()));
+        orderOptions.add(new Order("burger",new Texture("orderBurger.png"), new Burger()));
+        orderOptions.add(new Order("salad",new Texture("orderSalad.png"), new Salad()));
 
         this.customerOrder = generateOrder();
     }

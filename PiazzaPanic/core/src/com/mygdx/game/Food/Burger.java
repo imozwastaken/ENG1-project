@@ -1,6 +1,7 @@
 package com.mygdx.game.Food;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import com.badlogic.gdx.graphics.Texture;
 
@@ -35,5 +36,32 @@ public class Burger implements Recipe{
     @Override
     public Texture getSpeechBubbleTexture() {
         return speechBubble;
+    }
+    @Override
+    public Boolean has(Stack<Ingredient> ingredients) {
+        boolean foundBuns = false;
+        boolean foundPatty = false;
+        boolean foundLettuce = false;
+        Ingredient buns = new Ingredient("buns", null,null);
+        buns.prepare();
+        Ingredient patty = new Ingredient("patty", null,null);
+        patty.prepare();
+        Ingredient lettuce = new Ingredient("lettuce", null,null);
+        lettuce.prepare();
+        for(Ingredient ingredient : ingredients){
+            if(ingredient.equals(buns)){
+                foundBuns = true;
+            }
+            if(ingredient.equals(patty)){
+                foundPatty = true;
+            }
+            if(ingredient.equals(lettuce)){
+                foundLettuce = true;
+            }
+        }
+        if(foundBuns&&foundLettuce&&foundPatty){
+            return true;
+        }
+        return false;
     }
 }

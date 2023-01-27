@@ -1,6 +1,4 @@
 package com.mygdx.game.Screens;
-
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -34,10 +32,11 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.Cook;
 import com.mygdx.game.Customer;
+import com.mygdx.game.Food.Burger;
 import com.mygdx.game.Food.Ingredient;
 import com.mygdx.game.Food.Order;
+import com.mygdx.game.Food.Salad;
 import com.mygdx.game.PiazzaPanic;
-
 import java.util.ArrayList;
 
 public class GameScreenNew implements Screen{
@@ -75,52 +74,40 @@ public class GameScreenNew implements Screen{
     ArrayList<ProgressBar> bars;
 
     //stations
-    TextureRegion pantryRegion;
     ImageButton pantryClickable;
-
-    TextureRegion fryingRegion;
     ImageButton fryingClickable;
-
-    TextureRegion bakingRegion;
     ImageButton bakingClickable;
-
-    TextureRegion cuttingRegion;
     ImageButton cuttingClickable;
-
-    TextureRegion binRegion;
     ImageButton binClickable;
-
-    TextureRegion servingRegion;
     ImageButton servingClickable;
 
-    //pantryScreen clickables
-    TextureRegion XbtnRegion;
-    ImageButton XbtnClickable;
-
+    //pantry and serving screen frames
     TextureRegion pantryScreenFrameRegion;
-    ImageButton pantryScreenFrame;   
-    
-    TextureRegion lettuceRegion;
-    ImageButton lettuceClickable;
-    
-    TextureRegion tomatoRegion;
-    ImageButton tomatoClickable;
-
-    TextureRegion bunsRegion;
-    ImageButton bunsClickable;
-
-    TextureRegion pattyRegion;
-    ImageButton pattyClickable;
-
-    //servingScreen clickables
+    ImageButton pantryScreenFrame;
     TextureRegion servingScreenFrameRegion;
     ImageButton servingScreenFrame;
-
-    TextureRegion burgerRegion;
-    ImageButton burgerClickable;
     
-    TextureRegion saladRegion;
+    //clickables
+    ImageButton XbtnClickable;
+    ImageButton lettuceClickable;
+    ImageButton tomatoClickable;
+    ImageButton bunsClickable;
+    ImageButton pattyClickable;
+    ImageButton burgerClickable;
     ImageButton saladClickable;
+
+    //when you hover over a clickable it changes the cursor to a hand
+    //this listener is added to all clickables
+    ClickListener cursorHovering = new ClickListener(){
+        @Override
+        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+            Gdx.graphics.setSystemCursor(SystemCursor.Hand);
+        }
+        @Override
+        public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+           Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+        }
+    };
     
     //UI elements
     Texture plateTex = new Texture("plate.png");
@@ -171,74 +158,71 @@ public class GameScreenNew implements Screen{
         alienJazz.setLooping(true);
         alienJazz.play();
 
-        //batch = new SpriteBatch();
-        cooks = new Array<>();
+        cooks = new Array<Cook>();
         spawnCooks();
+        customers = new Array<Customer>();
+        customers.add(new Customer(new Actor()));
 
         //array of all progressbars created (used to update all of them in updateProgressBars function)
         bars = new ArrayList<>();
 
-        //regions for all the stations on the map and adding clicklistners to them.
-        //pixmap is used to create the region used for the stations (using pixel size from actual map)
-        Pixmap pixmap = new Pixmap(32, 32, Format.RGBA8888);
-
         //pantry station
-        pantryRegion = new TextureRegion(new Texture(pixmap));
-        // for each station create a new button for detecting clicks
-        pantryClickable = new ImageButton(new TextureRegionDrawable(pantryRegion));
-        pantryClickable.setSize(32, 32);
+        pantryClickable = createImageClickable(32, 32);
+        //function exectutes when you press on the pantry on screen
+        //it sets the pantry as the currently selected station - this moves the cook to the pantry
+        //when the cook arrives the pantry screen is shown
         pantryClickable.addListener(new ClickListener(){
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected,0);
-                showPantryScreen = true;
+                if((Math.abs(cooks.get(selected).CookBody.getY()-64f) < 2) && (Math.abs(cooks.get(selected).CookBody.getX()-0f) < 2)){
+                    showPantryScreen = true;
+                    cooks.get(selected).isBusy = true;
+                }
             }
         });
         gameStage.addActor(pantryClickable);
 
         //frying station
-        fryingRegion = new TextureRegion(new Texture(pixmap));
-
-        fryingClickable = new ImageButton(new TextureRegionDrawable(fryingRegion));
-        fryingClickable.setSize(32, 32);
+        fryingClickable = createImageClickable(32, 32);
+        //function exectutes when you press on the frying station on screen
+        //it sets the frying station as the currently selected station - this moves the cook to the frying station
         fryingClickable.addListener(new ClickListener(){
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected,1);
+                if((Math.abs(cooks.get(selected).CookBody.getY()-64f) < 2) && (Math.abs(cooks.get(selected).CookBody.getX()-32f) < 2)){
+                    if(!(cooks.get(selected).isBusy)){
+                        //used to limit to preping only one ingredient per press
+                        boolean ingredientDone = false;
+                        Ingredient selectedIngredient = null;
+                        //preps the first vegetable in the current cook's stack after pressing the station again
+                        //while busy creates a progress bar to indicate when the cook can move again
+                        for(Ingredient ingredient : cooks.get(selected).CookStack){
+                            if((ingredient.name == "patty") && (!ingredient.getState()) && (!ingredientDone)){
+                                selectedIngredient = ingredient;
+                            }
+                        }
+                        if(!(selectedIngredient == null)){
+                            cooks.get(selected).isBusy = true;
+                            createProgressBar(24, 86,selected);
+                            selectedIngredient.prepare();
+                            selectedIngredient.updateCurrentTexture();
+                            ingredientDone = true;
+                        } else {
+                            //create message to indicate that there are no ingredients in the current cook's stack to be prepared
+                        }
+                    }
+                }
             }
         });
         gameStage.addActor(fryingClickable);
         
         //baking station
-        bakingRegion = new TextureRegion(new Texture(pixmap));
-
-        bakingClickable = new ImageButton(new TextureRegionDrawable(bakingRegion));
-        bakingClickable.setSize(32, 32);
+        bakingClickable = createImageClickable(32, 32);
+        //function exectutes when you press on the baking station on screen
+        //it sets the baking station as the currently selected station - this moves the cook to the baking station
         bakingClickable.addListener(new ClickListener(){
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected,2);
@@ -247,23 +231,16 @@ public class GameScreenNew implements Screen{
         gameStage.addActor(bakingClickable);
         
         //bin station
-        binRegion = new TextureRegion(new Texture(pixmap));
-
-        binClickable = new ImageButton(new TextureRegionDrawable(binRegion));
-        binClickable.setSize(32, 32);
+        binClickable = createImageClickable(32, 32);
+        //function exectutes when you press on the bin station on screen
+        //it sets the bin station as the currently selected station - this moves the cook to the bin station
+        //if the cook is by the bin and presses on the bin it deletes the top ingredient on the current cook's stack 
         binClickable.addListener(new ClickListener(){
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 
                 stationSelected.set(selected,3);
+                //if statement that checks if the current cook is at the bin
                 if((Math.abs(cooks.get(selected).CookBody.getY()-32f) < 2) && (Math.abs(cooks.get(selected).CookBody.getX()-0f) < 2)){
                     if(cooks.get(selected).CookStack.size() > 0){
                         cooks.get(selected).CookStack.pop();
@@ -274,50 +251,59 @@ public class GameScreenNew implements Screen{
         gameStage.addActor(binClickable);
 
         //cutting station
-        pixmap = new Pixmap(64, 32, Format.RGBA8888); 
-        cuttingRegion = new TextureRegion(new Texture(pixmap));
-
-        cuttingClickable = new ImageButton(new TextureRegionDrawable(cuttingRegion));
-        cuttingClickable.setSize(64, 32);
+        cuttingClickable = createImageClickable(64, 32);
+        //function exectutes when you press on the cutting station on screen
+        //it sets the cutting station as the currently selected station - this moves the cook to the cutting station
         cuttingClickable.addListener(new ClickListener(){
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected, 4);
+                if((Math.abs(cooks.get(selected).CookBody.getY()-28f) < 2) && (Math.abs(cooks.get(selected).CookBody.getX()-48f) < 2)){
+                    //Can only prep if the cook is not busy
+                    if(!(cooks.get(selected).isBusy)){
+                        //used to limit to preping only one ingredient per press
+                        boolean ingredientDone = false;
+                        //preps the first vegetable in the current cook's stack after pressing the station again
+                        //while busy creates a progress bar to indicate when the cook can move again
+                        Ingredient selectedIngredient = null;
+                        for(Ingredient ingredient : cooks.get(selected).CookStack){
+                            if((ingredient.name == "lettuce") && (!ingredient.getState()) && (!ingredientDone)){
+                                selectedIngredient = ingredient;
+                            } else if ((ingredient.name == "tomato") && (!ingredient.getState()) && (!ingredientDone)){
+                                selectedIngredient = ingredient;
+                            }
+                        }
+                        if(!(selectedIngredient == null)){
+                            cooks.get(selected).isBusy = true;
+                            createProgressBar(40, 50,selected);
+                            selectedIngredient.prepare();
+                            selectedIngredient.updateCurrentTexture();
+                            ingredientDone = true;
+                        }
+                    }
+                }
             }
         });
         gameStage.addActor(cuttingClickable);
 
         //serving station
-        pixmap = new Pixmap(32, 56, Format.RGBA8888); 
-        servingRegion = new TextureRegion(new Texture(pixmap));
-
-        servingClickable = new ImageButton(new TextureRegionDrawable(servingRegion));
-        servingClickable.setSize(32, 56);
+        servingClickable = createImageClickable(32, 56);
+        //function exectutes when you press on the serving station on screen
+        //it sets the serving station as the currently selected station - this moves the cook to the serving station
+        //when the cook arrives the serving screen is shown
         servingClickable.addListener(new ClickListener(){
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected, 5);
-                showServingScreen = true;
+                if((Math.abs(cooks.get(selected).CookBody.getY()-48f) < 2) && (Math.abs(cooks.get(selected).CookBody.getX()-80f) < 2)){
+                    showServingScreen = true;
+                    cooks.get(selected).isBusy = true;
+                }
             }
         });
         gameStage.addActor(servingClickable);
-        //adding regions to the screen
+
+        //adding the station clickables to the screen
         pantryClickable.setPosition(0, 64);
         fryingClickable.setPosition(32, 64);
         bakingClickable.setPosition(64, 64);
@@ -325,55 +311,31 @@ public class GameScreenNew implements Screen{
         cuttingClickable.setPosition(32, 0);
         servingClickable.setPosition(96, 16);
 
-
-        customers = new Array<>();
-        customers.add(new Customer(new Actor()));
-
-        //pantry screen pop up clickables
-
         //Xbtn for station pop ups
-        XbtnRegion = new TextureRegion(new Texture("Xbtn.png"));
-
-        XbtnClickable = new ImageButton(new TextureRegionDrawable(XbtnRegion));
-        XbtnClickable.setSize(16, 16);
+        XbtnClickable = createImageClickable(new Texture("Xbtn.png"), 16, 16);
+        //function executes after clicking on the xbtn
+        //hides any menus that pop up
         XbtnClickable.addListener(new ClickListener(){
             @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            }
-            @Override
             public void clicked(InputEvent event, float x, float y) {
-                //stationSelected.set(selected,1);
-                showPantryScreen = false;
                 hidePantryScreen();
                 hideServingScreen();
+                cooks.get(selected).isBusy = false;
             }
         });
 
         //pantry screen frame
         pantryScreenFrameRegion = new TextureRegion(new Texture("pantryFrame.png"));
-
         pantryScreenFrame = new ImageButton(new TextureRegionDrawable(pantryScreenFrameRegion));
         pantryScreenFrame.setSize(140, 92);
 
-        //unprepd lettuce button
-        lettuceRegion = new TextureRegion(new Texture("lettuce.png"));
+        /* Pantry screen buttons
+         The functions executes after clicking on any of the ingredient buttons on the pantry screen
+         Addes the ingredient to the current cook's stack (if it's less than 5 items) */
 
-        lettuceClickable = new ImageButton(new TextureRegionDrawable(lettuceRegion));
-        lettuceClickable.setSize(24, 24);
+        //unprepd lettuce button
+        lettuceClickable = createImageClickable(new Texture("lettuce.png"), 24, 24);
         lettuceClickable.addListener(new ClickListener(){
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(cooks.get(selected).CookStack.size() < 5){
@@ -383,22 +345,10 @@ public class GameScreenNew implements Screen{
         });
 
         //unprepd tomato button
-        tomatoRegion = new TextureRegion(new Texture("tomato.png"));
-
-        tomatoClickable = new ImageButton(new TextureRegionDrawable(tomatoRegion));
-        tomatoClickable.setSize(24, 24);
+        tomatoClickable = createImageClickable(new Texture("tomato.png"), 24, 24);
         tomatoClickable.addListener(new ClickListener(){
             @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            }
-            @Override
             public void clicked(InputEvent event, float x, float y) {
-                
                 if(cooks.get(selected).CookStack.size() < 5){
                     cooks.get(selected).CookStack.push(new Ingredient("tomato", new Texture("tomato.png"), new Texture("prepdTomato.png")));
                 }
@@ -406,40 +356,21 @@ public class GameScreenNew implements Screen{
         });
 
         //unprepd buns button
-        bunsRegion = new TextureRegion(new Texture("buns.png"));
-
-        bunsClickable = new ImageButton(new TextureRegionDrawable(bunsRegion));
-        bunsClickable.setSize(24, 24);
+        bunsClickable = createImageClickable(new Texture("buns.png"), 24, 24);
         bunsClickable.addListener(new ClickListener(){
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(cooks.get(selected).CookStack.size() < 5){
-                    cooks.get(selected).CookStack.push(new Ingredient("buns", new Texture("buns.png"), new Texture("buns.png")));
+                    Ingredient buns = new Ingredient("buns", new Texture("buns.png"), new Texture("buns.png"));
+                    buns.prepare();
+                    cooks.get(selected).CookStack.push(buns);
                 }
             }
         });
 
-        pattyRegion = new TextureRegion(new Texture("rawPatty.png"));
-
-        pattyClickable = new ImageButton(new TextureRegionDrawable(pattyRegion));
-        pattyClickable.setSize(24, 24);
+        //unprepd patty button
+        pattyClickable = createImageClickable(new Texture("rawPatty.png"), 24, 24); 
         pattyClickable.addListener(new ClickListener(){
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(cooks.get(selected).CookStack.size() < 5){
@@ -448,53 +379,108 @@ public class GameScreenNew implements Screen{
             }
         });
 
-        //serving screen clickables
         //serving screen frame
         servingScreenFrameRegion = new TextureRegion(new Texture("servingFrame.png"));
-
         servingScreenFrame = new ImageButton(new TextureRegionDrawable(servingScreenFrameRegion));
         servingScreenFrame.setSize(140, 92);
 
+         /* Serving screen buttons
+         The functions executes after clicking on any of the ingredient buttons on the serving screen
+         Serves the item if all the required prepared ingredients are in the current cook's stack */
+        
         //burger button
-        burgerRegion = new TextureRegion(new Texture("burger.png"));
-
-        burgerClickable = new ImageButton(new TextureRegionDrawable(burgerRegion));
-        burgerClickable.setSize(24, 24);
+        burgerClickable = createImageClickable(new Texture("burger.png"), 24, 24);
         burgerClickable.addListener(new ClickListener(){
             @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            }
-            @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("burger pressed");
+                Burger recipe = new Burger();
+                Ingredient buns = new Ingredient("buns", null,null);
+                buns.prepare();
+                Ingredient patty = new Ingredient("patty", null,null);
+                patty.prepare();
+                Ingredient lettuce = new Ingredient("lettuce", null,null);
+                lettuce.prepare();
+                if(recipe.has(cooks.get(selected).CookStack)){
+                    if(customers.get(customerCount).customerOrder.getName() == "burger"){
+                        cooks.get(selected).CookStack.remove(buns);
+                        cooks.get(selected).CookStack.remove(patty);
+                        cooks.get(selected).CookStack.remove(lettuce);
+                        customers.get(customerCount).orderComplete = true;
+                        hideServingScreen();
+                    }
+                } else {
+                    //some or all ingredients are not in the current cook's stack
+                }
             }
         });
 
         //salad button
-        saladRegion = new TextureRegion(new Texture("salad.png"));
-
-        saladClickable = new ImageButton(new TextureRegionDrawable(saladRegion));
-        saladClickable.setSize(24, 24);
+        saladClickable = createImageClickable(new Texture("salad.png"), 24, 24);
         saladClickable.addListener(new ClickListener(){
             @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                Gdx.graphics.setSystemCursor(SystemCursor.Hand);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-               Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
-            }
-            @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("salad pressed");
+                Salad recipe = new Salad();
+                Ingredient tomato = new Ingredient("tomato", null,null);
+                tomato.prepare();
+                Ingredient lettuce = new Ingredient("lettuce", null,null);
+                lettuce.prepare();
+                if(recipe.has(cooks.get(selected).CookStack)){
+                    if(customers.get(customerCount).customerOrder.getName() == "salad"){
+                        cooks.get(selected).CookStack.remove(tomato);
+                        cooks.get(selected).CookStack.remove(lettuce);
+                        customers.get(customerCount).orderComplete = true;
+                        hideServingScreen();
+                    }
+                } else {
+                    //some or all ingredients are not in the current cook's stack
+                }
             }
         });
+    }
 
+    //Used when the clickable region has a texture
+    private ImageButton createImageClickable(Texture texture,float width, float height){
+        TextureRegion region = new TextureRegion(texture);
+        ImageButton clickable = new ImageButton(new TextureRegionDrawable(region));
+        clickable.setSize(width, height);
+        clickable.addListener(cursorHovering);
+        return clickable;
+    }
+
+    //Used to create an invisable clickable region
+    private ImageButton createImageClickable(int width, int height){
+        Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
+        TextureRegion region = new TextureRegion(new Texture(pixmap));
+        ImageButton clickable = new ImageButton(new TextureRegionDrawable(region));
+        clickable.setSize(width, height);
+        clickable.addListener(cursorHovering);
+        return clickable;
+    }
+
+    @Override
+    public void render(float delta) {
+        gameCam.update();
+        renderer.setView(gameCam);
+
+        ScreenUtils.clear(0, 0, 0, 0);
+        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.input.setInputProcessor(gameStage);
+        renderer.render();
+
+        gameStage.act();
+        updateProgressBars();
+        updateBatch();
+        showCookStack();
+        showStationScreens();
+        showOrders();
+        customerOperations();
+        processInput();
+        gameStage.draw();
+
+        for (int i = 0; i < cookCount; i++) {
+            cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody);
+        }
     }
 
     private void customerOperations(){
@@ -512,13 +498,6 @@ public class GameScreenNew implements Screen{
             }
         }
     }
-
-
-    @Override
-    public void show() {
-
-    }
-
     // generate the cooks
     private void spawnCooks(){
         for (int i = 0; i < cookCount; i++){
@@ -544,7 +523,6 @@ public class GameScreenNew implements Screen{
     }
     //process user input
     private void processInput() {
-        int index = 0;
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
             selected = 0;
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
@@ -553,11 +531,10 @@ public class GameScreenNew implements Screen{
         if (cookCount > 2 && Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
             selected = 2;
         }
-        for (Cook ignored : cooks) {
-            if (cooks.get(index).CookBody.isTouchFocusTarget()) {
-                selected = index;
+        for (int i = 0; i < cooks.size; i++) {
+            if (cooks.get(i).CookBody.isTouchFocusTarget()) {
+                selected = i;
             }
-            index++;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)){
             // debug option to mark the current customers order as complete, moving them on
@@ -591,44 +568,6 @@ public class GameScreenNew implements Screen{
         game.batch.end();
     }
 
-    @Override
-    public void render(float delta) {
-        gameCam.update();
-        renderer.setView(gameCam);
-
-        ScreenUtils.clear(0, 0, 0, 0);
-        Gdx.gl.glClearColor(0,0,0,1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        renderer.render();
-
-        gameStage.act();
-        updateProgressBars();
-
-        updateBatch();
-        
-        showCookStack();
-
-        showStationScreens();
-
-        showOrders();
-
-        customerOperations();
-        
-        gameStage.draw();
-
-        processInput();
-        for (int i = 0; i < cookCount; i++) {
-            cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody);
-        }
-
-        
-
-        Gdx.input.setInputProcessor(gameStage);
-
-        
-    }
-
     private void showOrders() {
         int x = 1;
         int y = 112;
@@ -651,9 +590,7 @@ public class GameScreenNew implements Screen{
         //game.batch.draw(cooks.get(selected).CookBody.getTouchable(),176,0);
             for(Ingredient ingredient : cooks.get(selected).CookStack){
                 game.batch.draw(ingredient.getCurrentTexture(),x,y);
-                //patty is a smaller texture hence decreasing the distance between the coming ingredient
                 y += 18;
-                
             }
         game.batch.end();
     }
@@ -662,9 +599,6 @@ public class GameScreenNew implements Screen{
         for (Cook cook : cooks){
             if((Math.abs(cook.CookBody.getY()-64f) < 2) && (Math.abs(cook.CookBody.getX()-0f) < 2)){
                 showPantryScreen();
-            }
-            if((Math.abs(cook.CookBody.getY()-28f) < 2) && (Math.abs(cook.CookBody.getX()-48f) < 2)){
-                createProgressBar(40, 50);
             }
             if((Math.abs(cook.CookBody.getY()-48f) < 2) && (Math.abs(cook.CookBody.getX()-80f) < 2)){
                 showServingScreen();
@@ -679,12 +613,10 @@ public class GameScreenNew implements Screen{
             XbtnClickable.toFront();
             gameStage.addActor(burgerClickable);
             gameStage.addActor(saladClickable);
-            
             servingScreenFrame.setPosition(10, 10);
             XbtnClickable.setPosition(7, 88);
             burgerClickable.setPosition(25,66);
             saladClickable.setPosition(53,66);
-
             showServingScreen = false;
         }
     }
@@ -698,7 +630,6 @@ public class GameScreenNew implements Screen{
             gameStage.addActor(tomatoClickable);
             gameStage.addActor(bunsClickable);
             gameStage.addActor(pattyClickable);
-            
             pantryScreenFrame.setPosition(10, 10);
             XbtnClickable.setPosition(7, 88);
             lettuceClickable.setPosition(25,66);
@@ -707,12 +638,9 @@ public class GameScreenNew implements Screen{
             pattyClickable.setPosition(110, 72);
             showPantryScreen = false;
         }
-        
     }
-
     private void hidePantryScreen() {
         //moves pantry screen offscreen
-        
         pantryScreenFrame.setPosition(10000, -1);
         XbtnClickable.setPosition(10000, -1);
         lettuceClickable.setPosition(10000,-1);
@@ -722,90 +650,57 @@ public class GameScreenNew implements Screen{
     }
     private void hideServingScreen() {
         //moves serving screen offscreen
-        
         servingScreenFrame.setPosition(10000, -1);
         XbtnClickable.setPosition(10000, -1);
         burgerClickable.setPosition(10000,-1);
         saladClickable.setPosition(10000,-1);
     }
-
-    @Override
-    public void resize(int width, int height) {
-        view.update(width, height);
+    public void createProgressBar(float x, float y, int selectedCook){
+        ProgressBarStyle style = new ProgressBarStyle();
+        style.background = getColoredDrawable(20, 5, Color.GREEN);
+        style.knob = getColoredDrawable(0, 5, Color.WHITE);
+        style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
+        ProgressBar bar = new ProgressBar(0, 7, 0.05f, false, style);
+        bar.setWidth(30);
+        bar.setHeight(5);
+        bar.setValue(15f);
+        bar.setX(x);
+        bar.setY(y);
+        gameStage.addActor(bar);
+        bars.add(bar);
     }
-
-    @Override
-    public void pause() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void resume() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void hide() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void dispose() {
-        gameStage.dispose();
-    }
-
-    private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
-		Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
-		pixmap.setColor(color);
-		pixmap.fill();
-		
-		TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-		
-		pixmap.dispose();
-		
-		return drawable;
-	}
-
-    public void createProgressBar(float x, float y){
-        boolean createTheBar = true;
-        for (ProgressBar bar : bars){
-            if(bar.getValue() > 0){
-                createTheBar = false;
-                break;
-            }
-        }
-        if(createTheBar){
-            ProgressBarStyle style = new ProgressBarStyle();
-            style.background = getColoredDrawable(20, 5, Color.GREEN);
-            style.knob = getColoredDrawable(0, 5, Color.WHITE);
-            style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
-
-            ProgressBar bar = new ProgressBar(0, 15, 0.05f, false, style);
-            bar.setWidth(30);
-            bar.setHeight(5);
-            
-            bar.setValue(15f);
-            bar.setX(x);
-            bar.setY(y);
-
-            gameStage.addActor(bar);
-            
-            bars.add(bar);
-        }
-    }
-
     private void updateProgressBars(){
         for (ProgressBar bar : bars){
             bar.setValue(bar.getValue()-0.05f);
             if(bar.getValue() == 0){
                 gameStage.getActors().removeValue(bar,false);
-                //bars.remove(bar);
-                //Gdx.input.setInputProcessor(gameStage);
+                //unbusy the correct cook
+                //this is incorrect
+                cooks.get(selected).isBusy = false;
             }
         }
     }
-    
+    private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
+		Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
+		pixmap.setColor(color);
+		pixmap.fill();
+		TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+		pixmap.dispose();
+		return drawable;
+	}
+    @Override
+    public void resize(int width, int height) {
+        view.update(width, height);}
+    @Override
+    public void show() {}
+    @Override
+    public void pause() {}
+    @Override
+    public void resume() {}
+    @Override
+    public void hide() {}
+    @Override
+    public void dispose() {
+        gameStage.dispose();
+    }
 }

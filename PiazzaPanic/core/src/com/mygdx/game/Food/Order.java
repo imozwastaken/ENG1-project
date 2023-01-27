@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.Texture;
 public class Order {
     Texture orderTex;
     Recipe orderRecipe;
+    String name;
     
-    public Order(Texture orderTexture, Recipe orderRecipe){
+    public Order(String name,Texture orderTexture, Recipe orderRecipe){
+        this.name = name;
         this.orderTex = orderTexture;
         this.orderRecipe = orderRecipe;
     }
@@ -17,5 +19,9 @@ public class Order {
 
     public Recipe getRecipe(){
         return this.orderRecipe;
+    }
+    
+    public String getName(){
+        return this.name;
     }
 }
