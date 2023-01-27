@@ -73,7 +73,7 @@ public class GameScreenNew implements Screen{
     private Array<Customer> customers;
     private int customerCount = 0;
 
-    // music composed by Ridley Coyte
+    // music composed by Ridley Coyte, big up my man
     private Music alienJazz = Gdx.audio.newMusic(Gdx.files.internal("Alien_Jazz_Ridley_Coyte.mp3"));
 
     //list of active orders

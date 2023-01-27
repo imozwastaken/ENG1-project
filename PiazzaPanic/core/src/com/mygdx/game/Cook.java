@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import java.util.Stack;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Food.Ingredient;
 
@@ -11,6 +10,7 @@ public class Cook {
     public Actor CookBody;
     public float[][] locations = {{0, 64},{32,64},{64,64},{0,32},{48,28},{80,48}};
     private float speed;
+    public boolean isBusy = false;
 
     public Cook(Actor skin){
         this.CookBody = skin;
