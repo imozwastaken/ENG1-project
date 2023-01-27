@@ -9,12 +9,11 @@ public class Cook {
     public Stack<Ingredient> CookStack;
     public Actor CookBody;
     public float[][] locations = {{0, 64},{32,64},{64,64},{0,32},{48,28},{80,48}};
-    private float speed;
     public boolean isBusy = false;
 
     public Cook(Actor skin){
         this.CookBody = skin;
-        this.CookStack = new Stack<Ingredient>();
+        this.CookStack = new Stack<>();
     }
 
     public void move(int index, Actor cook){
@@ -29,6 +28,7 @@ public class Cook {
             float directionX = pathX / distance;
             float directionY = pathY / distance;
             // very rough speed easing to ensure the sprites don't jitter around their coordinates
+            float speed;
             if (distance < 1) {
                 speed = 0f;
             } else {

@@ -16,7 +16,8 @@ public class Customer {
     public Actor body;
     public String name;
     public Order customerOrder;
-    private ArrayList<Order> orderOptions = new ArrayList<Order>();
+    // god we love using arrays for dealing with this stuff
+    private final ArrayList<Order> orderOptions = new ArrayList<>();
     private final float targetY = MathUtils.random(16, 48);
 
     public Customer(Actor skin){
@@ -28,6 +29,7 @@ public class Customer {
         this.body.setX(144);
         this.body.setY(80);
 
+        //
         orderOptions.add(new Order(new Texture("orderBurger.png"), new Burger()));
         orderOptions.add(new Order(new Texture("orderSalad.png"), new Salad()));
 
@@ -36,7 +38,6 @@ public class Customer {
 
     public void move() {
         // method to move a cook from their current position to a station
-        //System.out.println(locations[index][0]);
         if (!atCounter) {
             if (body.getY() != targetY) {
                 body.setY(body.getY() - 1);
@@ -48,6 +49,7 @@ public class Customer {
                 }
             }
         } else if(orderComplete){
+            // if an order is complete, move the customer offscreen to the right
             body.setX(body.getX()+1);
         }
     }

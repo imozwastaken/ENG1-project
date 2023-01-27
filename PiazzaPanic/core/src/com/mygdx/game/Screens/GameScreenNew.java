@@ -7,12 +7,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -20,14 +20,13 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
@@ -35,9 +34,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.Cook;
 import com.mygdx.game.Customer;
-import com.mygdx.game.PiazzaPanic;
 import com.mygdx.game.Food.Ingredient;
 import com.mygdx.game.Food.Order;
+import com.mygdx.game.PiazzaPanic;
+
 import java.util.ArrayList;
 
 public class GameScreenNew implements Screen{
@@ -46,38 +46,30 @@ public class GameScreenNew implements Screen{
     FitViewport view;
     Stage gameStage;
 
+    // map and camera stuff
     TmxMapLoader mapLoader;
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
     OrthographicCamera gameCam;
 
-    // graphics stuff
-    TextureAtlas atlas;
     Sprite alex;
     Sprite amelia;
     Sprite adam;
-    String[] lines;
     FileHandle charIdles;
     Skin skin;
     Skin custSkins;
-    ArrayList<Sprite> idles = new ArrayList<Sprite>();
+    ArrayList<Sprite> idles = new ArrayList<>();
 
-    // movement stuff
-    Vector3 touchPos = new Vector3();
-    Float speed = 3f;
     int selected = 0;
-    ArrayList<Integer> stationSelected = new ArrayList<Integer>();
+    ArrayList<Integer> stationSelected = new ArrayList<>();
     // control the number of cooks
     int cookCount = 2; // control how many cooks spawn -> update to allow for the value to increase
     private Array<Cook> cooks;
     private Array<Customer> customers;
     private int customerCount = 0;
 
-    // music composed by Ridley Coyte, big up my man
-    private Music alienJazz = Gdx.audio.newMusic(Gdx.files.internal("Alien_Jazz_Ridley_Coyte.mp3"));
-
     //list of active orders
-    ArrayList<Order> orders = new ArrayList<Order>();
+    ArrayList<Order> orders = new ArrayList<>();
 
     //progress bars
     ArrayList<ProgressBar> bars;
@@ -144,18 +136,18 @@ public class GameScreenNew implements Screen{
 
 
     public GameScreenNew(PiazzaPanic game, FitViewport port){
+        // initialise the game
         this.game = game;
         this.view = port;
         gameStage = new Stage(view, game.batch);
 
+        // load the map and camera
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("KitchenMap.tmx");
         renderer = new OrthogonalTiledMapRenderer(map);
         gameCam = new OrthographicCamera();
-
         view.setCamera(gameCam);
         view.setWorldSize(192,144);
-
         gameCam.position.set(view.getWorldWidth()/2, view.getWorldHeight()/2,0);
 
         // sprite information from the texture atlas
@@ -174,15 +166,17 @@ public class GameScreenNew implements Screen{
         idles.add(amelia);
 
         // music control
+        // music composed by Ridley Coyte, big up my man
+        Music alienJazz = Gdx.audio.newMusic(Gdx.files.internal("Alien_Jazz_Ridley_Coyte.mp3"));
         alienJazz.setLooping(true);
         alienJazz.play();
 
         //batch = new SpriteBatch();
-        cooks = new Array<Cook>();
+        cooks = new Array<>();
         spawnCooks();
 
         //array of all progressbars created (used to update all of them in updateProgressBars function)
-        bars = new ArrayList<ProgressBar>();
+        bars = new ArrayList<>();
 
         //regions for all the stations on the map and adding clicklistners to them.
         //pixmap is used to create the region used for the stations (using pixel size from actual map)
@@ -190,7 +184,7 @@ public class GameScreenNew implements Screen{
 
         //pantry station
         pantryRegion = new TextureRegion(new Texture(pixmap));
-
+        // for each station create a new button for detecting clicks
         pantryClickable = new ImageButton(new TextureRegionDrawable(pantryRegion));
         pantryClickable.setSize(32, 32);
         pantryClickable.addListener(new ClickListener(){
@@ -332,7 +326,7 @@ public class GameScreenNew implements Screen{
         servingClickable.setPosition(96, 16);
 
 
-        customers = new Array<Customer>();
+        customers = new Array<>();
         customers.add(new Customer(new Actor()));
 
         //pantry screen pop up clickables
@@ -530,13 +524,11 @@ public class GameScreenNew implements Screen{
         for (int i = 0; i < cookCount; i++){
             System.out.println(stationSelected);
             Cook cook = new Cook(new Actor());
-            cook.CookBody.setX(1 * i);
-            cook.CookBody.setY(10);
             cook.CookBody.setWidth(16);
             cook.CookBody.setHeight(23);
             // scale information
-            cook.CookBody.setScaleX(game.GAME_WIDTH/16);
-            cook.CookBody.setScaleY(game.GAME_HEIGHT/23);
+            cook.CookBody.setScaleX(game.GAME_WIDTH/16f);
+            cook.CookBody.setScaleY(game.GAME_HEIGHT/23f);
             // click detection for cooks
             cook.CookBody.addListener(new ClickListener(){
                 @Override
@@ -544,6 +536,7 @@ public class GameScreenNew implements Screen{
                     System.out.println("cook clicked!!");
                 }
             });
+            // cooks are stored in an array to make it easier to keep track of all things relating to them
             cooks.add(cook);
             gameStage.addActor(cook.CookBody);
             stationSelected.add(MathUtils.random(0,5));
@@ -557,12 +550,10 @@ public class GameScreenNew implements Screen{
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
             selected = 1;
         }
-        if (cookCount > 2);{
-            if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
-                selected = 2;
-            }
+        if (cookCount > 2 && Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
+            selected = 2;
         }
-        for (Cook cook : cooks) {
+        for (Cook ignored : cooks) {
             if (cooks.get(index).CookBody.isTouchFocusTarget()) {
                 selected = index;
             }
@@ -779,7 +770,7 @@ public class GameScreenNew implements Screen{
 	}
 
     public void createProgressBar(float x, float y){
-        Boolean createTheBar = true;
+        boolean createTheBar = true;
         for (ProgressBar bar : bars){
             if(bar.getValue() > 0){
                 createTheBar = false;
