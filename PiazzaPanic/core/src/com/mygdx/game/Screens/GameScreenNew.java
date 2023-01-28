@@ -76,6 +76,7 @@ public class GameScreenNew implements Screen{
     //stations
     ImageButton pantryClickable;
     ImageButton fryingClickable;
+    int fryingClicked = 0;
     ImageButton bakingClickable;
     ImageButton cuttingClickable;
     ImageButton binClickable;
@@ -206,9 +207,13 @@ public class GameScreenNew implements Screen{
                         if(!(selectedIngredient == null)){
                             cooks.get(selected).isBusy = true;
                             createProgressBar(24, 86,selected);
-                            selectedIngredient.prepare();
-                            selectedIngredient.updateCurrentTexture();
-                            ingredientDone = true;
+                            fryingClicked++;
+                            //used for the flipping mechanism (the station has to be pressed twice for the patty to be prepared)
+                            if((fryingClicked)%2 == 0){
+                                ingredientDone = true;
+                                selectedIngredient.prepare();
+                                selectedIngredient.updateCurrentTexture();
+                            }
                         } else {
                             //create message to indicate that there are no ingredients in the current cook's stack to be prepared
                         }
@@ -217,7 +222,7 @@ public class GameScreenNew implements Screen{
             }
         });
         gameStage.addActor(fryingClickable);
-        
+
         //baking station
         bakingClickable = createImageClickable(32, 32);
         //function exectutes when you press on the baking station on screen
