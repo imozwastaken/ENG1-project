@@ -77,6 +77,8 @@ public class GameScreenNew implements Screen{
     ImageButton pantryClickable;
     ImageButton fryingClickable;
     int fryingClicked = 0;
+    boolean pattyAtFrying = false;
+    Texture flipBtn = new Texture("flipBtn.png");
     ImageButton bakingClickable;
     ImageButton cuttingClickable;
     ImageButton binClickable;
@@ -192,6 +194,10 @@ public class GameScreenNew implements Screen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected,1);
+                //boolean ingredientAtStation = false;
+                Ingredient cookedPatty = new Ingredient("patty", new Texture("rawPatty.png"), new Texture("prepdPatty.png"));
+                cookedPatty.prepare();
+                cookedPatty.updateCurrentTexture();
                 if((Math.abs(cooks.get(selected).CookBody.getY()-64f) < 2) && (Math.abs(cooks.get(selected).CookBody.getX()-32f) < 2)){
                     if(!(cooks.get(selected).isBusy)){
                         //used to limit to preping only one ingredient per press
@@ -211,11 +217,21 @@ public class GameScreenNew implements Screen{
                             //used for the flipping mechanism (the station has to be pressed twice for the patty to be prepared)
                             if((fryingClicked)%2 == 0){
                                 ingredientDone = true;
-                                selectedIngredient.prepare();
-                                selectedIngredient.updateCurrentTexture();
+                                cooks.get(selected).CookStack.push(cookedPatty);
+                                pattyAtFrying = false;
+                            } else {
+                                cooks.get(selected).CookStack.remove(selectedIngredient);
+                                pattyAtFrying = true;
                             }
                         } else {
                             //create message to indicate that there are no ingredients in the current cook's stack to be prepared
+                            if(pattyAtFrying){
+                                cooks.get(selected).isBusy = true;
+                                createProgressBar(24, 86,selected);
+                                fryingClicked++;
+                                cooks.get(selected).CookStack.push(cookedPatty);
+                                pattyAtFrying = false;
+                            }
                         }
                     }
                 }
@@ -482,6 +498,12 @@ public class GameScreenNew implements Screen{
         customerOperations();
         processInput();
         gameStage.draw();
+
+        if(pattyAtFrying){
+            game.batch.begin();
+            game.batch.draw(flipBtn,30,80);
+            game.batch.end();
+        }
 
         for (int i = 0; i < cookCount; i++) {
             cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody);

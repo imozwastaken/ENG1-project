@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 public class Ingredient {
     //patty, buns, lettuce, tomato
     public String name;
-    public Texture prepdTex;
-    public Texture notPrepdTex;
-    public Texture currentTex;
+    private Texture prepdTex;
+    private Texture notPrepdTex;
+    private Texture currentTex;
     private Boolean prepared = false;
 
     public Ingredient(String name,Texture notPreparedTexture, Texture preparedTexture){
