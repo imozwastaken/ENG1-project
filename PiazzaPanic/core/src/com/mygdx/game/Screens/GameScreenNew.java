@@ -66,6 +66,9 @@ public class GameScreenNew implements Screen{
     private Array<Cook> cooks;
     private Array<Customer> customers;
     private int customerCount = 0;
+    // customer number determines how many customers will spawn over the course of the game
+    // 0 means infinite
+    private int customerNumber = 5;
 
     //list of active orders
     ArrayList<Order> orders = new ArrayList<>();
@@ -515,15 +518,21 @@ public class GameScreenNew implements Screen{
     private void customerOperations(){
         // TODO make an else statement which ends the game once all 5 customers have been served
         // move the customers to the counter
-        if (!customers.get(customerCount).atCounter){
-            customers.get(customerCount).move();
-        } else if (customers.get(customerCount).orderComplete){
-            // make the customer leave
-            customers.get(customerCount).move();
-            if (customers.get(customerCount).body.getX()>148){
-                customers.get(customerCount).body.remove();
-                customers.add(new Customer(new Actor()));
-                customerCount += 1;
+            if (!customers.get(customerCount).atCounter) {
+                customers.get(customerCount).move();
+            } else if (customers.get(customerCount).orderComplete) {
+                // make the customer leave
+                customers.get(customerCount).move();
+                if (customers.get(customerCount).body.getX() > 148) {
+                    customers.get(customerCount).body.remove();
+                    if (customerNumber != 0) {
+                        if (customerCount != customerNumber - 1) {
+                            customers.add(new Customer(new Actor()));
+                            customerCount += 1;
+                        } else {
+                            System.out.println(("End game"));
+                        }
+                }
             }
         }
     }
