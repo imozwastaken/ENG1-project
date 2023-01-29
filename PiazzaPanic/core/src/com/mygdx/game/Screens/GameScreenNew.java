@@ -439,6 +439,7 @@ public class GameScreenNew implements Screen{
                         cooks.get(selected).CookStack.remove(lettuce);
                         customers.get(customerCount).orderComplete = true;
                         hideServingScreen();
+                        cooks.get(selected).isBusy = false;
                     }
                 } else {
                     //some or all ingredients are not in the current cook's stack
@@ -462,6 +463,7 @@ public class GameScreenNew implements Screen{
                         cooks.get(selected).CookStack.remove(lettuce);
                         customers.get(customerCount).orderComplete = true;
                         hideServingScreen();
+                        cooks.get(selected).isBusy = false;
                     }
                 } else {
                     //some or all ingredients are not in the current cook's stack
