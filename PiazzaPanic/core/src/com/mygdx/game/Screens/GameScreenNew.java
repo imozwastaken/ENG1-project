@@ -37,6 +37,7 @@ import com.mygdx.game.Food.Order;
 import com.mygdx.game.Food.Salad;
 import com.mygdx.game.PiazzaPanic;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GameScreenNew implements Screen{
     PiazzaPanic game;
@@ -70,7 +71,7 @@ public class GameScreenNew implements Screen{
     ArrayList<Order> orders = new ArrayList<>();
 
     //progress bars
-    ArrayList<ProgressBar> bars;
+    HashMap<ProgressBar,Cook> bars;
 
     //stations
     ImageButton pantryClickable;
@@ -166,7 +167,7 @@ public class GameScreenNew implements Screen{
         customers.add(new Customer(new Actor()));
 
         //array of all progressbars created (used to update all of them in updateProgressBars function)
-        bars = new ArrayList<>();
+        bars = new HashMap<ProgressBar,Cook>();
 
         //pantry station
         pantryClickable = createImageClickable(32, 32);
@@ -211,7 +212,7 @@ public class GameScreenNew implements Screen{
                         }
                         if(!(selectedIngredient == null)){
                             cooks.get(selected).isBusy = true;
-                            createProgressBar(24, 86,selected);
+                            createProgressBar(24, 86,cooks.get(selected));
                             fryingClicked++;
                             //used for the flipping mechanism (the station has to be pressed twice for the patty to be prepared)
                             if((fryingClicked)%2 == 0){
@@ -226,7 +227,7 @@ public class GameScreenNew implements Screen{
                             //create message to indicate that there are no ingredients in the current cook's stack to be prepared
                             if(pattyAtFrying){
                                 cooks.get(selected).isBusy = true;
-                                createProgressBar(24, 86,selected);
+                                createProgressBar(24, 86,cooks.get(selected));
                                 fryingClicked++;
                                 cooks.get(selected).CookStack.push(cookedPatty);
                                 pattyAtFrying = false;
@@ -295,7 +296,7 @@ public class GameScreenNew implements Screen{
                         }
                         if(!(selectedIngredient == null)){
                             cooks.get(selected).isBusy = true;
-                            createProgressBar(40, 50,selected);
+                            createProgressBar(40, 50,cooks.get(selected));
                             selectedIngredient.prepare();
                             selectedIngredient.updateCurrentTexture();
                             ingredientDone = true;
@@ -505,7 +506,9 @@ public class GameScreenNew implements Screen{
         }
 
         for (int i = 0; i < cookCount; i++) {
-            cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected);
+            if(!cooks.get(i).isBusy){
+                cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected);
+            }
         }
     }
 
@@ -681,7 +684,7 @@ public class GameScreenNew implements Screen{
         burgerClickable.setPosition(10000,-1);
         saladClickable.setPosition(10000,-1);
     }
-    public void createProgressBar(float x, float y, int selectedCook){
+    public void createProgressBar(float x, float y, Cook selectedCook){
         ProgressBarStyle style = new ProgressBarStyle();
         style.background = getColoredDrawable(20, 5, Color.GREEN);
         style.knob = getColoredDrawable(0, 5, Color.WHITE);
@@ -693,18 +696,21 @@ public class GameScreenNew implements Screen{
         bar.setX(x);
         bar.setY(y);
         gameStage.addActor(bar);
-        bars.add(bar);
+        bars.put(bar, selectedCook);
     }
     private void updateProgressBars(){
-        for (ProgressBar bar : bars){
-            bar.setValue(bar.getValue()-0.05f);
-            if(bar.getValue() == 0){
-                gameStage.getActors().removeValue(bar,false);
-                //unbusy the correct cook
-                //this is incorrect
-                cooks.get(selected).isBusy = false;
+        if(!bars.isEmpty()){
+            for(ProgressBar bar : bars.keySet()){
+                bar.setValue(bar.getValue()-0.05f);
+                if(bar.getValue() == 0){
+                    gameStage.getActors().removeValue(bar,false);
+                    //unbusy the cook
+                    bars.get(bar).isBusy = false;
+                    bars.remove(bar);
+                }
             }
         }
+    
     }
     private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
 		Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
