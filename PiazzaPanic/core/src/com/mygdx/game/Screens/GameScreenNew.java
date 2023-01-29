@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.Cook;
 import com.mygdx.game.Customer;
@@ -36,6 +37,9 @@ import com.mygdx.game.Food.Ingredient;
 import com.mygdx.game.Food.Order;
 import com.mygdx.game.Food.Salad;
 import com.mygdx.game.PiazzaPanic;
+
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -51,6 +55,7 @@ public class GameScreenNew implements Screen{
     OrthogonalTiledMapRenderer renderer;
     OrthographicCamera gameCam;
 
+    // sprite handling
     Sprite alex;
     Sprite amelia;
     Sprite adam;
@@ -59,6 +64,7 @@ public class GameScreenNew implements Screen{
     Skin custSkins;
     ArrayList<Sprite> idles = new ArrayList<>();
 
+    // the
     int selected = 0;
     ArrayList<Integer> stationSelected = new ArrayList<>();
     // control the number of cooks
@@ -69,6 +75,8 @@ public class GameScreenNew implements Screen{
     // customer number determines how many customers will spawn over the course of the game
     // 0 means infinite
     private int customerNumber = 5;
+
+    Instant gameTime = Instant.now();
 
     //list of active orders
     ArrayList<Order> orders = new ArrayList<>();
@@ -518,20 +526,24 @@ public class GameScreenNew implements Screen{
     private void customerOperations(){
         // TODO make an else statement which ends the game once all 5 customers have been served
         // move the customers to the counter
-            if (!customers.get(customerCount).atCounter) {
-                customers.get(customerCount).move();
-            } else if (customers.get(customerCount).orderComplete) {
-                // make the customer leave
-                customers.get(customerCount).move();
-                if (customers.get(customerCount).body.getX() > 148) {
-                    customers.get(customerCount).body.remove();
-                    if (customerNumber != 0) {
-                        if (customerCount != customerNumber - 1) {
-                            customers.add(new Customer(new Actor()));
-                            customerCount += 1;
-                        } else {
-                            System.out.println(("End game"));
-                        }
+        if (!customers.get(customerCount).atCounter) {
+            customers.get(customerCount).move();
+        } else if (customers.get(customerCount).orderComplete) {
+            // make the customer leave
+            customers.get(customerCount).move();
+            if (customers.get(customerCount).body.getX() > 148) {
+                customers.get(customerCount).body.remove();
+                if (customerNumber != 0) {
+                    if (customerCount != customerNumber - 1) {
+                        customers.add(new Customer(new Actor()));
+                        customerCount += 1;
+                    } else {
+                        Duration timeTaken = Duration.between(gameTime, Instant.now());
+                        System.out.println(timeTaken);
+                    }
+                } else {
+                    customers.add(new Customer(new Actor()));
+                    customerCount += 1;
                 }
             }
         }
