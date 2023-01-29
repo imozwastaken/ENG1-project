@@ -17,7 +17,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -468,7 +467,7 @@ public class GameScreenNew implements Screen{
         return clickable;
     }
 
-    //Used to create an invisable clickable region
+    //Used to create an invisible clickable region
     private ImageButton createImageClickable(int width, int height){
         Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
         TextureRegion region = new TextureRegion(new Texture(pixmap));
@@ -506,7 +505,7 @@ public class GameScreenNew implements Screen{
         }
 
         for (int i = 0; i < cookCount; i++) {
-            cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody);
+            cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected, i);
         }
     }
 
@@ -545,7 +544,7 @@ public class GameScreenNew implements Screen{
             // cooks are stored in an array to make it easier to keep track of all things relating to them
             cooks.add(cook);
             gameStage.addActor(cook.CookBody);
-            stationSelected.add(MathUtils.random(0,5));
+            stationSelected.add(i);
         }
     }
     //process user input

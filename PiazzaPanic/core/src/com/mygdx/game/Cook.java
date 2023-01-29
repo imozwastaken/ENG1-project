@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -16,27 +17,30 @@ public class Cook {
         this.CookStack = new Stack<>();
     }
 
-    public void move(int index, Actor cook){
-        // method to move a cook from their current position to a station
-        //System.out.println(locations[index][0]);
-        if (cook.getX() != locations[index][0]|| cook.getY() != locations[index][1]) {
-            // calculate the difference between 2 points to move the sprite towards
-            float pathX = locations[index][0] - cook.getX();
-            float pathY = locations[index][1] - cook.getY();
-            // use Pythagoras to find the distance between current position and final position
-            float distance = (float) Math.sqrt(pathX * pathX + pathY * pathY);
-            float directionX = pathX / distance;
-            float directionY = pathY / distance;
-            // very rough speed easing to ensure the sprites don't jitter around their coordinates
-            float speed;
-            if (distance < 1) {
-                speed = 0f;
-            } else {
-                speed = 1f;
-            }
+    public void move(int index, Actor cook, ArrayList<Integer> stations, int i) {
+        for (int station : stations){
+            if (index != station){
+                // method to move a cook from their current position to a station
+                if (cook.getX() != locations[index][0] || cook.getY() != locations[index][1]) {
+                    // calculate the difference between 2 points to move the sprite towards
+                    float pathX = locations[index][0] - cook.getX();
+                    float pathY = locations[index][1] - cook.getY();
+                    // use Pythagoras to find the distance between current position and final position
+                    float distance = (float) Math.sqrt(pathX * pathX + pathY * pathY);
+                    float directionX = pathX / distance;
+                    float directionY = pathY / distance;
+                    // snap cook to final coordinates once close enough
+                    float speed;
+                    if (distance < 1) {
+                        speed = 0f;
+                    } else {
+                        speed = 1f;
+                    }
 
-            cook.setX(cook.getX() + directionX * speed);
-            cook.setY(cook.getY() + directionY * speed);
+                    cook.setX(cook.getX() + directionX * speed);
+                    cook.setY(cook.getY() + directionY * speed);
+                }
+            }
         }
     }
 
