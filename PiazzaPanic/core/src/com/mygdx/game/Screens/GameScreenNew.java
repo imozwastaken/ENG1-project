@@ -505,7 +505,7 @@ public class GameScreenNew implements Screen{
         }
 
         for (int i = 0; i < cookCount; i++) {
-            cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected, i);
+            cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected);
         }
     }
 

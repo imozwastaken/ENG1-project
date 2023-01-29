@@ -17,7 +17,7 @@ public class Cook {
         this.CookStack = new Stack<>();
     }
 
-    public void move(int index, Actor cook, ArrayList<Integer> stations, int i) {
+    public void move(int index, Actor cook, ArrayList<Integer> stations) {
         for (int station : stations){
             if (index != station){
                 // method to move a cook from their current position to a station
