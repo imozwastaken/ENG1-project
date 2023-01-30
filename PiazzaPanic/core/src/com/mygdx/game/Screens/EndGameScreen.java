@@ -114,12 +114,12 @@ public class EndGameScreen implements Screen{
         screenStage.getViewport().apply();
 
         if (restartBtn.isPressed()){
-            game.setScreen(new MainMenuScreen(game));
+            game.setScreen(new GameScreen(game,view));
         }
 
         if (exitBtn.isPressed()){
             dispose();
-            Gdx.app.exit();
+            game.setScreen(new MainMenuScreen(game));
         }
         
         screenStage.draw();
