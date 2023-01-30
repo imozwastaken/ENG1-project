@@ -155,10 +155,9 @@ public class EndGameScreen implements Screen{
     }
 
     private String humanReadableFormat(Duration duration) {
-        return duration.toString()
-                .substring(2)
-                .replaceAll("(\\d[HMS])(?!$)", "$1 ")
-                .toLowerCase();
+        return (String.format("%sm %ss", 
+                duration.toMinutesPart(), 
+                duration.toSecondsPart()));
     }
     
 }
