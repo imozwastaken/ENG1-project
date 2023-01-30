@@ -43,7 +43,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GameScreenNew implements Screen{
+public class GameScreen implements Screen{
     PiazzaPanic game;
     
     FitViewport view;
@@ -136,7 +136,7 @@ public class GameScreenNew implements Screen{
     Boolean showServingScreen = false;
 
 
-    public GameScreenNew(PiazzaPanic game, FitViewport port){
+    public GameScreen(PiazzaPanic game, FitViewport port){
         // initialise the game
         this.game = game;
         this.view = port;
@@ -541,7 +541,7 @@ public class GameScreenNew implements Screen{
                         customerCount += 1;
                     } else {
                         Duration timeTaken = Duration.between(gameTime, Instant.now());
-                        System.out.println(timeTaken);
+                        game.setScreen(new EndGameScreen(game, timeTaken));
                     }
                 } else {
                     customers.add(new Customer(new Actor()));

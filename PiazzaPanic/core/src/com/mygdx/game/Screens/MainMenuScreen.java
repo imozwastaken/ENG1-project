@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.PiazzaPanic;
 
 
-public class MainMenuNew implements Screen{
+public class MainMenuScreen implements Screen{
     PiazzaPanic game;
     Texture logo;
     Texture playBtnTex;
@@ -54,7 +54,7 @@ public class MainMenuNew implements Screen{
     TextureRegionDrawable infoBtnDrawableHover;
     ImageButton infoBtnHover;
 
-    public MainMenuNew(PiazzaPanic game){
+    public MainMenuScreen(PiazzaPanic game){
         this.game = game;
         
     }
@@ -165,7 +165,7 @@ public class MainMenuNew implements Screen{
         infoBtn.setPosition(game.GAME_WIDTH-infoBtn.getWidth(),game.GAME_HEIGHT-infoBtn.getHeight());
 
         if (playBtn.isPressed()){
-            game.setScreen(new GameScreenNew(game,view));
+            game.setScreen(new GameScreen(game,view));
         }
 
         if(exitBtn.isPressed()){
@@ -174,7 +174,7 @@ public class MainMenuNew implements Screen{
         }
 
         if(infoBtn.isPressed()){
-            game.setScreen(new CreditsScreenNew(game));
+            game.setScreen(new CreditsScreen(game));
         }
 
         Gdx.input.setInputProcessor(gameStage);

@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.PiazzaPanic;
 
-public class CreditsScreenNew implements Screen{
+public class CreditsScreen implements Screen{
     PiazzaPanic game;
     Texture credits;
     Texture backBtnTex;
@@ -29,7 +29,7 @@ public class CreditsScreenNew implements Screen{
     TextureRegion backBtnRegionHover;
     TextureRegionDrawable backBtnDrawableHover;
 
-    public CreditsScreenNew(PiazzaPanic game){
+    public CreditsScreen(PiazzaPanic game){
         this.game = game;
     }
 
@@ -85,7 +85,7 @@ public class CreditsScreenNew implements Screen{
         backBtn.setPosition(0,game.GAME_HEIGHT-backBtn.getHeight());
 
         if (backBtn.isPressed()){
-            game.setScreen(new MainMenuNew(game));
+            game.setScreen(new MainMenuScreen(game));
         }
 
         Gdx.input.setInputProcessor(gameStage);
