@@ -18,6 +18,15 @@ Once all the ingredients have been prepped, the cook must be moved to the servin
 Here you can give a customer their order only if the selected cook is carrying all of the correct ingredients.
 Click on the dish you wish to serve and the customer will automatically take it and leave!
 
+KEYBINDS:
+1 - Select cook 1.
+2 - Select cook 2.
+3 - Select cook 3 (non-functional).
+Escape - Return to main menu.
+DEBUG KEYS:
+Enter - Skip current customer
+M - Prepare all held ingredients
+
 Thanks for reading!
 Oscar
 Generic Games

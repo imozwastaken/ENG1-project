@@ -171,6 +171,7 @@ public class GameScreen implements Screen{
         alienJazz.setLooping(true);
         alienJazz.play();
 
+        // create the instances of the cooks and first customer.
         cooks = new Array<Cook>();
         spawnCooks();
         customers = new Array<Customer>();
@@ -590,6 +591,9 @@ public class GameScreen implements Screen{
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)){
             // debug option to mark the current customers order as complete, moving them on
             customers.get(customerCount).orderComplete = true;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+            game.setScreen(new MainMenuScreen(game));
         }
         if (Gdx.input.isKeyPressed(Input.Keys.M)){
             // used for debugging
