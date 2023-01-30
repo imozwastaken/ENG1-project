@@ -68,8 +68,8 @@ public class CreditsScreen implements Screen{
 
         //listen for hover
         backBtn.addListener(new ClickListener(){
-            ImageButton backNormal = new ImageButton(backBtnDrawable);
-            ImageButton backHover = new ImageButton(backBtnDrawableHover);
+            final ImageButton backNormal = new ImageButton(backBtnDrawable);
+            final ImageButton backHover = new ImageButton(backBtnDrawableHover);
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 backBtn.setStyle(backHover.getStyle());

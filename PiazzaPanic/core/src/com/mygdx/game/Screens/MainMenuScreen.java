@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.PiazzaPanic;
 
 
-public class MainMenuScreen implements Screen{
+public class MainMenuScreen implements Screen {
     PiazzaPanic game;
     Texture logo;
     Texture playBtnTex;
@@ -24,11 +24,11 @@ public class MainMenuScreen implements Screen{
     Texture exitBtnTexHover;
     Texture infoBtnTex;
     Texture infoBtnTexHover;
-    
+
     FitViewport view;
     Stage gameStage;
 
-    //Image buttons for when not hovering on the button
+    // image buttons for when not hovering on the button
     TextureRegion playBtnRegion;
     TextureRegionDrawable playBtnDrawable;
     ImageButton playBtn;
@@ -41,7 +41,7 @@ public class MainMenuScreen implements Screen{
     TextureRegionDrawable infoBtnDrawable;
     ImageButton infoBtn;
 
-    //Image buttons for when hovering on the button
+    // image buttons for when hovering on the button
     TextureRegion playBtnRegionHover;
     TextureRegionDrawable playBtnDrawableHover;
     ImageButton playBtnHover;
@@ -54,21 +54,21 @@ public class MainMenuScreen implements Screen{
     TextureRegionDrawable infoBtnDrawableHover;
     ImageButton infoBtnHover;
 
-    public MainMenuScreen(PiazzaPanic game){
+    public MainMenuScreen(PiazzaPanic game) {
         this.game = game;
-        
+
     }
 
     @Override
     public void show() {
         logo = new Texture("Piazza_Panic_Logo.png");
 
-        //Textures for normal buttons
+        // textures for normal buttons
         playBtnTex = new Texture("playBtn.png");
         exitBtnTex = new Texture("exitBtn.png");
         infoBtnTex = new Texture("infoBtn.png");
 
-        //Textures for hovered buttons
+        // textures for hovered buttons
         infoBtnTexHover = new Texture("infoBtn2.png");
         playBtnTexHover = new Texture("playBtn2.png");
         exitBtnTexHover = new Texture("exitBtn2.png");
@@ -77,7 +77,7 @@ public class MainMenuScreen implements Screen{
         view.getCamera().position.set(game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, 1f);
         gameStage = new Stage(view, game.batch);
 
-        //normal buttons
+        // normal buttons
         playBtnRegion = new TextureRegion(playBtnTex);
         playBtnDrawable = new TextureRegionDrawable(playBtnRegion);
         playBtn = new ImageButton(playBtnDrawable);
@@ -89,8 +89,8 @@ public class MainMenuScreen implements Screen{
         infoBtnRegion = new TextureRegion(infoBtnTex);
         infoBtnDrawable = new TextureRegionDrawable(infoBtnRegion);
         infoBtn = new ImageButton(infoBtnDrawable);
-        
-        //hovered buttons
+
+        // hovered buttons
         playBtnRegionHover = new TextureRegion(playBtnTexHover);
         playBtnDrawableHover = new TextureRegionDrawable(playBtnRegionHover);
 
@@ -100,40 +100,46 @@ public class MainMenuScreen implements Screen{
         infoBtnRegionHover = new TextureRegion(infoBtnTexHover);
         infoBtnDrawableHover = new TextureRegionDrawable(infoBtnRegionHover);
 
-        //Listerners for hovering on the buttons
-        playBtn.addListener(new ClickListener(){
-            ImageButton playNormal = new ImageButton(playBtnDrawable);
-            ImageButton playHover = new ImageButton(playBtnDrawableHover);
+        // listeners for hovering on the buttons
+        playBtn.addListener(new ClickListener() {
+            final ImageButton playNormal = new ImageButton(playBtnDrawable);
+            final ImageButton playHover = new ImageButton(playBtnDrawableHover);
+
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 playBtn.setStyle(playHover.getStyle());
             }
+
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 playBtn.setStyle(playNormal.getStyle());
             }
         });
 
-        exitBtn.addListener(new ClickListener(){
-            ImageButton exitNormal = new ImageButton(exitBtnDrawable);
-            ImageButton exitHover = new ImageButton(exitBtnDrawableHover);
+        exitBtn.addListener(new ClickListener() {
+            final ImageButton exitNormal = new ImageButton(exitBtnDrawable);
+            final ImageButton exitHover = new ImageButton(exitBtnDrawableHover);
+
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 exitBtn.setStyle(exitHover.getStyle());
             }
+
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 exitBtn.setStyle(exitNormal.getStyle());
             }
         });
 
-        infoBtn.addListener(new ClickListener(){
-            ImageButton infoNormal = new ImageButton(infoBtnDrawable);
-            ImageButton infoHover = new ImageButton(infoBtnDrawableHover);
+        infoBtn.addListener(new ClickListener() {
+            final ImageButton infoNormal = new ImageButton(infoBtnDrawable);
+            final ImageButton infoHover = new ImageButton(infoBtnDrawableHover);
+
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 infoBtn.setStyle(infoHover.getStyle());
             }
+
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 infoBtn.setStyle(infoNormal.getStyle());
@@ -149,31 +155,31 @@ public class MainMenuScreen implements Screen{
         view.apply();
 
         game.batch.setProjectionMatrix(view.getCamera().combined);
-		game.batch.begin();
-		game.batch.draw(logo, ((game.GAME_WIDTH/2) - (logo.getWidth()/2)), 250);
-		game.batch.end();
+        game.batch.begin();
+        game.batch.draw(logo, ((game.GAME_WIDTH / 2) - (logo.getWidth() / 2)), 250);
+        game.batch.end();
 
         gameStage.getViewport().apply();
-        
+
         gameStage.addActor(playBtn);
-        playBtn.setPosition((game.GAME_WIDTH/2) - (playBtn.getWidth()/2),125);
+        playBtn.setPosition((game.GAME_WIDTH / 2) - (playBtn.getWidth() / 2), 125);
 
         gameStage.addActor(exitBtn);
-        exitBtn.setPosition((game.GAME_WIDTH/2) - (exitBtn.getWidth()/2),35);
+        exitBtn.setPosition((game.GAME_WIDTH / 2) - (exitBtn.getWidth() / 2), 35);
 
         gameStage.addActor(infoBtn);
-        infoBtn.setPosition(game.GAME_WIDTH-infoBtn.getWidth(),game.GAME_HEIGHT-infoBtn.getHeight());
+        infoBtn.setPosition(game.GAME_WIDTH - infoBtn.getWidth(), game.GAME_HEIGHT - infoBtn.getHeight());
 
-        if (playBtn.isPressed()){
-            game.setScreen(new GameScreen(game,view));
+        if (playBtn.isPressed()) {
+            game.setScreen(new GameScreen(game, view));
         }
 
-        if(exitBtn.isPressed()){
+        if (exitBtn.isPressed()) {
             dispose();
             Gdx.app.exit();
         }
 
-        if(infoBtn.isPressed()){
+        if (infoBtn.isPressed()) {
             game.setScreen(new CreditsScreen(game));
         }
 
@@ -189,19 +195,19 @@ public class MainMenuScreen implements Screen{
     @Override
     public void pause() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void resume() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void hide() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -209,5 +215,5 @@ public class MainMenuScreen implements Screen{
         logo.dispose();
         gameStage.dispose();
     }
-    
+
 }

@@ -1,7 +1,5 @@
 package com.mygdx.game.Screens;
 
-import java.time.Duration;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -20,7 +18,11 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.PiazzaPanic;
 
-public class EndGameScreen implements Screen{
+import java.time.Duration;
+
+// screen which displays after the game finishes
+
+public class EndGameScreen implements Screen {
     FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Odin Rounded - Bold.otf"));
     FreeTypeFontParameter parameter = new FreeTypeFontParameter();
     BitmapFont font;
@@ -40,7 +42,8 @@ public class EndGameScreen implements Screen{
     TextureRegionDrawable restartBtnDrawableHover;
     Duration levelTime;
 
-    public EndGameScreen(PiazzaPanic game,Duration levelCompletedIn){
+    public EndGameScreen(PiazzaPanic game, Duration levelCompletedIn) {
+        // generate the styling information for the data given to this screen
         this.levelTime = levelCompletedIn;
         this.game = game;
         parameter.size = 48;
@@ -50,10 +53,12 @@ public class EndGameScreen implements Screen{
 
     @Override
     public void show() {
+        // size information
         view = new FitViewport(game.GAME_WIDTH, game.GAME_HEIGHT);
         view.getCamera().position.set(game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, 1f);
         screenStage = new Stage(view, game.batch);
 
+        // draw buttons
         exitBtnTex = new Texture("exitBtn.png");
         exitBtnTexHover = new Texture("exitBtn2.png");
         restartBtnTex = new Texture("RestartBtn.png");
@@ -62,13 +67,15 @@ public class EndGameScreen implements Screen{
         exitBtnDrawable = new TextureRegionDrawable(new TextureRegion(exitBtnTex));
         exitBtnDrawableHover = new TextureRegionDrawable(new TextureRegion(exitBtnTexHover));
         exitBtn = new ImageButton(exitBtnDrawable);
-        exitBtn.addListener(new ClickListener(){
-            ImageButton normal = new ImageButton(exitBtnDrawable);
-            ImageButton hover = new ImageButton(exitBtnDrawableHover);
+        exitBtn.addListener(new ClickListener() {
+            final ImageButton normal = new ImageButton(exitBtnDrawable);
+            final ImageButton hover = new ImageButton(exitBtnDrawableHover);
+
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 exitBtn.setStyle(hover.getStyle());
             }
+
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 exitBtn.setStyle(normal.getStyle());
@@ -78,13 +85,15 @@ public class EndGameScreen implements Screen{
         restartBtnDrawable = new TextureRegionDrawable(new TextureRegion(restartBtnTex));
         restartBtnDrawableHover = new TextureRegionDrawable(new TextureRegion(restartBtnTexHover));
         restartBtn = new ImageButton(restartBtnDrawable);
-        restartBtn.addListener(new ClickListener(){
-            ImageButton normal = new ImageButton(restartBtnDrawable);
-            ImageButton hover = new ImageButton(restartBtnDrawableHover);
+        restartBtn.addListener(new ClickListener() {
+            final ImageButton normal = new ImageButton(restartBtnDrawable);
+            final ImageButton hover = new ImageButton(restartBtnDrawableHover);
+
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 restartBtn.setStyle(hover.getStyle());
             }
+
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 restartBtn.setStyle(normal.getStyle());
@@ -92,9 +101,9 @@ public class EndGameScreen implements Screen{
         });
 
         screenStage.addActor(exitBtn);
-        exitBtn.setPosition(game.GAME_WIDTH/2 - exitBtn.getWidth()/2,game.GAME_HEIGHT/2-exitBtn.getHeight()/2-250);
+        exitBtn.setPosition(game.GAME_WIDTH / 2 - exitBtn.getWidth() / 2, game.GAME_HEIGHT / 2 - exitBtn.getHeight() / 2 - 250);
         screenStage.addActor(restartBtn);
-        restartBtn.setPosition(game.GAME_WIDTH/2 - restartBtn.getWidth()/2,game.GAME_HEIGHT/2-restartBtn.getHeight()/2-100);
+        restartBtn.setPosition(game.GAME_WIDTH / 2 - restartBtn.getWidth() / 2, game.GAME_HEIGHT / 2 - restartBtn.getHeight() / 2 - 100);
     }
 
     @Override
@@ -106,22 +115,22 @@ public class EndGameScreen implements Screen{
         Gdx.input.setInputProcessor(screenStage);
 
         game.batch.setProjectionMatrix(view.getCamera().combined);
-		game.batch.begin();
-		game.batch.draw(levelCompleteFrame, ((game.GAME_WIDTH/2) - (levelCompleteFrame.getWidth()/2)),10);
-        font.draw(game.batch,"COMPLETED IN "+humanReadableFormat(levelTime),430,480);
-		game.batch.end();
+        game.batch.begin();
+        game.batch.draw(levelCompleteFrame, ((game.GAME_WIDTH / 2) - (levelCompleteFrame.getWidth() / 2)), 10);
+        font.draw(game.batch, "COMPLETED IN " + humanReadableFormat(levelTime), 430, 480);
+        game.batch.end();
 
         screenStage.getViewport().apply();
 
-        if (restartBtn.isPressed()){
-            game.setScreen(new GameScreen(game,view));
+        if (restartBtn.isPressed()) {
+            game.setScreen(new GameScreen(game, view));
         }
 
-        if (exitBtn.isPressed()){
+        if (exitBtn.isPressed()) {
             dispose();
             game.setScreen(new MainMenuScreen(game));
         }
-        
+
         screenStage.draw();
     }
 
@@ -133,19 +142,19 @@ public class EndGameScreen implements Screen{
     @Override
     public void pause() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void resume() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void hide() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -155,10 +164,11 @@ public class EndGameScreen implements Screen{
     }
 
     private String humanReadableFormat(Duration duration) {
-        return (String.format("%sm %ss", 
-                duration.toMinutesPart(), 
+        // format the time information
+        return (String.format("%sm %ss",
+                duration.toMinutesPart(),
                 duration.toSecondsPart()));
     }
-    
+
 }
 

@@ -1,19 +1,19 @@
 package com.mygdx.game.Food;
 
+import com.badlogic.gdx.graphics.Texture;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
-import com.badlogic.gdx.graphics.Texture;
-
-//Salad recipe made up of Ingredients
-public class Salad implements Recipe{
+// salad recipe made up of Ingredients
+public class Salad implements Recipe {
     ArrayList<Ingredient> recipe;
     Texture saladTex;
     Texture speechBubble;
 
-    public Salad(){
+    public Salad() {
         this.recipe = new ArrayList<Ingredient>();
-        
+
         Ingredient lettuce = new Ingredient("lettuce", new Texture("lettuce.png"), new Texture("prepdLettuce.png"));
         lettuce.prepare();
         recipe.add(lettuce);
@@ -24,36 +24,37 @@ public class Salad implements Recipe{
         this.saladTex = new Texture("salad.png");
         this.speechBubble = new Texture("orderSaladBubble.png");
     }
+
     @Override
     public ArrayList<Ingredient> getRecipe() {
         return recipe;
     }
+
     @Override
     public Texture getTexture() {
         return saladTex;
     }
+
     @Override
     public Texture getSpeechBubbleTexture() {
         return speechBubble;
     }
+
     public Boolean has(Stack<Ingredient> ingredients) {
         boolean foundTomato = false;
         boolean foundLettuce = false;
-        Ingredient tomato = new Ingredient("tomato", null,null);
+        Ingredient tomato = new Ingredient("tomato", null, null);
         tomato.prepare();
-        Ingredient lettuce = new Ingredient("lettuce", null,null);
+        Ingredient lettuce = new Ingredient("lettuce", null, null);
         lettuce.prepare();
-        for(Ingredient ingredient : ingredients){
-            if(ingredient.equals(tomato)){
+        for (Ingredient ingredient : ingredients) {
+            if (ingredient.equals(tomato)) {
                 foundTomato = true;
             }
-            if(ingredient.equals(lettuce)){
+            if (ingredient.equals(lettuce)) {
                 foundLettuce = true;
             }
         }
-        if(foundTomato&&foundLettuce){
-            return true;
-        }
-        return false;
+        return foundTomato && foundLettuce;
     }
 }
