@@ -63,7 +63,7 @@ public class GameScreen implements Screen{
     Skin custSkins;
     ArrayList<Sprite> idles = new ArrayList<>();
 
-    // the
+    // cook and customer control variables
     int selected = 0;
     ArrayList<Integer> stationSelected = new ArrayList<>();
     // control the number of cooks
@@ -552,7 +552,6 @@ public class GameScreen implements Screen{
     // generate the cooks
     private void spawnCooks(){
         for (int i = 0; i < cookCount; i++){
-            System.out.println(stationSelected);
             Cook cook = new Cook(new Actor());
             cook.CookBody.setWidth(16);
             cook.CookBody.setHeight(23);
@@ -564,6 +563,7 @@ public class GameScreen implements Screen{
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     System.out.println("cook clicked!!");
+                    // use to develop click selection for selecting cooks
                 }
             });
             // cooks are stored in an array to make it easier to keep track of all things relating to them
