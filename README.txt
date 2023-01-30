@@ -27,6 +27,10 @@ DEBUG KEYS:
 Enter - Skip current customer
 M - Prepare all held ingredients
 
+NOTES:
+We have included two folders in this repository containing the specific spritesheets with the animations for the cooks and customers.
+If you wish to continue using the same assets that we have used, you can use the ones included here for easier access.
+
 Thanks for reading!
 Oscar
 Generic Games
