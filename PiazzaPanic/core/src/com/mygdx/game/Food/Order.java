@@ -6,6 +6,8 @@ public class Order {
     Texture orderTex;
     Recipe orderRecipe;
     String name;
+    //default order time, 40 seconds
+    public Integer orderTime = 40;
     
     public Order(String name,Texture orderTexture, Recipe orderRecipe){
         this.name = name;
@@ -23,5 +25,13 @@ public class Order {
     
     public String getName(){
         return this.name;
+    }
+
+    public Integer getOrderTime(){
+        return this.orderTime;
+    }
+
+    public void setOrderTime(Integer orderTime){
+        this.orderTime = orderTime;
     }
 }

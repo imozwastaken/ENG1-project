@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -37,17 +38,13 @@ import com.mygdx.game.Food.Ingredient;
 import com.mygdx.game.Food.Order;
 import com.mygdx.game.Food.Salad;
 import com.mygdx.game.PiazzaPanic;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GameScreen implements Screen {
-    private final Array<Cook> cooks;
-    private final Array<Customer> customers;
-    // customer number determines how many customers will spawn over the course of the game
-    // 0 means infinite
+    
     private final int customerNumber = 5;
     PiazzaPanic game;
     FitViewport view;
@@ -57,6 +54,14 @@ public class GameScreen implements Screen {
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
     OrthographicCamera gameCam;
+    //Start the game with 3 reputation points
+    int Rep = 3;
+    Texture RepLabel = new Texture("REP.png");
+    Texture RepPoint = new Texture("REPHeart.png");
+    // customer number determines how many customers will spawn over the course of the game
+    // 0 means infinite
+    private final Array<Cook> cooks;
+    private final Array<Customer> customers;
     // sprite handling
     Sprite alex;
     Sprite amelia;
@@ -74,6 +79,10 @@ public class GameScreen implements Screen {
     Instant gameTime = Instant.now();
     // list of active orders
     ArrayList<Order> orders = new ArrayList<>();
+    //used to count how much time has passed after an order is placed
+    float timeCount = 0;
+    //order timer font
+    BitmapFont font = new BitmapFont();
     // progress bars
     HashMap<ProgressBar, Cook> bars;
     // music
@@ -140,7 +149,9 @@ public class GameScreen implements Screen {
         view.setCamera(gameCam);
         view.setWorldSize(192, 144);
         gameCam.position.set(view.getWorldWidth() / 2, view.getWorldHeight() / 2, 0);
-
+        //set order timer font color
+        font.setColor(Color.BLACK);
+        font.getData().setScale(0.5f);
         // sprite information from the texture atlas
         TextureAtlas atlasIdle = new TextureAtlas(Gdx.files.internal("charIdle.txt"));
         TextureAtlas customersLeft = new TextureAtlas(Gdx.files.internal("customersLeft.txt"));
@@ -157,7 +168,7 @@ public class GameScreen implements Screen {
         idles.add(amelia);
 
         // music control
-        // music composed by Ridley Coyte, big up my man
+        // music composed by Ridley Coyte
         alienJazz.setLooping(true);
         alienJazz.play();
 
@@ -507,7 +518,8 @@ public class GameScreen implements Screen {
         updateBatch();
         showCookStack();
         showStationScreens();
-        showOrders();
+        showOrders(delta);
+        showRepPoints();
         customerOperations();
         processInput();
         gameStage.draw();
@@ -524,7 +536,16 @@ public class GameScreen implements Screen {
             }
         }
     }
-
+    private void showRepPoints(){
+        game.batch.begin();
+        int x = 146;
+        game.batch.draw(RepLabel,130,134);
+        for(int i = 0; i<Rep; i++){
+            game.batch.draw(RepPoint,x,135);
+            x += 6;
+        }
+        game.batch.end();
+    }
     private void customerOperations() {
         // move the customers to the counter
         if (!customers.get(customerCount).atCounter) {
@@ -544,7 +565,7 @@ public class GameScreen implements Screen {
                         // end game by taking the time at the game end and going to the time screen
                         Duration timeTaken = Duration.between(gameTime, Instant.now());
                         alienJazz.stop();
-                        game.setScreen(new EndGameScreen(game, timeTaken));
+                        game.setScreen(new EndGameScreen(game, timeTaken,Rep));
                     }
                 } else {
                     // TODO endless mode
@@ -564,14 +585,6 @@ public class GameScreen implements Screen {
             // scale information
             cook.CookBody.setScaleX(game.GAME_WIDTH / 16f);
             cook.CookBody.setScaleY(game.GAME_HEIGHT / 23f);
-            // click detection for cooks
-            cook.CookBody.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    System.out.println("cook clicked!!");
-                    // use to develop click selection for selecting cooks
-                }
-            });
             // cooks are stored in an array to make it easier to keep track of all things relating to them
             // I love arrays so much
             cooks.add(cook);
@@ -633,15 +646,36 @@ public class GameScreen implements Screen {
         game.batch.end();
     }
 
-    private void showOrders() {
+    private void showOrders(float dt) {
         // displays the orders at the top of the screen
         int x = 1;
         int y = 112;
         for (Customer customer : customers) {
             if ((customer.atCounter) && (!customer.orderComplete)) {
+                timeCount += dt;
+                //one second has passed
+                if(timeCount >= 1){
+                    //update order timer
+                    if(customer.customerOrder.getOrderTime() >= 0){
+                        customer.customerOrder.orderTime --;
+                    }
+                    timeCount = 0;
+                    if(customer.customerOrder.getOrderTime()==0){
+                        //Uncomment line below if you want the customer to leave after the order timer is gone
+                        //customer.orderComplete = true;
+                        Rep--;
+                    }
+                }
                 game.batch.begin();
                 game.batch.draw(customer.customerOrder.getOrderTexture(), x, y);
                 game.batch.draw(customer.customerOrder.getRecipe().getSpeechBubbleTexture(), customer.body.getX() - 10, customer.body.getY() + 17);
+                //order timer sets to 0 when it reaches -1
+                if(customer.customerOrder.getOrderTime()>-1){
+                    font.draw(game.batch, Integer.toString(customer.customerOrder.getOrderTime()), x+30, y+10);
+                } else {
+                    font.draw(game.batch, "0", x+30, y+10);
+                }
+                
                 game.batch.end();
                 // increase x value if there is more than one current order
                 x += 41;

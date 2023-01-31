@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.PiazzaPanic;
-
 import java.time.Duration;
 
 // screen which displays after the game finishes
@@ -40,15 +39,17 @@ public class EndGameScreen implements Screen {
     TextureRegionDrawable exitBtnDrawableHover;
     TextureRegionDrawable restartBtnDrawable;
     TextureRegionDrawable restartBtnDrawableHover;
-    Duration levelTime;
+    int Rep;
+    String levelTimeString;
 
-    public EndGameScreen(PiazzaPanic game, Duration levelCompletedIn) {
+    public EndGameScreen(PiazzaPanic game, Duration levelCompletedIn, int RepPoints) {
         // generate the styling information for the data given to this screen
-        this.levelTime = levelCompletedIn;
         this.game = game;
         parameter.size = 48;
         parameter.color = Color.BLACK;
         font = generator.generateFont(parameter);
+        levelTimeString = humanReadableFormat(levelCompletedIn);
+        this.Rep = RepPoints;
     }
 
     @Override
@@ -117,7 +118,8 @@ public class EndGameScreen implements Screen {
         game.batch.setProjectionMatrix(view.getCamera().combined);
         game.batch.begin();
         game.batch.draw(levelCompleteFrame, ((game.GAME_WIDTH / 2) - (levelCompleteFrame.getWidth() / 2)), 10);
-        font.draw(game.batch, "COMPLETED IN " + humanReadableFormat(levelTime), 430, 480);
+        font.draw(game.batch, "COMPLETED IN " + levelTimeString, 420, 480);
+        font.draw(game.batch, "REPUTATION:" + Rep, 420, 425);
         game.batch.end();
 
         screenStage.getViewport().apply();
