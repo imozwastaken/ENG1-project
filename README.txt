@@ -17,7 +17,7 @@ Once the bar dissapears, the cook can now move again.
 Once all the ingredients have been prepped, the cook must be moved to the serving bench on the right side of the kitchen.
 Here you can give a customer their order only if the selected cook is carrying all of the correct ingredients.
 Click on the dish you wish to serve and the customer will automatically take it and leave!
-If the countdown of the order finishes the player loses a reputation point, however the customer still waits to ber served.
+If the countdown of the order finishes the player loses a reputation point, however the customer still waits to be served.
 
 KEYBINDS:
 1 - Select cook 1.
