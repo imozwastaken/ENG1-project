@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Food.Ingredient;
 
@@ -14,13 +15,22 @@ public class Cook {
     public Actor CookBody;
     public float[][] locations = {{0, 64}, {32, 64}, {64, 64}, {0, 32}, {48, 28}, {80, 48}};
     public boolean isBusy = false;
-
+    private float speed = 1;
+    private float x;
+    private float y;
+    public boolean moveable;
     public Cook(Actor skin) {
         this.CookBody = skin;
+        this.speed = 50f;
         this.CookStack = new Stack<>();
+        this.moveable = false;
     }
 
     public void move(int index, Actor cook, ArrayList<Integer> stations) {
+
+        if (moveable) {
+            return;
+        }
         for (int station : stations) {
             if (index != station) {
                 // method to move a cook from their current position to a station
@@ -40,10 +50,42 @@ public class Cook {
                         speed = 50f;
                     }
 
-                    cook.setX(cook.getX() + directionX * (speed * Gdx.graphics.getDeltaTime()));
-                    cook.setY(cook.getY() + directionY * (speed * Gdx.graphics.getDeltaTime()));
+                    //cook.setX(cook.getX() + directionX * (speed * Gdx.graphics.getDeltaTime()));
+                    //cook.setY(cook.getY() + directionY * (speed * Gdx.graphics.getDeltaTime()));
+
                 }
+
             }
         }
     }
+
+    public void doUserInput(Cook cook) {
+        //if (!moveable) {
+        //    return;
+        //}
+        x = cook.CookBody.getX();
+        y = cook.CookBody.getY();
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            x -= speed * Gdx.graphics.getDeltaTime();
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            x += speed* Gdx.graphics.getDeltaTime();
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            y += speed* Gdx.graphics.getDeltaTime();
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            y -= speed* Gdx.graphics.getDeltaTime();
+        }
+        if (!cook.isBusy) {
+            cook.CookBody.setX(x);
+            cook.CookBody.setY(y);
+        }
+
+    }
+
+    public void setMoveable(boolean val) {
+        moveable = val;
+    }
+
 }

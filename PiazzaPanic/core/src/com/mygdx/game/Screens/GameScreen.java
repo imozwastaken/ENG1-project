@@ -535,7 +535,11 @@ public class GameScreen implements Screen {
                 cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected);
             }
         }
+
+        cooks.get(selected).doUserInput(cooks.get(selected));
+
     }
+
     private void showRepPoints(){
         game.batch.begin();
         int x = 146;
