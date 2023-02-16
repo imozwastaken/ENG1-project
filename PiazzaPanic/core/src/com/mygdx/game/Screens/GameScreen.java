@@ -31,14 +31,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.mygdx.game.Cook;
-import com.mygdx.game.Customer;
+import com.mygdx.game.*;
 import com.mygdx.game.Food.Burger;
 import com.mygdx.game.Food.Ingredient;
 import com.mygdx.game.Food.Order;
 import com.mygdx.game.Food.Salad;
-import com.mygdx.game.Money;
-import com.mygdx.game.PiazzaPanic;
+import com.mygdx.game.Powerups.Powerups;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -51,6 +50,7 @@ public class GameScreen implements Screen {
     FitViewport view;
     Stage gameStage;
     Money money;
+    Powerups powerups;
     // map and camera stuff
     TmxMapLoader mapLoader;
     TiledMap map;
@@ -444,12 +444,15 @@ public class GameScreen implements Screen {
                         cooks.get(selected).CookStack.remove(patty);
                         cooks.get(selected).CookStack.remove(lettuce);
                         customers.get(customerCount).orderComplete = true;
+                        money.addMoney(100);
+
                         hideServingScreen();
                         cooks.get(selected).isBusy = false;
                     }
                 } else {
                     // some or all ingredients are not in the current cook's stack
                 }
+
             }
         });
 
@@ -468,6 +471,8 @@ public class GameScreen implements Screen {
                         cooks.get(selected).CookStack.remove(tomato);
                         cooks.get(selected).CookStack.remove(lettuce);
                         customers.get(customerCount).orderComplete = true;
+                        money.addMoney(100);
+
                         hideServingScreen();
                         cooks.get(selected).isBusy = false;
                     }
@@ -478,6 +483,7 @@ public class GameScreen implements Screen {
         });
         this.endless = isEndless;
         money = new Money(game);
+        powerups = new Powerups(game);
     }
 
     private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
@@ -530,6 +536,8 @@ public class GameScreen implements Screen {
         showRepPoints();
         customerOperations();
         processInput();
+        powerups.render();
+        powerups.checkPowerups();
         gameStage.draw();
 
         if (pattyAtFrying) {
@@ -540,7 +548,7 @@ public class GameScreen implements Screen {
 
         for (int i = 0; i < cookCount; i++) {
             if (!cooks.get(i).isBusy) {
-                cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected);
+                cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected, powerups);
             }
         }
         money.render();
@@ -618,6 +626,9 @@ public class GameScreen implements Screen {
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
             selected = 1;
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.P)) {
+            powerups.setSpeedMultiplier(2);
+        }
         // TODO add statements for adding more cooks here
         if (cookCount > 2 && Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
             selected = 2;
@@ -630,6 +641,8 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             // debug option to mark the current customers order as complete, moving them on
             customers.get(customerCount).orderComplete = true;
+            money.addMoney(100);
+
         }
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             // return to main menu

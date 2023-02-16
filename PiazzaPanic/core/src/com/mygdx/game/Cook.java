@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Food.Ingredient;
+import com.mygdx.game.Powerups.Powerups;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -15,7 +16,7 @@ public class Cook {
     public Actor CookBody;
     public float[][] locations = {{0, 64}, {32, 64}, {64, 64}, {0, 32}, {48, 28}, {80, 48}};
     public boolean isBusy = false;
-    private float speed = 1.0;
+    private float speed = 1f;
     private float x;
     private float y;
     public boolean moveable;
@@ -26,7 +27,7 @@ public class Cook {
         this.moveable = false;
     }
 
-    public void move(int index, Actor cook, ArrayList<Integer> stations) {
+    public void move(int index, Actor cook, ArrayList<Integer> stations, Powerups powerups) {
 
         if (moveable) {
             return;
@@ -45,9 +46,9 @@ public class Cook {
                     // stop cook from moving once close enough to the station
                     float speed;
                     if (distance < 1) {
-                        speed = 0f;
+                        speed = 0f * powerups.getSpeedMultiplier();
                     } else {
-                        speed = 50f;
+                        speed = 50f * powerups.getSpeedMultiplier();
                     }
 
                     cook.setX(cook.getX() + directionX * (speed * Gdx.graphics.getDeltaTime()));

@@ -12,12 +12,6 @@ public class Money {
 
 
 
-    /*
-    0.52156866
-0.73333335
-0.39607844
-1.0
-     */
     public Money(PiazzaPanic _game) {
         this.font = new BitmapFont();
         font.setColor(new Color(0.52156866f,0.73333335f, 0.39607844f, 1.0f));
@@ -28,12 +22,11 @@ public class Money {
     public void addMoney(int amount) {
         currentMoney += amount;
     }
-    /*
-    * game.batch.begin();
-        font.setColor(valueOf("85bb65"));
-        font.getData().setScale(0.45f);
-        font.draw(gameStage.getBatch(), "$"+money.toString(), 127, 132);
-        game.batch.end();*/
+
+    public void removeMoney(int amount) {
+        currentMoney -= amount;
+    }
+
     public void render() {
         game.batch.begin();
         font.draw(game.batch, "$"+currentMoney, 127, 132);
