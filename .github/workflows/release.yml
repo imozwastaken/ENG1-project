@@ -26,7 +26,7 @@ jobs:
       run: |
         cd desktop/build/libs
         VER=`git rev-parse --short HEAD`
-        mv desktop-1.0.jar team17.jar
+        mv desktop-1.0.jar team17-piazzaPanic.jar
     - name: Automatically release
       uses: marvinpinto/action-automatic-releases@v1.2.1
       with:
