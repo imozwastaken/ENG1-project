@@ -37,6 +37,7 @@ import com.mygdx.game.Food.Burger;
 import com.mygdx.game.Food.Ingredient;
 import com.mygdx.game.Food.Order;
 import com.mygdx.game.Food.Salad;
+import com.mygdx.game.Money;
 import com.mygdx.game.PiazzaPanic;
 import java.time.Duration;
 import java.time.Instant;
@@ -49,6 +50,7 @@ public class GameScreen implements Screen {
     PiazzaPanic game;
     FitViewport view;
     Stage gameStage;
+    Money money;
     // map and camera stuff
     TmxMapLoader mapLoader;
     TiledMap map;
@@ -132,10 +134,13 @@ public class GameScreen implements Screen {
     Texture saladOrderTexture = new Texture("orderSalad.png");
     Boolean showPantryScreen = false;
     Boolean showServingScreen = false;
+
     private int customerCount = 0;
 
+    private Boolean endless = false;
 
-    public GameScreen(PiazzaPanic game, FitViewport port) {
+
+    public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless) {
         // initialise the game
         this.game = game;
         this.view = port;
@@ -471,6 +476,8 @@ public class GameScreen implements Screen {
                 }
             }
         });
+        this.endless = isEndless;
+        money = new Money(game);
     }
 
     private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
@@ -514,6 +521,7 @@ public class GameScreen implements Screen {
 
         // call functions which determine key gameplay elements
         gameStage.act();
+
         updateProgressBars();
         updateBatch();
         showCookStack();
@@ -535,8 +543,12 @@ public class GameScreen implements Screen {
                 cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected);
             }
         }
+        money.render();
 
-        cooks.get(selected).doUserInput(cooks.get(selected));
+
+
+
+        //cooks.get(selected).doUserInput(cooks.get(selected));
 
     }
 
@@ -550,6 +562,7 @@ public class GameScreen implements Screen {
         }
         game.batch.end();
     }
+
     private void customerOperations() {
         // move the customers to the counter
         if (!customers.get(customerCount).atCounter) {
@@ -559,7 +572,7 @@ public class GameScreen implements Screen {
             customers.get(customerCount).move();
             if (customers.get(customerCount).body.getX() > 148) {
                 customers.get(customerCount).body.remove();
-                if (customerNumber != 0) {
+                if (!endless) {
                     // check if the game is in endless mode or not
                     if (customerCount != customerNumber - 1) {
                         // spawn new customer
@@ -629,6 +642,9 @@ public class GameScreen implements Screen {
                 ingredient.prepare();
                 ingredient.updateCurrentTexture();
             }
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.L)) {
+            alienJazz.pause();
         }
     }
 

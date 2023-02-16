@@ -24,7 +24,7 @@ public class MainMenuScreen implements Screen {
     Texture exitBtnTexHover;
     Texture infoBtnTex;
     Texture infoBtnTexHover;
-
+    Texture endlessBtnTex;
     FitViewport view;
     Stage gameStage;
 
@@ -40,6 +40,10 @@ public class MainMenuScreen implements Screen {
     TextureRegion infoBtnRegion;
     TextureRegionDrawable infoBtnDrawable;
     ImageButton infoBtn;
+
+    TextureRegion endlessBtnRegion;
+    TextureRegionDrawable endlessBtnDrawable;
+    ImageButton endlessBtn;
 
     // image buttons for when hovering on the button
     TextureRegion playBtnRegionHover;
@@ -67,7 +71,7 @@ public class MainMenuScreen implements Screen {
         playBtnTex = new Texture("playBtn.png");
         exitBtnTex = new Texture("exitBtn.png");
         infoBtnTex = new Texture("infoBtn.png");
-
+        endlessBtnTex = new Texture("endless.png");
         // textures for hovered buttons
         infoBtnTexHover = new Texture("infoBtn2.png");
         playBtnTexHover = new Texture("playBtn2.png");
@@ -89,6 +93,10 @@ public class MainMenuScreen implements Screen {
         infoBtnRegion = new TextureRegion(infoBtnTex);
         infoBtnDrawable = new TextureRegionDrawable(infoBtnRegion);
         infoBtn = new ImageButton(infoBtnDrawable);
+
+        endlessBtnRegion = new TextureRegion(endlessBtnTex);
+        endlessBtnDrawable = new TextureRegionDrawable(endlessBtnRegion);
+        endlessBtn = new ImageButton(endlessBtnDrawable);
 
         // hovered buttons
         playBtnRegionHover = new TextureRegion(playBtnTexHover);
@@ -131,6 +139,10 @@ public class MainMenuScreen implements Screen {
             }
         });
 
+        endlessBtn.addListener(new ClickListener() {
+
+        });
+
         infoBtn.addListener(new ClickListener() {
             final ImageButton infoNormal = new ImageButton(infoBtnDrawable);
             final ImageButton infoHover = new ImageButton(infoBtnDrawableHover);
@@ -162,8 +174,9 @@ public class MainMenuScreen implements Screen {
         gameStage.getViewport().apply();
 
         gameStage.addActor(playBtn);
-        playBtn.setPosition((game.GAME_WIDTH / 2) - (playBtn.getWidth() / 2), 125);
-
+        playBtn.setPosition((((game.GAME_WIDTH / 2) - (playBtn.getWidth() / 2)) - endlessBtn.getWidth() / 2) - 25, 125);
+        gameStage.addActor(endlessBtn);
+        endlessBtn.setPosition((((game.GAME_WIDTH / 2) - (playBtn.getWidth() / 2)) + endlessBtn.getWidth() / 2) + 25, 125);
         gameStage.addActor(exitBtn);
         exitBtn.setPosition((game.GAME_WIDTH / 2) - (exitBtn.getWidth() / 2), 35);
 
@@ -171,7 +184,7 @@ public class MainMenuScreen implements Screen {
         infoBtn.setPosition(game.GAME_WIDTH - infoBtn.getWidth(), game.GAME_HEIGHT - infoBtn.getHeight());
 
         if (playBtn.isPressed()) {
-            game.setScreen(new GameScreen(game, view));
+            game.setScreen(new GameScreen(game, view, false));
         }
 
         if (exitBtn.isPressed()) {
@@ -181,6 +194,9 @@ public class MainMenuScreen implements Screen {
 
         if (infoBtn.isPressed()) {
             game.setScreen(new CreditsScreen(game));
+        }
+        if (endlessBtn.isPressed()) {
+            game.setScreen(new GameScreen(game, view, true));
         }
 
         Gdx.input.setInputProcessor(gameStage);

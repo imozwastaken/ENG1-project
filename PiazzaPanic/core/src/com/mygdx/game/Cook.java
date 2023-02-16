@@ -50,8 +50,8 @@ public class Cook {
                         speed = 50f;
                     }
 
-                    //cook.setX(cook.getX() + directionX * (speed * Gdx.graphics.getDeltaTime()));
-                    //cook.setY(cook.getY() + directionY * (speed * Gdx.graphics.getDeltaTime()));
+                    cook.setX(cook.getX() + directionX * (speed * Gdx.graphics.getDeltaTime()));
+                    cook.setY(cook.getY() + directionY * (speed * Gdx.graphics.getDeltaTime()));
 
                 }
 
