@@ -15,7 +15,7 @@ public class Cook {
     public Actor CookBody;
     public float[][] locations = {{0, 64}, {32, 64}, {64, 64}, {0, 32}, {48, 28}, {80, 48}};
     public boolean isBusy = false;
-    private float speed = 1;
+    private float speed = 1.0;
     private float x;
     private float y;
     public boolean moveable;
