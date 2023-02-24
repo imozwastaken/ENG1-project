@@ -22,6 +22,7 @@ public class Money {
     public void addMoney(int amount) {
         currentMoney += amount;
     }
+    public int getCurrentMoney() {return currentMoney;}
 
     public void removeMoney(int amount) {
         currentMoney -= amount;
@@ -31,8 +32,6 @@ public class Money {
         game.batch.begin();
         font.draw(game.batch, "$"+currentMoney, 127, 132);
         game.batch.end();
-
-
     }
 
 

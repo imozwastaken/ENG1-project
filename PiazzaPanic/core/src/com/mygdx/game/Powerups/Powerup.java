@@ -5,14 +5,25 @@ public class Powerup {
     private long duration;
     private long initialisedTime;
     private float value;
+    private int price;
+    private int timesBought;
 
 
-    public Powerup(String name, long duration, long initialisedTime, float value ) {
+    public Powerup(String name, long duration, long initialisedTime, float value, int price, int timesBought ) {
         this.name = name;
         this.duration = duration;
         this.initialisedTime = initialisedTime;
         this.value = value;
+        this.price = price;
+        this.timesBought = timesBought;
 
+    }
+
+    public void incrementTimesBought() {
+        timesBought++;
+    }
+    public int getTimesBought() {
+        return timesBought;
     }
 
     public String getName() {
@@ -23,6 +34,7 @@ public class Powerup {
     public void setInitialisedTime(long initialisedTime) {
         this.initialisedTime = initialisedTime;
     }
+    public int getPrice() {return price;}
 
     public long getDuration() {
         return duration;

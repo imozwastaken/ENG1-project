@@ -113,6 +113,8 @@ public class GameScreen implements Screen {
     ImageButton pattyClickable;
     ImageButton burgerClickable;
     ImageButton saladClickable;
+    ImageButton speedClickable;
+    ImageButton repClickable;
     //when you hover over a clickable it changes the cursor to a hand
     //this listener is added to all clickables
     ClickListener cursorHovering = new ClickListener() {
@@ -150,6 +152,9 @@ public class GameScreen implements Screen {
     BunClickable bun;
     PattyClickable patty;
 
+    SpeedPowerup speedPowerup;
+    RepPowerup repPowerup;
+
     private int customerCount = 0;
 
     private Boolean endless = false;
@@ -172,6 +177,12 @@ public class GameScreen implements Screen {
         this.lettuce = new LettuceClickable(utils, this);
         this.tomato = new TomatoClickable(utils, this);
         this.patty = new PattyClickable(utils, this);
+        money = new Money(game);
+
+        powerups = new Powerups(game, money);
+        this.speedPowerup = new SpeedPowerup(utils, this, powerups);
+        this.repPowerup = new RepPowerup(utils, this, powerups);
+
         gameStage = new Stage(view, game.batch);
 
         // load the map and camera
@@ -268,7 +279,8 @@ public class GameScreen implements Screen {
         bunsClickable = bun.getBunClickable();
         // unprepared patty button
         pattyClickable = patty.getPattyClickable();
-
+        speedClickable = speedPowerup.getSpeedClickable();
+        repClickable = repPowerup.getRepButton();
         // serving screen frame
         servingScreenFrameRegion = new TextureRegion(new Texture("servingFrame.png"));
         servingScreenFrame = new ImageButton(new TextureRegionDrawable(servingScreenFrameRegion));
@@ -282,8 +294,6 @@ public class GameScreen implements Screen {
         // salad button
         saladClickable = saladC.getSaladClickable();
         this.endless = isEndless;
-        money = new Money(game);
-        powerups = new Powerups(game);
     }
 
     public void setSationSelected(int value) {
@@ -326,6 +336,9 @@ public class GameScreen implements Screen {
         return customerCount;
     }
 
+    public void addRep( int amount) {
+        Rep += amount;
+    }
     public Money getMoney() {
         return money;
     }
@@ -608,12 +621,17 @@ public class GameScreen implements Screen {
             gameStage.addActor(tomatoClickable);
             gameStage.addActor(bunsClickable);
             gameStage.addActor(pattyClickable);
+            gameStage.addActor(speedClickable);
+            gameStage.addActor(repClickable);
             pantryScreenFrame.setPosition(10, 10);
             XbtnClickable.setPosition(7, 88);
             lettuceClickable.setPosition(25, 66);
             tomatoClickable.setPosition(53, 66);
             bunsClickable.setPosition(81, 66);
             pattyClickable.setPosition(110, 72);
+            speedClickable.setPosition(25, 40);
+            repClickable.setPosition(53, 40);
+
             showPantryScreen = false;
         }
     }
@@ -626,6 +644,8 @@ public class GameScreen implements Screen {
         tomatoClickable.setPosition(10000, -1);
         bunsClickable.setPosition(10000, -1);
         pattyClickable.setPosition(10000, -1);
+        speedClickable.setPosition(10000, -1);
+        repClickable.setPosition(10000, -1);
     }
 
     public void hideServingScreen() {
