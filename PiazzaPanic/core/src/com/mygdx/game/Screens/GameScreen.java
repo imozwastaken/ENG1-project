@@ -38,7 +38,9 @@ import com.mygdx.game.Food.Ingredient;
 import com.mygdx.game.Food.Order;
 import com.mygdx.game.Food.Salad;
 import com.mygdx.game.Powerups.Powerups;
+import org.graalvm.compiler.java.GraphBuilderPhase;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -79,7 +81,7 @@ public class GameScreen implements Screen {
     // control the number of cooks
     int cookCount = 2; // control how many cooks spawn -> update to allow for the value to increase
     // take the time at the start of the game to display the time taken to complete the round
-    Instant gameTime = Instant.now();
+    long gameTime = System.currentTimeMillis();
     // list of active orders
     ArrayList<Order> orders = new ArrayList<>();
     //used to count how much time has passed after an order is placed
@@ -115,6 +117,7 @@ public class GameScreen implements Screen {
     ImageButton saladClickable;
     ImageButton speedClickable;
     ImageButton repClickable;
+    ImageButton saveClickable;
     //when you hover over a clickable it changes the cursor to a hand
     //this listener is added to all clickables
     ClickListener cursorHovering = new ClickListener() {
@@ -151,6 +154,7 @@ public class GameScreen implements Screen {
     TomatoClickable tomato;
     BunClickable bun;
     PattyClickable patty;
+    Savegame save;
 
     SpeedPowerup speedPowerup;
     RepPowerup repPowerup;
@@ -160,7 +164,7 @@ public class GameScreen implements Screen {
     private Boolean endless = false;
 
 
-    public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless) {
+    public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless) throws IOException {
         // initialise the game
         this.game = game;
         this.view = port;
@@ -177,6 +181,7 @@ public class GameScreen implements Screen {
         this.lettuce = new LettuceClickable(utils, this);
         this.tomato = new TomatoClickable(utils, this);
         this.patty = new PattyClickable(utils, this);
+        this.save = new Savegame(game, utils, this);
         money = new Money(game);
 
         powerups = new Powerups(game, money);
@@ -242,6 +247,10 @@ public class GameScreen implements Screen {
         servingClickable = serving.getServingClickable();
         gameStage.addActor(servingClickable);
 
+        // save game
+        saveClickable = save.getSaveClickable();
+        gameStage.addActor(saveClickable);
+
         // adding the station clickables to the screen
         pantryClickable.setPosition(0, 64);
         fryingClickable.setPosition(32, 64);
@@ -249,6 +258,7 @@ public class GameScreen implements Screen {
         binClickable.setPosition(0, 0);
         cuttingClickable.setPosition(32, 0);
         servingClickable.setPosition(96, 16);
+        saveClickable.setPosition(170,100);
 
         // close button for station pop ups
         XbtnClickable = createImageClickable(new Texture("Xbtn.png"), 16, 16);
@@ -296,6 +306,8 @@ public class GameScreen implements Screen {
         this.endless = isEndless;
     }
 
+
+    public long getGameTime() {return gameTime;}
     public void setSationSelected(int value) {
         stationSelected.set(selected, value);
     }
@@ -446,7 +458,7 @@ public class GameScreen implements Screen {
                         customerCount += 1;
                     } else {
                         // end game by taking the time at the game end and going to the time screen
-                        Duration timeTaken = Duration.between(gameTime, Instant.now());
+                        long timeTaken = System.currentTimeMillis() - gameTime;
                         alienJazz.stop();
                         game.setScreen(new EndGameScreen(game, timeTaken,Rep));
                     }

@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.PiazzaPanic;
 
+import java.io.IOException;
+
 
 public class MainMenuScreen implements Screen {
     PiazzaPanic game;
@@ -184,7 +186,11 @@ public class MainMenuScreen implements Screen {
         infoBtn.setPosition(game.GAME_WIDTH - infoBtn.getWidth(), game.GAME_HEIGHT - infoBtn.getHeight());
 
         if (playBtn.isPressed()) {
-            game.setScreen(new GameScreen(game, view, false));
+            try {
+                game.setScreen(new GameScreen(game, view, false));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         if (exitBtn.isPressed()) {
@@ -196,7 +202,11 @@ public class MainMenuScreen implements Screen {
             game.setScreen(new CreditsScreen(game));
         }
         if (endlessBtn.isPressed()) {
-            game.setScreen(new GameScreen(game, view, true));
+            try {
+                game.setScreen(new GameScreen(game, view, true));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         Gdx.input.setInputProcessor(gameStage);

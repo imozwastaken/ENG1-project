@@ -17,7 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.PiazzaPanic;
+
+import java.io.IOException;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 // screen which displays after the game finishes
 
@@ -42,7 +45,7 @@ public class EndGameScreen implements Screen {
     int Rep;
     String levelTimeString;
 
-    public EndGameScreen(PiazzaPanic game, Duration levelCompletedIn, int RepPoints) {
+    public EndGameScreen(PiazzaPanic game, long levelCompletedIn, int RepPoints) {
         // generate the styling information for the data given to this screen
         this.game = game;
         parameter.size = 48;
@@ -125,7 +128,11 @@ public class EndGameScreen implements Screen {
         screenStage.getViewport().apply();
 
         if (restartBtn.isPressed()) {
-            game.setScreen(new GameScreen(game, view, false));
+            try {
+                game.setScreen(new GameScreen(game, view, false));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         if (exitBtn.isPressed()) {
@@ -165,11 +172,11 @@ public class EndGameScreen implements Screen {
         screenStage.dispose();
     }
 
-    private String humanReadableFormat(Duration duration) {
+    private String humanReadableFormat(long duration) {
+
+        long secs = TimeUnit.MILLISECONDS.toSeconds(duration);
         // format the time information
-        return (String.format("%sm %ss",
-                duration.toMinutesPart(),
-                duration.toSecondsPart()));
+        return (String.format("%ss", secs));
     }
 
 }
