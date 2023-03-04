@@ -21,10 +21,10 @@ import java.util.prefs.Preferences;
 public class Savegame {
 
     ImageButton saveClickable;
-    GameScreen scren;
+    GameScreen screen;
 
     public Savegame(PiazzaPanic _game, Utils utils, final GameScreen _screen) throws IOException {
-        this.scren = _screen;
+        this.screen = _screen;
         this.saveClickable = utils.createImageClickable(new Texture("Save.png"),24,24);
         saveClickable.addListener(new ClickListener() {
             @Override
@@ -40,16 +40,19 @@ public class Savegame {
     * */
 
     public Boolean saveState() {
-        DateFormat dform = new SimpleDateFormat("ddMMyyHH");
+        DateFormat dform = new SimpleDateFormat("ddMMyySS");
         Date obj = new Date();
         String path = String.format("save%s.json",dform.format(obj) );
         JSONObject json = new JSONObject();
-        int money = scren.getMoney().getCurrentMoney();
-        long timetaken = scren.getGameTime();
+        int money = screen.getMoney().getCurrentMoney();
+        long timetaken = System.currentTimeMillis() - screen.getGameTime();
+        int rep = screen.getRep();
+        int customersServed = screen.getCustomerCount();
         try {
-            json.put("test", "testvalue");
             json.put("Money", money);
             json.put("timetaken", timetaken);
+            json.put("rep", rep);
+            json.put("customersLeft", customersServed);
         } catch (JSONException e) {
             e.printStackTrace();
             return false;

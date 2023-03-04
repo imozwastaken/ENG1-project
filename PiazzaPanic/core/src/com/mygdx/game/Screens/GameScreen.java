@@ -38,8 +38,6 @@ import com.mygdx.game.Food.Ingredient;
 import com.mygdx.game.Food.Order;
 import com.mygdx.game.Food.Salad;
 import com.mygdx.game.Powerups.Powerups;
-import org.graalvm.compiler.java.GraphBuilderPhase;
-
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
@@ -164,7 +162,10 @@ public class GameScreen implements Screen {
     private Boolean endless = false;
 
 
-    public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless) throws IOException {
+    public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless, Boolean isLoad, String Loadfile) throws IOException {
+        if (isLoad) {
+            System.out.println(Loadfile);
+        }
         // initialise the game
         this.game = game;
         this.view = port;
@@ -354,6 +355,7 @@ public class GameScreen implements Screen {
     public Money getMoney() {
         return money;
     }
+    public int getRep(){return Rep;}
 
 
     private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
