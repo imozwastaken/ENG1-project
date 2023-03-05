@@ -38,7 +38,13 @@ import com.mygdx.game.Food.Ingredient;
 import com.mygdx.game.Food.Order;
 import com.mygdx.game.Food.Salad;
 import com.mygdx.game.Powerups.Powerups;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -160,12 +166,10 @@ public class GameScreen implements Screen {
     private int customerCount = 0;
 
     private Boolean endless = false;
-
+    JSONObject obj;
 
     public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless, Boolean isLoad, String Loadfile) throws IOException {
-        if (isLoad) {
-            System.out.println(Loadfile);
-        }
+
         // initialise the game
         this.game = game;
         this.view = port;
@@ -305,6 +309,11 @@ public class GameScreen implements Screen {
         // salad button
         saladClickable = saladC.getSaladClickable();
         this.endless = isEndless;
+        if (isLoad) {
+            String content = new String(Files.readAllBytes(Paths.get(Loadfile)));
+            obj = new JSONObject(content);
+            initialiseLoad(obj);
+        }
     }
 
 
@@ -356,6 +365,14 @@ public class GameScreen implements Screen {
         return money;
     }
     public int getRep(){return Rep;}
+    public void setRep(int rep) {Rep= rep;}
+    public void initialiseLoad(JSONObject obj) {
+        Rep = (int) obj.get("rep");
+        gameTime = System.currentTimeMillis() + (int) obj.get("timetaken");
+        //customerCount = (int) obj.get("customersLeft");
+        money.addMoney((int) obj.get("Money"));
+        System.out.println("Initialised shit");
+    }
 
 
     private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
@@ -462,7 +479,12 @@ public class GameScreen implements Screen {
                         // end game by taking the time at the game end and going to the time screen
                         long timeTaken = System.currentTimeMillis() - gameTime;
                         alienJazz.stop();
-                        game.setScreen(new EndGameScreen(game, timeTaken,Rep));
+                        if (endless) {
+                            game.setScreen(new EndGameScreen(game, timeTaken,0, true, customerCount));
+                        } else {
+                            game.setScreen(new EndGameScreen(game, timeTaken,Rep, false, 0));
+                        }
+
                     }
                 } else {
                     // TODO endless mode
@@ -569,6 +591,11 @@ public class GameScreen implements Screen {
                         //Uncomment line below if you want the customer to leave after the order timer is gone
                         //customer.orderComplete = true;
                         Rep--;
+                        if (Rep == 0) {
+                            long timeTaken = System.currentTimeMillis() - gameTime;
+                            game.setScreen(new EndGameScreen(game, timeTaken,0, true, customerCount));
+                        }
+
                     }
                 }
                 game.batch.begin();

@@ -14,9 +14,7 @@ buildscript {
     }
 }
 
-plugins {
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-}
+
 allprojects {
     apply plugin: "eclipse"
 
@@ -62,11 +60,5 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         implementation 'org.json:json:20220924'
-
     }
-}
-javafx {
-    version = '12'
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
-    configuration = 'compileOnly'
 }

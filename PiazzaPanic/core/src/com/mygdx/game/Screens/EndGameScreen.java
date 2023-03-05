@@ -44,10 +44,14 @@ public class EndGameScreen implements Screen {
     TextureRegionDrawable restartBtnDrawableHover;
     int Rep;
     String levelTimeString;
+    Boolean endless;
+    int customersServed;
 
-    public EndGameScreen(PiazzaPanic game, long levelCompletedIn, int RepPoints) {
+    public EndGameScreen(PiazzaPanic game, long levelCompletedIn, int RepPoints, boolean endless, int customersServed) {
         // generate the styling information for the data given to this screen
         this.game = game;
+        this.endless = endless;
+        this.customersServed = customersServed;
         parameter.size = 48;
         parameter.color = Color.BLACK;
         font = generator.generateFont(parameter);
@@ -121,8 +125,13 @@ public class EndGameScreen implements Screen {
         game.batch.setProjectionMatrix(view.getCamera().combined);
         game.batch.begin();
         game.batch.draw(levelCompleteFrame, ((game.GAME_WIDTH / 2) - (levelCompleteFrame.getWidth() / 2)), 10);
-        font.draw(game.batch, "COMPLETED IN " + levelTimeString, 420, 480);
-        font.draw(game.batch, "REPUTATION:" + Rep, 420, 425);
+        if (endless) {
+            font.draw(game.batch, "YOU SERVED " + customersServed + " Customers", 420, 480);
+        } else {
+            font.draw(game.batch, "REPUTATION:" + Rep, 420, 425);
+        }
+
+
         game.batch.end();
 
         screenStage.getViewport().apply();
