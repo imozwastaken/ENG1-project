@@ -168,7 +168,7 @@ public class GameScreen implements Screen {
     private Boolean endless = false;
     JSONObject obj;
 
-    public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless, Boolean isLoad, String Loadfile) throws IOException {
+    public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless, Boolean isLoad, String Loadfile) {
 
         // initialise the game
         this.game = game;
@@ -186,7 +186,11 @@ public class GameScreen implements Screen {
         this.lettuce = new LettuceClickable(utils, this);
         this.tomato = new TomatoClickable(utils, this);
         this.patty = new PattyClickable(utils, this);
-        this.save = new Savegame(game, utils, this);
+        try {
+            this.save = new Savegame(game, utils, this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         money = new Money(game);
 
         powerups = new Powerups(game, money);
@@ -310,12 +314,13 @@ public class GameScreen implements Screen {
         saladClickable = saladC.getSaladClickable();
         this.endless = isEndless;
         if (isLoad) {
-            String content = new String(Files.readAllBytes(Paths.get(Loadfile)));
-            obj = new JSONObject(content);
-            initialiseLoad(obj);
+            try {
+                loadJSON(Loadfile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
-
 
     public long getGameTime() {return gameTime;}
     public void setSationSelected(int value) {
@@ -374,6 +379,11 @@ public class GameScreen implements Screen {
         System.out.println("Initialised shit");
     }
 
+    public void loadJSON(String Loadfile) throws IOException {
+        String content = new String(Files.readAllBytes(Paths.get(Loadfile)));
+        obj = new JSONObject(content);
+        initialiseLoad(obj);
+    }
 
     private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
         Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
