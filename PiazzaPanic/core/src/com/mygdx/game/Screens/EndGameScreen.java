@@ -137,11 +137,7 @@ public class EndGameScreen implements Screen {
         screenStage.getViewport().apply();
 
         if (restartBtn.isPressed()) {
-            try {
-                game.setScreen(new GameScreen(game, view, false, false, ""));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            game.setScreen(new GameScreen(game, view, false, false, ""));
         }
 
         if (exitBtn.isPressed()) {
