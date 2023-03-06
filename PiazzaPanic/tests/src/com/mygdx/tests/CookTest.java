@@ -1,12 +1,11 @@
 package com.mygdx.tests;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
+import org.junit.runner.RunWith;
 
 
-
+import static org.junit.Assert.assertTrue;
+@RunWith(GdxTestRunner.class)
 public class CookTest {
 
     @Test
