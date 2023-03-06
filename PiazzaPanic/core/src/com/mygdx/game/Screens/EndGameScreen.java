@@ -17,7 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.PiazzaPanic;
+
+import java.io.IOException;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 // screen which displays after the game finishes
 
@@ -41,10 +44,14 @@ public class EndGameScreen implements Screen {
     TextureRegionDrawable restartBtnDrawableHover;
     int Rep;
     String levelTimeString;
+    Boolean endless;
+    int customersServed;
 
-    public EndGameScreen(PiazzaPanic game, Duration levelCompletedIn, int RepPoints) {
+    public EndGameScreen(PiazzaPanic game, long levelCompletedIn, int RepPoints, boolean endless, int customersServed) {
         // generate the styling information for the data given to this screen
         this.game = game;
+        this.endless = endless;
+        this.customersServed = customersServed;
         parameter.size = 48;
         parameter.color = Color.BLACK;
         font = generator.generateFont(parameter);
@@ -118,14 +125,23 @@ public class EndGameScreen implements Screen {
         game.batch.setProjectionMatrix(view.getCamera().combined);
         game.batch.begin();
         game.batch.draw(levelCompleteFrame, ((game.GAME_WIDTH / 2) - (levelCompleteFrame.getWidth() / 2)), 10);
-        font.draw(game.batch, "COMPLETED IN " + levelTimeString, 420, 480);
-        font.draw(game.batch, "REPUTATION:" + Rep, 420, 425);
+        if (endless) {
+            font.draw(game.batch, "YOU SERVED " + customersServed + " Customers", 420, 480);
+        } else {
+            font.draw(game.batch, "REPUTATION:" + Rep, 420, 425);
+        }
+
+
         game.batch.end();
 
         screenStage.getViewport().apply();
 
         if (restartBtn.isPressed()) {
-            game.setScreen(new GameScreen(game, view));
+            try {
+                game.setScreen(new GameScreen(game, view, false, false, ""));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         if (exitBtn.isPressed()) {
@@ -165,11 +181,11 @@ public class EndGameScreen implements Screen {
         screenStage.dispose();
     }
 
-    private String humanReadableFormat(Duration duration) {
+    private String humanReadableFormat(long duration) {
+
+        long secs = TimeUnit.MILLISECONDS.toSeconds(duration);
         // format the time information
-        return (String.format("%sm %ss",
-                duration.toMinutesPart(),
-                duration.toSecondsPart()));
+        return (String.format("%ss", secs));
     }
 
 }

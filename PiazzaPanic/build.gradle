@@ -14,6 +14,7 @@ buildscript {
     }
 }
 
+
 allprojects {
     apply plugin: "eclipse"
 
@@ -55,11 +56,10 @@ project(":desktop") {
 project(":core") {
     apply plugin: "java-library"
 
-
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        
+        implementation 'org.json:json:20220924'
     }
 }
 

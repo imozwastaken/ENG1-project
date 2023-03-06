@@ -35,4 +35,6 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
+
             desktop/build/libs/*.jar
+
