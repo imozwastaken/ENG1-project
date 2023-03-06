@@ -37,6 +37,7 @@ import com.mygdx.game.Food.Burger;
 import com.mygdx.game.Food.Ingredient;
 import com.mygdx.game.Food.Order;
 import com.mygdx.game.Food.Salad;
+
 import com.mygdx.game.Powerups.Powerups;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,9 +47,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 
 public class GameScreen implements Screen {
     
@@ -85,7 +84,9 @@ public class GameScreen implements Screen {
     // control the number of cooks
     int cookCount = 2; // control how many cooks spawn -> update to allow for the value to increase
     // take the time at the start of the game to display the time taken to complete the round
+
     long gameTime = System.currentTimeMillis();
+
     // list of active orders
     ArrayList<Order> orders = new ArrayList<>();
     //used to count how much time has passed after an order is placed
@@ -477,6 +478,7 @@ public class GameScreen implements Screen {
                         customerCount += 1;
                     } else {
                         // end game by taking the time at the game end and going to the time screen
+
                         long timeTaken = System.currentTimeMillis() - gameTime;
                         alienJazz.stop();
                         if (endless) {
