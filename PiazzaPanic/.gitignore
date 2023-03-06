@@ -29,7 +29,9 @@ www-test/
 *.iml
 /android/out/
 com_crashlytics_export_strings.xml
-
+# testing
+tests/bin
+tests/build
 ## Eclipse
 
 .classpath
