@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Food.Burger;
+import com.mygdx.game.Food.FoodMenu;
 import com.mygdx.game.Food.Order;
 import com.mygdx.game.Food.Salad;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 
 public class Customer {
     // god we love using arrays for dealing with this stuff
-    private final ArrayList<Order> orderOptions = new ArrayList<>();
+
     private final float targetY = MathUtils.random(16, 48);
     public boolean orderComplete = false;
     public boolean atCounter = false;
@@ -31,8 +32,6 @@ public class Customer {
         this.body.setY(80);
 
         // TODO add all possible orders here
-        orderOptions.add(new Order("burger", new Texture("orderBurger.png"), new Burger()));
-        orderOptions.add(new Order("salad", new Texture("orderSalad.png"), new Salad()));
 
         this.customerOrder = generateOrder();
     }
@@ -63,6 +62,7 @@ public class Customer {
     }
 
     private Order generateOrder() {
-        return orderOptions.get(MathUtils.random(0, 1));
+        FoodMenu menu = new FoodMenu();
+        return menu.getRandomOrder();
     }
 }
