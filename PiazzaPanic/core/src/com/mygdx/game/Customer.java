@@ -18,6 +18,8 @@ public class Customer {
     private final float targetY = MathUtils.random(16, 48);
     public boolean orderComplete = false;
     public boolean atCounter = false;
+    public boolean selfComplete = false;
+
     public Actor body;
     public String name;
     public Order customerOrder;
