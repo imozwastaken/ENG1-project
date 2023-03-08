@@ -18,10 +18,10 @@ public class Powerups {
         this.game = _game;
         Powerup speedPowerup = new Powerup("Speed", 5000, 0, 1, 100, 0);
         Powerup extraLife = new Powerup("ExtraLife", 1000000000, 0, 1, 300, 0);
-        Powerup stationSpeed = new Powerup("Fast Stations", 5000, 0, 1, 300, 0);
+        Powerup stationSpeed = new Powerup("FastStations", 5000, 0, 1, 300, 0);
         allPowerups.put("Speed", speedPowerup);
         allPowerups.put("ExtraLife", extraLife);
-        allPowerups.put("Fast Stations", stationSpeed);
+        allPowerups.put("FastStations", stationSpeed);
         this.font = new BitmapFont();
         this.money = _money;
 
@@ -45,14 +45,14 @@ public class Powerups {
     }
 
     public float getStationSpeed() {
-        return allPowerups.get("Fast Stations").getValue();
+        return allPowerups.get("FastStations").getValue();
     }
 
     public void setStationSpeed(float multiplier) {
-        boolean bought = buyPowerup("Fast Stations");
+        boolean bought = buyPowerup("FastStations");
         if (bought) {
-            allPowerups.get("Fast Stations").setInitialisedTime(System.currentTimeMillis());
-            allPowerups.get("Fast Stations").setValue(multiplier);
+            allPowerups.get("FastStations").setInitialisedTime(System.currentTimeMillis());
+            allPowerups.get("FastStations").setValue(multiplier);
         } else {
             System.out.println("Not enough money for this.");
         }

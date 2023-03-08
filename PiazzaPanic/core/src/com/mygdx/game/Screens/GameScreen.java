@@ -126,9 +126,7 @@ public class GameScreen implements Screen {
     ImageButton repClickable;
     ImageButton saveClickable;
 
-    ImageButton upChopClickable;
-
-    ImageButton upFryClickable;
+    ImageButton stationSpeedClickable;
 
     //when you hover over a clickable it changes the cursor to a hand
     //this listener is added to all clickables
@@ -171,6 +169,8 @@ public class GameScreen implements Screen {
     SpeedPowerup speedPowerup;
     RepPowerup repPowerup;
 
+    StationSpeedPowerup stationSpeedPowerup;
+
     private int customerCount = 0;
 
     private Boolean endless = false;
@@ -204,6 +204,7 @@ public class GameScreen implements Screen {
         powerups = new Powerups(game, money);
         this.speedPowerup = new SpeedPowerup(utils, this, powerups);
         this.repPowerup = new RepPowerup(utils, this, powerups);
+        this.stationSpeedPowerup = new StationSpeedPowerup(utils, this, powerups);
 
         gameStage = new Stage(view, game.batch);
 
@@ -268,8 +269,6 @@ public class GameScreen implements Screen {
         saveClickable = save.getSaveClickable();
         gameStage.addActor(saveClickable);
 
-        //upChopClickable = ;
-
         // adding the station clickables to the screen
         pantryClickable.setPosition(0, 64);
         fryingClickable.setPosition(32, 64);
@@ -310,6 +309,7 @@ public class GameScreen implements Screen {
         pattyClickable = patty.getPattyClickable();
         speedClickable = speedPowerup.getSpeedClickable();
         repClickable = repPowerup.getRepButton();
+        stationSpeedClickable = stationSpeedPowerup.getStationClickable();
         // serving screen frame
         servingScreenFrameRegion = new TextureRegion(new Texture("servingFrame.png"));
         servingScreenFrame = new ImageButton(new TextureRegionDrawable(servingScreenFrameRegion));
@@ -685,6 +685,7 @@ public class GameScreen implements Screen {
             gameStage.addActor(pattyClickable);
             gameStage.addActor(speedClickable);
             gameStage.addActor(repClickable);
+            gameStage.addActor(stationSpeedClickable);
             pantryScreenFrame.setPosition(10, 10);
             XbtnClickable.setPosition(7, 88);
             lettuceClickable.setPosition(25, 66);
@@ -693,6 +694,7 @@ public class GameScreen implements Screen {
             pattyClickable.setPosition(110, 72);
             speedClickable.setPosition(25, 40);
             repClickable.setPosition(53, 40);
+            stationSpeedClickable.setPosition(75, 40);
 
             showPantryScreen = false;
         }
@@ -708,6 +710,7 @@ public class GameScreen implements Screen {
         pattyClickable.setPosition(10000, -1);
         speedClickable.setPosition(10000, -1);
         repClickable.setPosition(10000, -1);
+        stationSpeedClickable.setPosition(10000, -1);
     }
 
     public void hideServingScreen() {
