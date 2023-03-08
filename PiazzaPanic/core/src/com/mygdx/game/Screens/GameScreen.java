@@ -71,7 +71,7 @@ public class GameScreen implements Screen {
     // customer number determines how many customers will spawn over the course of the game
     // 0 means infinite
     private final Array<Cook> cooks;
-    private final Array<Customer> customers;
+    private final ArrayList<ArrayList<Customer>> customers;
     // sprite handling
     Sprite alex;
     Sprite amelia;
@@ -241,8 +241,11 @@ public class GameScreen implements Screen {
         // create the instances of the cooks and first customer.
         cooks = new Array<Cook>();
         spawnCooks();
-        customers = new Array<Customer>();
-        customers.add(new Customer(new Actor()));
+        customers = new ArrayList<ArrayList<Customer>>();
+        ArrayList<Customer> tmp = new ArrayList<Customer>();
+        tmp.add(new Customer(new Actor()));
+        customers.add(tmp);
+        customers.get(0).add(new Customer(new Actor()));
         // array of all progressbars created (used to update all of them in updateProgressBars function)
         bars = new HashMap<ProgressBar, Cook>();
         // pantry station
@@ -366,7 +369,7 @@ public class GameScreen implements Screen {
     public void setShowServingScreen(Boolean value) {
         showServingScreen = value;
     }
-    public Array<Customer> getCustomers() {
+    public ArrayList<ArrayList<Customer>> getCustomers() {
         return customers;
     }
     public int getCustomerCount() {
@@ -482,18 +485,26 @@ public class GameScreen implements Screen {
 
     private void customerOperations() {
         // move the customers to the counter
-        if (!customers.get(customerCount).atCounter) {
-            customers.get(customerCount).move();
-        } else if (customers.get(customerCount).orderComplete) {
+        if (!customers.get(customerCount).get(0).atCounter) {
+            System.out.println("at counter");
+            customers.get(customerCount).get(0).move();
+            System.out.println(customers.get(customerCount).get(0).orderComplete);
+        } else if (customers.get(customerCount).get(0).orderComplete) {
             // make the customer leave
-            customers.get(customerCount).move();
-            if (customers.get(customerCount).body.getX() > 148) {
-                customers.get(customerCount).body.remove();
+            System.out.println("at counter kl");
+            customers.get(customerCount).get(0).move();
+            System.out.println("left");
+            System.out.println(customers);
+            if (customers.get(customerCount).get(0).body.getX() > 148) {
+                customers.get(customerCount).get(0).body.remove();
                 if (!endless) {
                     // check if the game is in endless mode or not
                     if (customerCount != customerNumber - 1) {
                         // spawn new customer
-                        customers.add(new Customer(new Actor()));
+
+                        ArrayList<Customer> tmp = new ArrayList<Customer>();
+                        tmp.add(new Customer(new Actor()));
+                        customers.add(tmp);
                         customerCount += 1;
                     } else {
                         // end game by taking the time at the game end and going to the time screen
@@ -509,7 +520,9 @@ public class GameScreen implements Screen {
                     }
                 } else {
                     // TODO endless mode
-                    customers.add(new Customer(new Actor()));
+                    ArrayList<Customer> tmp = new ArrayList<Customer>();
+                    tmp.add(new Customer(new Actor()));
+                    customers.add(tmp);
                     customerCount += 1;
                 }
             }
@@ -555,7 +568,7 @@ public class GameScreen implements Screen {
         }
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             // debug option to mark the current customers order as complete, moving them on
-            customers.get(customerCount).orderComplete = true;
+            customers.get(customerCount).get(0).orderComplete = true;
             money.addMoney(100);
 
         }
@@ -590,7 +603,7 @@ public class GameScreen implements Screen {
         game.batch.draw(plateTex, 164, 25);
         game.batch.draw(cookStackTitle, 164, 120);
         game.batch.draw(idles.get(selected), 168, 1);
-        game.batch.draw(custSkins.getSprite(customers.get(customerCount).name), customers.get(customerCount).body.getX(), customers.get(customerCount).body.getY());
+        game.batch.draw(custSkins.getSprite(customers.get(customerCount).get(0).name), customers.get(customerCount).get(0).body.getX(), customers.get(customerCount).get(0).body.getY());
         game.batch.draw(selectedCook, cooks.get(selected).CookBody.getX(), cooks.get(selected).CookBody.getY() + 26);
         game.batch.end();
     }
@@ -599,42 +612,45 @@ public class GameScreen implements Screen {
         // displays the orders at the top of the screen
         int x = 1;
         int y = 112;
-        for (Customer customer : customers) {
-            if ((customer.atCounter) && (!customer.orderComplete)) {
-                timeCount += dt;
-                //one second has passed
-                if(timeCount >= 1){
-                    //update order timer
-                    if(customer.customerOrder.getOrderTime() >= 0){
-                        customer.customerOrder.orderTime --;
-                    }
-                    timeCount = 0;
-                    if(customer.customerOrder.getOrderTime()==0){
-                        //Uncomment line below if you want the customer to leave after the order timer is gone
-                        //customer.orderComplete = true;
-                        Rep--;
-                        if (Rep == 0) {
-                            long timeTaken = System.currentTimeMillis() - gameTime;
-                            game.setScreen(new EndGameScreen(game, timeTaken,0, true, customerCount));
+        for (ArrayList<Customer> customerArr : customers) {
+            for (Customer customer : customerArr) {
+                if ((customer.atCounter) && (!customer.orderComplete)) {
+                    timeCount += dt;
+                    //one second has passed
+                    if(timeCount >= 1){
+                        //update order timer
+                        if(customer.customerOrder.getOrderTime() >= 0){
+                            customer.customerOrder.orderTime --;
                         }
-
+                        timeCount = 0;
+                        if(customer.customerOrder.getOrderTime()==0){
+                            //Uncomment line below if you want the customer to leave after the order timer is gone
+                            //customer.orderComplete = true;
+                            Rep--;
+                            if (Rep == 0) {
+                                long timeTaken = System.currentTimeMillis() - gameTime;
+                                game.setScreen(new EndGameScreen(game, timeTaken,0, true, customerCount));
+                            }
+    
+                        }
                     }
+                    game.batch.begin();
+                    game.batch.draw(customer.customerOrder.getOrderTexture(), x, y);
+                    game.batch.draw(customer.customerOrder.getRecipe().getSpeechBubbleTexture(), customer.body.getX() - 10, customer.body.getY() + 17);
+                    //order timer sets to 0 when it reaches -1
+                    if(customer.customerOrder.getOrderTime()>-1){
+                        font.draw(game.batch, Integer.toString(customer.customerOrder.getOrderTime()), x+30, y+10);
+                    } else {
+                        font.draw(game.batch, "0", x+30, y+10);
+                    }
+                    
+                    game.batch.end();
+                    // increase x value if there is more than one current order
+                    x += 41;
                 }
-                game.batch.begin();
-                game.batch.draw(customer.customerOrder.getOrderTexture(), x, y);
-                game.batch.draw(customer.customerOrder.getRecipe().getSpeechBubbleTexture(), customer.body.getX() - 10, customer.body.getY() + 17);
-                //order timer sets to 0 when it reaches -1
-                if(customer.customerOrder.getOrderTime()>-1){
-                    font.draw(game.batch, Integer.toString(customer.customerOrder.getOrderTime()), x+30, y+10);
-                } else {
-                    font.draw(game.batch, "0", x+30, y+10);
-                }
-                
-                game.batch.end();
-                // increase x value if there is more than one current order
-                x += 41;
             }
         }
+        
     }
 
     private void showCookStack() {

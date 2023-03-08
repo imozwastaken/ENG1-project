@@ -1,5 +1,7 @@
 package com.mygdx.game.Clickables;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -21,7 +23,7 @@ public class BurgerClickable {
             public void clicked(InputEvent event, float x, float y) {
                 Array<Cook> cooks = screen.getCooks();
                 int selected = screen.getSelected();
-                Array<Customer> customers = screen.getCustomers();
+                ArrayList<ArrayList<Customer>> customers = screen.getCustomers();
                 int customerCount = screen.getCustomerCount();
                 Burger recipe = new Burger();
                 Ingredient buns = new Ingredient("buns", null, null);
@@ -31,11 +33,11 @@ public class BurgerClickable {
                 Ingredient lettuce = new Ingredient("lettuce", null, null);
                 lettuce.prepare();
                 if (recipe.has(cooks.get(selected).CookStack)) {
-                    if (customers.get(customerCount).customerOrder.getName() == "burger") {
+                    if (customers.get(customerCount).get(0).customerOrder.getName() == "burger") {
                         cooks.get(selected).CookStack.remove(buns);
                         cooks.get(selected).CookStack.remove(patty);
                         cooks.get(selected).CookStack.remove(lettuce);
-                        customers.get(customerCount).orderComplete = true;
+                        customers.get(customerCount).get(0).orderComplete = true;
                         screen.getMoney().addMoney(100);
 
                         screen.hideServingScreen();
