@@ -18,7 +18,7 @@ public class Powerups {
         this.game = _game;
         Powerup speedPowerup = new Powerup("Speed", 5000, 0, 1, 100, 0);
         Powerup extraLife = new Powerup("ExtraLife", 1000000000, 0, 1, 300, 0);
-        Powerup stationSpeed = new Powerup("FastStations", 5000, 0, 1f, 300, 0);
+        Powerup stationSpeed = new Powerup("FastStations", 10000, 0, 1f, 300, 0);
         allPowerups.put("Speed", speedPowerup);
         allPowerups.put("ExtraLife", extraLife);
         allPowerups.put("FastStations", stationSpeed);

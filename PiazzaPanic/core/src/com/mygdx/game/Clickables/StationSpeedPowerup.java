@@ -15,7 +15,7 @@ public class StationSpeedPowerup {
         stationSpeedClickable.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                powerups.setSpeedMultiplier(2);
+                powerups.setStationSpeed(10);
             }
         });
 
