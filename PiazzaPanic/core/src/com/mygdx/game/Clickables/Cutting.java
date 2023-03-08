@@ -11,6 +11,7 @@ import com.mygdx.game.Screens.GameScreen;
 
 public class Cutting {
     ImageButton cuttingClickable;
+
     public Cutting(PiazzaPanic _game, Utils utils, final GameScreen screen) {
         this.cuttingClickable =  utils.createImageClickable(32, 32);
         // function exectutes when you press on the cutting station on screen

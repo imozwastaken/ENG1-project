@@ -125,6 +125,11 @@ public class GameScreen implements Screen {
     ImageButton speedClickable;
     ImageButton repClickable;
     ImageButton saveClickable;
+
+    ImageButton upChopClickable;
+
+    ImageButton upFryClickable;
+
     //when you hover over a clickable it changes the cursor to a hand
     //this listener is added to all clickables
     ClickListener cursorHovering = new ClickListener() {
@@ -262,6 +267,8 @@ public class GameScreen implements Screen {
         // save game
         saveClickable = save.getSaveClickable();
         gameStage.addActor(saveClickable);
+
+        //upChopClickable = ;
 
         // adding the station clickables to the screen
         pantryClickable.setPosition(0, 64);
@@ -716,7 +723,8 @@ public class GameScreen implements Screen {
         style.background = getColoredDrawable(20, 5, Color.GREEN);
         style.knob = getColoredDrawable(0, 5, Color.WHITE);
         style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
-        ProgressBar bar = new ProgressBar(0, 7, 0.05f, false, style);
+        float stepSize =  powerups.getStationSpeed() * 0.5f;
+        ProgressBar bar = new ProgressBar(0, 7, stepSize, false, style);
         bar.setWidth(30);
         bar.setHeight(5);
         bar.setValue(15f);
@@ -729,7 +737,7 @@ public class GameScreen implements Screen {
     private void updateProgressBars() {
         if (!bars.isEmpty()) {
             for (ProgressBar bar : bars.keySet()) {
-                bar.setValue(bar.getValue() - 0.05f);
+                bar.setValue(bar.getValue() - bar.getStepSize());
                 if (bar.getValue() == 0) {
                     gameStage.getActors().removeValue(bar, false);
                     //unbusy the cook

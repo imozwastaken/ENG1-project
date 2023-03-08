@@ -13,6 +13,8 @@ import sun.nio.ch.Util;
 
 public class Frying {
     ImageButton fryingClickable;
+
+    boolean upgraded = false;
     public Frying(PiazzaPanic _game, Utils utils, final GameScreen screen) {
         this.fryingClickable =  utils.createImageClickable(32, 32);
 
@@ -74,5 +76,8 @@ public class Frying {
         return fryingClickable;
     }
 
+    public void upgrade() {
+        upgraded = true;
+    }
 
 }
