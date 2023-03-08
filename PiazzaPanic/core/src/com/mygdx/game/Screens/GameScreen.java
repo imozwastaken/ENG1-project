@@ -245,7 +245,7 @@ public class GameScreen implements Screen {
         spawnCooks();
         customers = new ArrayList<ArrayList<Customer>>();
         ArrayList<Customer> tmp = new ArrayList<Customer>();
-        for (int i=0; i < 3; i++) {
+        for (int i=0; i < 2; i++) {
             tmp.add(new Customer(new Actor()));
         }
         System.out.print(tmp);
@@ -491,14 +491,26 @@ public class GameScreen implements Screen {
 
     private void customerOperations() {
         // Check if all customers have been served
-        boolean allComplete = true;
-        for (int i=0; i < customers.get(customerCount).size(); i++) {
-            boolean selfComplete = (customers.get(customerCount).get(i).selfComplete);
-            if (!selfComplete) {
+        boolean allComplete = false;
+        for (Customer c : customers.get(customerCount)) {
+            if (!c.selfComplete) {
                 allComplete = false;
+                System.out.println(c.customerOrder.getRecipe());
                 break;
+            } else {
+                allComplete= true;
             }
         }
+        //for (int i=0; i < customers.get(customerCount).size(); i++) {
+        //    boolean selfComplete = (customers.get(customerCount).get(i).selfComplete);
+        //    if (!selfComplete) {
+        //        allComplete = false;
+        //        break;
+        //    } else {
+        //        allComplete = true;
+        //    }
+        //}
+        System.out.println("All is complete: " + allComplete);
         // move the customers to the counter
         for (int i=0; i < customers.get(customerCount).size();i++) {
             if (!customers.get(customerCount).get(i).atCounter) {
@@ -632,7 +644,7 @@ public class GameScreen implements Screen {
         int y = 112;
         for (ArrayList<Customer> customerArr : customers) {
             for (Customer customer : customerArr) {
-                if ((customer.atCounter) && (!customer.orderComplete)) {
+                if ((customer.atCounter) && (!customer.selfComplete)) {
                     timeCount += dt;
                     //one second has passed
                     if(timeCount >= 1){
@@ -641,7 +653,7 @@ public class GameScreen implements Screen {
                             customer.customerOrder.orderTime --;
                         }
                         timeCount = 0;
-                        if(customer.customerOrder.getOrderTime()==0){
+                        if(customer.customerOrder.getOrderTime()==0 && !customer.selfComplete){
                             //Uncomment line below if you want the customer to leave after the order timer is gone
                             //customer.orderComplete = true;
                             Rep--;

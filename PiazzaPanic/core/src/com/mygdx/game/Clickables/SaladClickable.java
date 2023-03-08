@@ -32,15 +32,18 @@ public class SaladClickable {
                 if (recipe.has(cooks.get(selected).CookStack)) {
                     for (int i = 0; i < customers.get(customerCount).size(); i++) {
                     if (customers.get(customerCount).get(i).customerOrder.getName() == "salad") {
-                        System.out.println("Served salad");
-                        cooks.get(selected).CookStack.remove(tomato);
-                        cooks.get(selected).CookStack.remove(lettuce);
-                        customers.get(customerCount).get(i).selfComplete = true;
-                        screen.getMoney().addMoney(100);
-                        screen.hideServingScreen();
-                        cooks.get(selected).isBusy = false;
-                        return;
-                    }
+                        if (!customers.get(customerCount).get(i).selfComplete) {
+                            System.out.println("Served salad");
+                            cooks.get(selected).CookStack.remove(tomato);
+                            cooks.get(selected).CookStack.remove(lettuce);
+                            customers.get(customerCount).get(i).selfComplete = true;
+                            screen.getMoney().addMoney(100);
+                            screen.hideServingScreen();
+                            cooks.get(selected).isBusy = false;
+                            return;
+                        }
+                        }
+                        
                 }
                 } else {
                     // some or all ingredients are not in the current cook's stack
