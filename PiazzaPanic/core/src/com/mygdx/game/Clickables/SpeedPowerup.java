@@ -20,8 +20,6 @@ public class SpeedPowerup {
                 powerups.setSpeedMultiplier(2);
             }
         });
-
-
     }
 
     public ImageButton getSpeedClickable() {

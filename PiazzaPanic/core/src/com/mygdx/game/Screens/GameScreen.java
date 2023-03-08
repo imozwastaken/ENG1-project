@@ -559,6 +559,7 @@ public class GameScreen implements Screen {
             money.addMoney(100);
 
         }
+        
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             // return to main menu
             game.setScreen(new MainMenuScreen(game));
@@ -726,7 +727,8 @@ public class GameScreen implements Screen {
         style.background = getColoredDrawable(20, 5, Color.GREEN);
         style.knob = getColoredDrawable(0, 5, Color.WHITE);
         style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
-        float stepSize =  powerups.getStationSpeed() * 0.5f;
+        float stepSize =  powerups.getStationSpeed() * 0.05f;
+        System.out.println(stepSize);
         ProgressBar bar = new ProgressBar(0, 7, stepSize, false, style);
         bar.setWidth(30);
         bar.setHeight(5);
