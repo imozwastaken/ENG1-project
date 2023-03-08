@@ -57,11 +57,15 @@ public class Customer {
                     atCounter = true;
                 }
             }
-        } else if (orderComplete) {
+        } else if (selfComplete) {
             // if an order is complete, move the customer offscreen to the right
             body.setX(body.getX() + 50 * Gdx.graphics.getDeltaTime());
+        } else {
+            System.out.println("ORder isnt complete...");
         }
     }
+
+    
 
     private Order generateOrder() {
         FoodMenu menu = new FoodMenu();

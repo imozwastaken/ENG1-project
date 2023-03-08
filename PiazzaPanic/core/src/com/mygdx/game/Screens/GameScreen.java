@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -245,12 +246,11 @@ public class GameScreen implements Screen {
         spawnCooks();
         customers = new ArrayList<ArrayList<Customer>>();
         ArrayList<Customer> tmp = new ArrayList<Customer>();
-        for (int i=0; i < 2; i++) {
+        for (int i=0; i < 3; i++) {
             tmp.add(new Customer(new Actor()));
         }
         System.out.print(tmp);
         customers.add(tmp);
-        customers.get(0).add(new Customer(new Actor()));
         // array of all progressbars created (used to update all of them in updateProgressBars function)
         bars = new HashMap<ProgressBar, Cook>();
         // pantry station
@@ -501,29 +501,19 @@ public class GameScreen implements Screen {
                 allComplete= true;
             }
         }
-        //for (int i=0; i < customers.get(customerCount).size(); i++) {
-        //    boolean selfComplete = (customers.get(customerCount).get(i).selfComplete);
-        //    if (!selfComplete) {
-        //        allComplete = false;
-        //        break;
-        //    } else {
-        //        allComplete = true;
-        //    }
-        //}
+
         System.out.println("All is complete: " + allComplete);
         // move the customers to the counter
         for (int i=0; i < customers.get(customerCount).size();i++) {
             if (!customers.get(customerCount).get(i).atCounter) {
-                System.out.println("at counter");
                 customers.get(customerCount).get(i).move();
-                System.out.println(customers.get(customerCount).get(i).orderComplete);
             } else if (allComplete) {
                 // make the customer leave
-                System.out.println("at counter kl");
+                System.out.println("at counter kl" + customers.get(customerCount).get(i).body.getX());
                 customers.get(customerCount).get(i).move();
-                System.out.println("left");
-                System.out.println(customers);
+                
                 if (customers.get(customerCount).get(i).body.getX() > 148) {
+                    System.out.println("X is past 148"+ customers.get(customerCount).get(i).body.getX());
                     customers.get(customerCount).get(i).body.remove();
                     if (!endless) {
                         // check if the game is in endless mode or not
@@ -531,7 +521,10 @@ public class GameScreen implements Screen {
                             // spawn new customer
     
                             ArrayList<Customer> tmp = new ArrayList<Customer>();
-                            tmp.add(new Customer(new Actor()));
+                            int tmpI = MathUtils.random(0, 2);
+                            for (int j=0; j <= tmpI ; j++){
+                                tmp.add(new Customer(new Actor()));
+                            }
                             customers.add(tmp);
                             customerCount += 1;
                         } else {
@@ -549,7 +542,10 @@ public class GameScreen implements Screen {
                     } else {
                         // TODO endless mode
                         ArrayList<Customer> tmp = new ArrayList<Customer>();
-                        tmp.add(new Customer(new Actor()));
+                        int tmpI = MathUtils.random(0, 3);
+                        for (int j=0; j <= tmpI ; j++){
+                            tmp.add(new Customer(new Actor()));
+                        }
                         customers.add(tmp);
                         customerCount += 1;
                     }
@@ -633,8 +629,9 @@ public class GameScreen implements Screen {
         game.batch.draw(plateTex, 164, 25);
         game.batch.draw(cookStackTitle, 164, 120);
         game.batch.draw(idles.get(selected), 168, 1);
-        game.batch.draw(custSkins.getSprite(customers.get(customerCount).get(0).name), customers.get(customerCount).get(0).body.getX(), customers.get(customerCount).get(0).body.getY());
-        game.batch.draw(selectedCook, cooks.get(selected).CookBody.getX(), cooks.get(selected).CookBody.getY() + 26);
+        for (int i=0; i < customers.get(customerCount).size(); i++) {
+            game.batch.draw(custSkins.getSprite(customers.get(customerCount).get(i).name), customers.get(customerCount).get(i).body.getX(), customers.get(customerCount).get(i).body.getY());
+        }
         game.batch.end();
     }
 
