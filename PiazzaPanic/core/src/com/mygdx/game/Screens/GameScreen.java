@@ -490,13 +490,22 @@ public class GameScreen implements Screen {
     }
 
     private void customerOperations() {
+        // Check if all customers have been served
+        boolean allComplete = true;
+        for (int i=0; i < customers.get(customerCount).size(); i++) {
+            boolean selfComplete = (customers.get(customerCount).get(i).selfComplete);
+            if (!selfComplete) {
+                allComplete = false;
+                break;
+            }
+        }
         // move the customers to the counter
         for (int i=0; i < customers.get(customerCount).size();i++) {
             if (!customers.get(customerCount).get(i).atCounter) {
                 System.out.println("at counter");
                 customers.get(customerCount).get(i).move();
                 System.out.println(customers.get(customerCount).get(i).orderComplete);
-            } else if (customers.get(customerCount).get(i).orderComplete) {
+            } else if (allComplete) {
                 // make the customer leave
                 System.out.println("at counter kl");
                 customers.get(customerCount).get(i).move();
@@ -654,7 +663,6 @@ public class GameScreen implements Screen {
                         }
                     }
                                         //order timer sets to 0 when it reaches -1
-                   
                     
                     game.batch.end();
                     // increase x value if there is more than one current order

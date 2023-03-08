@@ -19,7 +19,6 @@ public class Customer {
     public boolean orderComplete = false;
     public boolean selfComplete = false;
     public boolean atCounter = false;
-    public boolean selfComplete = false;
 
     public Actor body;
     public String name;
