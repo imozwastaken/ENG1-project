@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 // it would probably be a good idea to move a lot of the code from GameScreen to here
+/**
+ * The class Cook represents the playable characters in the game
+ */
 
 public class Cook {
     public Stack<Ingredient> CookStack;
@@ -15,11 +18,17 @@ public class Cook {
     public float[][] locations = {{0, 64}, {32, 64}, {64, 64}, {0, 32}, {48, 28}, {80, 48}};
     public boolean isBusy = false;
 
+    /**
+     * Cook constructor
+     */
     public Cook(Actor skin) {
         this.CookBody = skin;
         this.CookStack = new Stack<>();
     }
 
+    /**
+     * move method moves the cook between the workstations
+     */
     public void move(int index, Actor cook, ArrayList<Integer> stations) {
         for (int station : stations) {
             if (index != station) {
