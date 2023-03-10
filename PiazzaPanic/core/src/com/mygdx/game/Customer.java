@@ -10,7 +10,9 @@ import com.mygdx.game.Food.Salad;
 
 import java.util.ArrayList;
 
-
+/**
+ * The Customer class represents the non-playable customer character
+ */
 public class Customer {
     // god we love using arrays for dealing with this stuff
     private final ArrayList<Order> orderOptions = new ArrayList<>();
@@ -21,6 +23,9 @@ public class Customer {
     public String name;
     public Order customerOrder;
 
+    /**
+     * Customer constructor
+     */
     public Customer(Actor skin) {
         String[] names = {"Blue", "Red", "White", "Yellow"};
         this.name = names[MathUtils.random(0, 3)];
@@ -36,7 +41,9 @@ public class Customer {
 
         this.customerOrder = generateOrder();
     }
-
+/**
+ * The Move method is the same move method from Cook. It sets the target destination and moves the customer there in a straight line
+ */
     public void move() {
         // method to move a cook from their current position to a station
         if (!atCounter) {
@@ -61,7 +68,10 @@ public class Customer {
             body.setX(body.getX() + 50 * Gdx.graphics.getDeltaTime());
         }
     }
-
+/**
+ * Generates a random number for the order
+ * @return the random number
+ */
     private Order generateOrder() {
         return orderOptions.get(MathUtils.random(0, 1));
     }
