@@ -43,26 +43,29 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * The class GameScreen represents the screen and all displayed assets within the game, which inherits from the Screen interface
+ */
 public class GameScreen implements Screen {
-    
+
     private final int customerNumber = 5;
     PiazzaPanic game;
     FitViewport view;
     Stage gameStage;
-    // map and camera stuff
+    /** map and camera stuff */
     TmxMapLoader mapLoader;
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
     OrthographicCamera gameCam;
-    //Start the game with 3 reputation points
+    /** Start the game with 3 reputation points */
     int Rep = 3;
     Texture RepLabel = new Texture("REP.png");
     Texture RepPoint = new Texture("REPHeart.png");
-    // customer number determines how many customers will spawn over the course of the game
-    // 0 means infinite
+    /** customer number determines how many customers will spawn over the course of the game */
+    /** 0 means infinite */
     private final Array<Cook> cooks;
     private final Array<Customer> customers;
-    // sprite handling
+    /** sprite handling */
     Sprite alex;
     Sprite amelia;
     Sprite adam;
@@ -70,24 +73,24 @@ public class GameScreen implements Screen {
     Skin skin;
     Skin custSkins;
     ArrayList<Sprite> idles = new ArrayList<>();
-    // cook and customer control variables
+    /** cook and customer control variables */
     int selected = 0;
     ArrayList<Integer> stationSelected = new ArrayList<>();
-    // control the number of cooks
-    int cookCount = 2; // control how many cooks spawn -> update to allow for the value to increase
-    // take the time at the start of the game to display the time taken to complete the round
+    /** control the number of cooks */
+    int cookCount = 2; /** control how many cooks spawn -> update to allow for the value to increase */
+    /** take the time at the start of the game to display the time taken to complete the round */
     Instant gameTime = Instant.now();
-    // list of active orders
+    /** list of active orders */
     ArrayList<Order> orders = new ArrayList<>();
-    //used to count how much time has passed after an order is placed
+    /** used to count how much time has passed after an order is placed */
     float timeCount = 0;
-    //order timer font
+    /** order timer font */
     BitmapFont font = new BitmapFont();
-    // progress bars
+    /** progress bars */
     HashMap<ProgressBar, Cook> bars;
-    // music
+    /** music */
     Music alienJazz = Gdx.audio.newMusic(Gdx.files.internal("Alien_Jazz_Ridley_Coyte.mp3"));
-    // stations
+    /** stations */
     ImageButton pantryClickable;
     ImageButton fryingClickable;
     int fryingClicked = 0;
@@ -97,12 +100,12 @@ public class GameScreen implements Screen {
     ImageButton cuttingClickable;
     ImageButton binClickable;
     ImageButton servingClickable;
-    //pantry and serving screen frames
+    /** pantry and serving screen frames */
     TextureRegion pantryScreenFrameRegion;
     ImageButton pantryScreenFrame;
     TextureRegion servingScreenFrameRegion;
     ImageButton servingScreenFrame;
-    //clickables
+    /** clickables */
     ImageButton XbtnClickable;
     ImageButton lettuceClickable;
     ImageButton tomatoClickable;
@@ -110,8 +113,8 @@ public class GameScreen implements Screen {
     ImageButton pattyClickable;
     ImageButton burgerClickable;
     ImageButton saladClickable;
-    //when you hover over a clickable it changes the cursor to a hand
-    //this listener is added to all clickables
+    /** when you hover over a clickable it changes the cursor to a hand */
+    /** this listener is added to all clickables */
     ClickListener cursorHovering = new ClickListener() {
         @Override
         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -123,11 +126,11 @@ public class GameScreen implements Screen {
             Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
         }
     };
-    //UI elements
+    /** UI elements */
     Texture plateTex = new Texture("plate.png");
     Texture cookStackTitle = new Texture("cookStackTitle.png");
     Texture selectedCook = new Texture("selected.png");
-    //Order Textures
+    /** Order Textures */
     Texture burgerOrderTexture = new Texture("orderBurger.png");
     Texture saladOrderTexture = new Texture("orderSalad.png");
     Boolean showPantryScreen = false;
@@ -136,12 +139,12 @@ public class GameScreen implements Screen {
 
 
     public GameScreen(PiazzaPanic game, FitViewport port) {
-        // initialise the game
+        /** initialise the game */
         this.game = game;
         this.view = port;
         gameStage = new Stage(view, game.batch);
 
-        // load the map and camera
+        /** load the map and camera */
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("KitchenMap.tmx");
         renderer = new OrthogonalTiledMapRenderer(map);
@@ -149,10 +152,10 @@ public class GameScreen implements Screen {
         view.setCamera(gameCam);
         view.setWorldSize(192, 144);
         gameCam.position.set(view.getWorldWidth() / 2, view.getWorldHeight() / 2, 0);
-        //set order timer font color
+        /** set order timer font color */
         font.setColor(Color.BLACK);
         font.getData().setScale(0.5f);
-        // sprite information from the texture atlas
+        /** sprite information from the texture atlas */
         TextureAtlas atlasIdle = new TextureAtlas(Gdx.files.internal("charIdle.txt"));
         TextureAtlas customersLeft = new TextureAtlas(Gdx.files.internal("customersLeft.txt"));
         skin = new Skin();
@@ -167,25 +170,25 @@ public class GameScreen implements Screen {
         idles.add(alex);
         idles.add(amelia);
 
-        // music control
-        // music composed by Ridley Coyte
+        /** music control */
+        /** music composed by Ridley Coyte */
         alienJazz.setLooping(true);
         alienJazz.play();
 
-        // create the instances of the cooks and first customer.
+        /** create the instances of the cooks and first customer. */
         cooks = new Array<Cook>();
         spawnCooks();
         customers = new Array<Customer>();
         customers.add(new Customer(new Actor()));
 
-        // array of all progressbars created (used to update all of them in updateProgressBars function)
+        /** array of all progressbars created (used to update all of them in updateProgressBars function) */
         bars = new HashMap<ProgressBar, Cook>();
 
-        // pantry station
+        /** pantry station */
         pantryClickable = createImageClickable(32, 32);
-        // function exectutes when you press on the pantry on screen
-        // it sets the pantry as the currently selected station - this moves the cook to the pantry
-        // when the cook arrives the pantry screen is shown
+        /** function exectutes when you press on the pantry on screen */
+        /** it sets the pantry as the currently selected station - this moves the cook to the pantry */
+        /** when the cook arrives the pantry screen is shown */
         pantryClickable.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -198,25 +201,25 @@ public class GameScreen implements Screen {
         });
         gameStage.addActor(pantryClickable);
 
-        // frying station
+        /** frying station */
         fryingClickable = createImageClickable(32, 32);
-        // function exectutes when you press on the frying station on screen
-        // it sets the frying station as the currently selected station - this moves the cook to the frying station
+        /** function exectutes when you press on the frying station on screen */
+        /** it sets the frying station as the currently selected station - this moves the cook to the frying station */
         fryingClickable.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected, 1);
-                //boolean ingredientAtStation = false;
+                boolean ingredientAtStation = false;
                 Ingredient cookedPatty = new Ingredient("patty", new Texture("rawPatty.png"), new Texture("prepdPatty.png"));
                 cookedPatty.prepare();
                 cookedPatty.updateCurrentTexture();
                 if ((Math.abs(cooks.get(selected).CookBody.getY() - 64f) < 2) && (Math.abs(cooks.get(selected).CookBody.getX() - 32f) < 2)) {
                     if (!(cooks.get(selected).isBusy)) {
-                        // used to limit to preping only one ingredient per press
+                        /** used to limit to preping only one ingredient per press */
                         boolean ingredientDone = false;
                         Ingredient selectedIngredient = null;
-                        // preps the first vegetable in the current cook's stack after pressing the station again
-                        // while busy creates a progress bar to indicate when the cook can move again
+                        /** preps the first vegetable in the current cook's stack after pressing the station again */
+                        /** while busy creates a progress bar to indicate when the cook can move again */
                         for (Ingredient ingredient : cooks.get(selected).CookStack) {
                             if ((ingredient.name == "patty") && (!ingredient.getState()) && (!ingredientDone)) {
                                 selectedIngredient = ingredient;
@@ -226,7 +229,7 @@ public class GameScreen implements Screen {
                             cooks.get(selected).isBusy = true;
                             createProgressBar(24, 86, cooks.get(selected));
                             fryingClicked++;
-                            // used for the flipping mechanism (the station has to be pressed twice for the patty to be prepared)
+                            /** used for the flipping mechanism (the station has to be pressed twice for the patty to be prepared) */
                             if ((fryingClicked) % 2 == 0) {
                                 ingredientDone = true;
                                 cooks.get(selected).CookStack.push(cookedPatty);
@@ -236,7 +239,7 @@ public class GameScreen implements Screen {
                                 pattyAtFrying = true;
                             }
                         } else {
-                            // create message to indicate that there are no ingredients in the current cook's stack to be prepared
+                            /** create message to indicate that there are no ingredients in the current cook's stack to be prepared */
                             if (pattyAtFrying) {
                                 cooks.get(selected).isBusy = true;
                                 createProgressBar(24, 86, cooks.get(selected));
@@ -251,10 +254,10 @@ public class GameScreen implements Screen {
         });
         gameStage.addActor(fryingClickable);
 
-        // baking station
+        /** baking station */
         bakingClickable = createImageClickable(32, 32);
-        // function exectutes when you press on the baking station on screen
-        // it sets the baking station as the currently selected station - this moves the cook to the baking station
+        /** function exectutes when you press on the baking station on screen */
+        /** it sets the baking station as the currently selected station - this moves the cook to the baking station */
         bakingClickable.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -263,17 +266,17 @@ public class GameScreen implements Screen {
         });
         gameStage.addActor(bakingClickable);
 
-        // bin station
+        /** bin station */
         binClickable = createImageClickable(32, 32);
-        // function exectutes when you press on the bin station on screen
-        // it sets the bin station as the currently selected station - this moves the cook to the bin station
-        // if the cook is by the bin and presses on the bin it deletes the top ingredient on the current cook's stack
+        /** function exectutes when you press on the bin station on screen */
+        /** it sets the bin station as the currently selected station - this moves the cook to the bin station */
+        /** if the cook is by the bin and presses on the bin it deletes the top ingredient on the current cook's stack */
         binClickable.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
 
                 stationSelected.set(selected, 3);
-                // if statement that checks if the current cook is at the bin
+                /** if statement that checks if the current cook is at the bin */
                 if ((Math.abs(cooks.get(selected).CookBody.getY() - 32f) < 2) && (Math.abs(cooks.get(selected).CookBody.getX() - 0f) < 2)) {
                     if (cooks.get(selected).CookStack.size() > 0) {
                         cooks.get(selected).CookStack.pop();
@@ -283,21 +286,21 @@ public class GameScreen implements Screen {
         });
         gameStage.addActor(binClickable);
 
-        // cutting station
+        /** cutting station */
         cuttingClickable = createImageClickable(64, 32);
-        // function exectutes when you press on the cutting station on screen
-        // it sets the cutting station as the currently selected station - this moves the cook to the cutting station
+        /** function exectutes when you press on the cutting station on screen */
+        /** it sets the cutting station as the currently selected station - this moves the cook to the cutting station */
         cuttingClickable.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected, 4);
                 if ((Math.abs(cooks.get(selected).CookBody.getY() - 28f) < 2) && (Math.abs(cooks.get(selected).CookBody.getX() - 48f) < 2)) {
-                    // Can only prep if the cook is not busy
+                    /** Can only prep if the cook is not busy */
                     if (!(cooks.get(selected).isBusy)) {
-                        // used to limit to preping only one ingredient per press
+                        /** used to limit to preping only one ingredient per press */
                         boolean ingredientDone = false;
-                        // preps the first vegetable in the current cook's stack after pressing the station again
-                        // while busy creates a progress bar to indicate when the cook can move again
+                        /** preps the first vegetable in the current cook's stack after pressing the station again */
+                        /** while busy creates a progress bar to indicate when the cook can move again */
                         Ingredient selectedIngredient = null;
                         for (Ingredient ingredient : cooks.get(selected).CookStack) {
                             if ((ingredient.name == "lettuce") && (!ingredient.getState()) && (!ingredientDone)) {
@@ -319,11 +322,11 @@ public class GameScreen implements Screen {
         });
         gameStage.addActor(cuttingClickable);
 
-        // serving station
+        /** serving station */
         servingClickable = createImageClickable(32, 56);
-        // function exectutes when you press on the serving station on screen
-        // it sets the serving station as the currently selected station - this moves the cook to the serving station
-        // when the cook arrives the serving screen is shown
+        /** function exectutes when you press on the serving station on screen */
+        /** it sets the serving station as the currently selected station - this moves the cook to the serving station */
+        /** when the cook arrives the serving screen is shown */
         servingClickable.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -336,7 +339,7 @@ public class GameScreen implements Screen {
         });
         gameStage.addActor(servingClickable);
 
-        // adding the station clickables to the screen
+        /** adding the station clickables to the screen */
         pantryClickable.setPosition(0, 64);
         fryingClickable.setPosition(32, 64);
         bakingClickable.setPosition(64, 64);
@@ -344,10 +347,10 @@ public class GameScreen implements Screen {
         cuttingClickable.setPosition(32, 0);
         servingClickable.setPosition(96, 16);
 
-        // close button for station pop ups
+        /** close button for station pop ups */
         XbtnClickable = createImageClickable(new Texture("Xbtn.png"), 16, 16);
-        // function executes after clicking on the close button
-        // hides any menus that pop up
+        /** function executes after clicking on the close button */
+        /** hides any menus that pop up */
         XbtnClickable.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -357,16 +360,16 @@ public class GameScreen implements Screen {
             }
         });
 
-        // pantry screen frame
+        /** pantry screen frame */
         pantryScreenFrameRegion = new TextureRegion(new Texture("pantryFrame.png"));
         pantryScreenFrame = new ImageButton(new TextureRegionDrawable(pantryScreenFrameRegion));
         pantryScreenFrame.setSize(140, 92);
 
-        /* Pantry screen buttons
-         The functions executes after clicking on any of the ingredient buttons on the pantry screen
-         Addes the ingredient to the current cook's stack (if it's less than 5 items) */
+        /** Pantry screen buttons
+         * The functions executes after clicking on any of the ingredient buttons on the pantry screen
+         * Adds the ingredient to the current cook's stack (if it's less than 5 items) */
 
-        // unprepared lettuce button
+        /** unprepared lettuce button */
         lettuceClickable = createImageClickable(new Texture("lettuce.png"), 24, 24);
         lettuceClickable.addListener(new ClickListener() {
             @Override
@@ -377,7 +380,7 @@ public class GameScreen implements Screen {
             }
         });
 
-        // unprepared tomato button
+        /** unprepared tomato button */
         tomatoClickable = createImageClickable(new Texture("tomato.png"), 24, 24);
         tomatoClickable.addListener(new ClickListener() {
             @Override
@@ -388,7 +391,7 @@ public class GameScreen implements Screen {
             }
         });
 
-        // unprepared buns button
+        /** unprepared buns button */
         bunsClickable = createImageClickable(new Texture("buns.png"), 24, 24);
         bunsClickable.addListener(new ClickListener() {
             @Override
@@ -401,7 +404,7 @@ public class GameScreen implements Screen {
             }
         });
 
-        // unprepared patty button
+        /** unprepared patty button */
         pattyClickable = createImageClickable(new Texture("rawPatty.png"), 24, 24);
         pattyClickable.addListener(new ClickListener() {
             @Override
@@ -412,16 +415,18 @@ public class GameScreen implements Screen {
             }
         });
 
-        // serving screen frame
+        /** serving screen frame */
         servingScreenFrameRegion = new TextureRegion(new Texture("servingFrame.png"));
         servingScreenFrame = new ImageButton(new TextureRegionDrawable(servingScreenFrameRegion));
         servingScreenFrame.setSize(140, 92);
 
-         /* Serving screen buttons
-         The functions executes after clicking on any of the ingredient buttons on the serving screen
-         Serves the item if all the required prepared ingredients are in the current cook's stack */
+         /**
+          * Serving screen buttons
+          * The functions executes after clicking on any of the ingredient buttons on the serving screen
+          * Serves the item if all the required prepared ingredients are in the current cook's stack
+          */
 
-        // burger button
+        /** burger button */
         burgerClickable = createImageClickable(new Texture("burger.png"), 24, 24);
         burgerClickable.addListener(new ClickListener() {
             @Override
@@ -443,12 +448,12 @@ public class GameScreen implements Screen {
                         cooks.get(selected).isBusy = false;
                     }
                 } else {
-                    // some or all ingredients are not in the current cook's stack
+                    /** some or all ingredients are not in the current cook's stack */
                 }
             }
         });
 
-        // salad button
+        /** salad button */
         saladClickable = createImageClickable(new Texture("salad.png"), 24, 24);
         saladClickable.addListener(new ClickListener() {
             @Override
@@ -467,7 +472,7 @@ public class GameScreen implements Screen {
                         cooks.get(selected).isBusy = false;
                     }
                 } else {
-                    // some or all ingredients are not in the current cook's stack
+                    /** some or all ingredients are not in the current cook's stack */
                 }
             }
         });
@@ -482,7 +487,7 @@ public class GameScreen implements Screen {
         return drawable;
     }
 
-    // Used when the clickable region has a texture
+    /** Used when the clickable region has a texture */
     private ImageButton createImageClickable(Texture texture, float width, float height) {
         TextureRegion region = new TextureRegion(texture);
         ImageButton clickable = new ImageButton(new TextureRegionDrawable(region));
@@ -491,7 +496,7 @@ public class GameScreen implements Screen {
         return clickable;
     }
 
-    // Used to create an invisible clickable region
+    /** Used to create an invisible clickable region */
     private ImageButton createImageClickable(int width, int height) {
         Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
         TextureRegion region = new TextureRegion(new Texture(pixmap));
@@ -512,7 +517,7 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(gameStage);
         renderer.render();
 
-        // call functions which determine key gameplay elements
+        /** call functions which determine key gameplay elements */
         gameStage.act();
         updateProgressBars();
         updateBatch();
@@ -547,28 +552,28 @@ public class GameScreen implements Screen {
         game.batch.end();
     }
     private void customerOperations() {
-        // move the customers to the counter
+        /** move the customers to the counter */
         if (!customers.get(customerCount).atCounter) {
             customers.get(customerCount).move();
         } else if (customers.get(customerCount).orderComplete) {
-            // make the customer leave
+            /** make the customer leave */
             customers.get(customerCount).move();
             if (customers.get(customerCount).body.getX() > 148) {
                 customers.get(customerCount).body.remove();
                 if (customerNumber != 0) {
-                    // check if the game is in endless mode or not
+                    /** check if the game is in endless mode or not */
                     if (customerCount != customerNumber - 1) {
-                        // spawn new customer
+                        /** spawn new customer */
                         customers.add(new Customer(new Actor()));
                         customerCount += 1;
                     } else {
-                        // end game by taking the time at the game end and going to the time screen
+                        /** end game by taking the time at the game end and going to the time screen */
                         Duration timeTaken = Duration.between(gameTime, Instant.now());
                         alienJazz.stop();
                         game.setScreen(new EndGameScreen(game, timeTaken,Rep));
                     }
                 } else {
-                    // TODO endless mode
+                    /** TODO endless mode */
                     customers.add(new Customer(new Actor()));
                     customerCount += 1;
                 }
@@ -576,32 +581,32 @@ public class GameScreen implements Screen {
         }
     }
 
-    // generate the cooks
+    /** generate the cooks */
     private void spawnCooks() {
         for (int i = 0; i < cookCount; i++) {
             Cook cook = new Cook(new Actor());
             cook.CookBody.setWidth(16);
             cook.CookBody.setHeight(23);
-            // scale information
+            /** scale information */
             cook.CookBody.setScaleX(game.GAME_WIDTH / 16f);
             cook.CookBody.setScaleY(game.GAME_HEIGHT / 23f);
-            // cooks are stored in an array to make it easier to keep track of all things relating to them
-            // I love arrays so much
+            /** cooks are stored in an array to make it easier to keep track of all things relating to them
+            /** I love arrays so much */
             cooks.add(cook);
             gameStage.addActor(cook.CookBody);
             stationSelected.add(i);
         }
     }
 
-    //process user input
+    /**process user input */
     private void processInput() {
-        // number keys are used to select which cook is being controlled currently
+        /** number keys are used to select which cook is being controlled currently */
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
             selected = 0;
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
             selected = 1;
         }
-        // TODO add statements for adding more cooks here
+        /** TODO add statements for adding more cooks here */
         if (cookCount > 2 && Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
             selected = 2;
         }
@@ -611,16 +616,16 @@ public class GameScreen implements Screen {
             }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            // debug option to mark the current customers order as complete, moving them on
+            /** debug option to mark the current customers order as complete, moving them on */
             customers.get(customerCount).orderComplete = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            // return to main menu
+            /** return to main menu */
             game.setScreen(new MainMenuScreen(game));
         }
         if (Gdx.input.isKeyPressed(Input.Keys.M)) {
-            // used for debugging
-            // prepares all ingredients in current cook's stack
+            /** used for debugging */
+            /** prepares all ingredients in current cook's stack */
             for (Ingredient ingredient : cooks.get(selected).CookStack) {
                 ingredient.prepare();
                 ingredient.updateCurrentTexture();
@@ -628,10 +633,10 @@ public class GameScreen implements Screen {
         }
     }
 
-    //update the cooks on the screen
+    /**update the cooks on the screen */
     private void updateBatch() {
-        // this section assigns each cook a sprite from the list idles
-        // you could potentially update this to allow for animations for the cooks when they move
+        /** this section assigns each cook a sprite from the list idles */
+        /** you could potentially update this to allow for animations for the cooks when they move */
         game.batch.begin();
         int index = 0;
         for (Cook cook : cooks) {
@@ -647,29 +652,29 @@ public class GameScreen implements Screen {
     }
 
     private void showOrders(float dt) {
-        // displays the orders at the top of the screen
+        /** displays the orders at the top of the screen */
         int x = 1;
         int y = 112;
         for (Customer customer : customers) {
             if ((customer.atCounter) && (!customer.orderComplete)) {
                 timeCount += dt;
-                //one second has passed
+                /**one second has passed */
                 if(timeCount >= 1){
-                    //update order timer
+                    /**update order timer */
                     if(customer.customerOrder.getOrderTime() >= 0){
                         customer.customerOrder.orderTime --;
                     }
                     timeCount = 0;
                     if(customer.customerOrder.getOrderTime()==0){
-                        //Uncomment line below if you want the customer to leave after the order timer is gone
-                        //customer.orderComplete = true;
+                        /**Uncomment line below if you want the customer to leave after the order timer is gone */
+                        /**customer.orderComplete = true; */
                         Rep--;
                     }
                 }
                 game.batch.begin();
                 game.batch.draw(customer.customerOrder.getOrderTexture(), x, y);
                 game.batch.draw(customer.customerOrder.getRecipe().getSpeechBubbleTexture(), customer.body.getX() - 10, customer.body.getY() + 17);
-                //order timer sets to 0 when it reaches -1
+                /**order timer sets to 0 when it reaches -1 */
                 if(customer.customerOrder.getOrderTime()>-1){
                     font.draw(game.batch, Integer.toString(customer.customerOrder.getOrderTime()), x+30, y+10);
                 } else {
@@ -677,14 +682,14 @@ public class GameScreen implements Screen {
                 }
                 
                 game.batch.end();
-                // increase x value if there is more than one current order
+                /** increase x value if there is more than one current order */
                 x += 41;
             }
         }
     }
 
     private void showCookStack() {
-        // display the stack of ingredients being held by the current cook
+        /** display the stack of ingredients being held by the current cook */
         float x = 164;
         float y = 32;
         game.batch.begin();
@@ -741,7 +746,7 @@ public class GameScreen implements Screen {
     }
 
     private void hidePantryScreen() {
-        // moves pantry screen offscreen
+        /** moves pantry screen offscreen */
         pantryScreenFrame.setPosition(10000, -1);
         XbtnClickable.setPosition(10000, -1);
         lettuceClickable.setPosition(10000, -1);
@@ -751,7 +756,7 @@ public class GameScreen implements Screen {
     }
 
     private void hideServingScreen() {
-        // moves serving screen offscreen
+        /** moves serving screen offscreen */
         servingScreenFrame.setPosition(10000, -1);
         XbtnClickable.setPosition(10000, -1);
         burgerClickable.setPosition(10000, -1);
@@ -779,7 +784,7 @@ public class GameScreen implements Screen {
                 bar.setValue(bar.getValue() - 0.05f);
                 if (bar.getValue() == 0) {
                     gameStage.getActors().removeValue(bar, false);
-                    //unbusy the cook
+                    /**unbusy the cook */
                     bars.get(bar).isBusy = false;
                     bars.remove(bar);
                 }

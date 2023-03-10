@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 /**
- * The class Burger represents the burger item in the game, which inherits from the recipe class
+ * The class Burger represents the burger item in the game, which inherits from the recipe interface
  */
 public class Burger implements Recipe {
     ArrayList<Ingredient> burgerRecipe;
