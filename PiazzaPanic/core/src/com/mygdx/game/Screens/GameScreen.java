@@ -113,8 +113,10 @@ public class GameScreen implements Screen {
     ImageButton pattyClickable;
     ImageButton burgerClickable;
     ImageButton saladClickable;
-    /** when you hover over a clickable it changes the cursor to a hand */
-    /** this listener is added to all clickables */
+
+    /**
+     * Listener function to
+     */
     ClickListener cursorHovering = new ClickListener() {
         @Override
         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
