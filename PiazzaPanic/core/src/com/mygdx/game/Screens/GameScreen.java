@@ -115,14 +115,30 @@ public class GameScreen implements Screen {
     ImageButton saladClickable;
 
     /**
-     * Listener function to
+     * Listener function to change the mouse cursor to a hand icon when hovering over clickable assets
      */
     ClickListener cursorHovering = new ClickListener() {
+        /**
+         * Function to change the arrow icon into the hand icon after it stops floating over the clickable asset
+         * @param event
+         * @param x
+         * @param y
+         * @param pointer
+         * @param fromActor May be null.
+         */
         @Override
         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
             Gdx.graphics.setSystemCursor(SystemCursor.Hand);
         }
 
+        /**
+         * Function to change the hand icon back to the arrow icon after it stops floating over the clickable asset
+         * @param event
+         * @param x
+         * @param y
+         * @param pointer
+         * @param toActor May be null.
+         */
         @Override
         public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
             Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
@@ -140,8 +156,12 @@ public class GameScreen implements Screen {
     private int customerCount = 0;
 
 
+    /**
+     * Method to initialises the game
+     * @param game
+     * @param port
+     */
     public GameScreen(PiazzaPanic game, FitViewport port) {
-        /** initialise the game */
         this.game = game;
         this.view = port;
         gameStage = new Stage(view, game.batch);
