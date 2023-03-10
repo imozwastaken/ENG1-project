@@ -14,7 +14,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.PiazzaPanic;
 
-
+/**
+ *The MainMenuScreen class represents the main menu and inherits from Screen
+ */
 public class MainMenuScreen implements Screen {
     PiazzaPanic game;
     Texture logo;
@@ -54,11 +56,17 @@ public class MainMenuScreen implements Screen {
     TextureRegionDrawable infoBtnDrawableHover;
     ImageButton infoBtnHover;
 
+    /**
+     * Constructor for the MainMenuScreen
+     */
     public MainMenuScreen(PiazzaPanic game) {
         this.game = game;
 
     }
 
+    /**
+     * The show method creates listeners for the play, info and exit buttons after loading their textures
+     */
     @Override
     public void show() {
         logo = new Texture("Piazza_Panic_Logo.png");
@@ -147,6 +155,9 @@ public class MainMenuScreen implements Screen {
         });
     }
 
+    /**
+     * The render method draws/renders the main menu screen
+     */
     @Override
     public void render(float delta) {
         gameStage.act();
@@ -187,6 +198,9 @@ public class MainMenuScreen implements Screen {
         gameStage.draw();
     }
 
+    /**
+     * The resize method resizes the gameStage to fit the screen
+     */
     @Override
     public void resize(int width, int height) {
         gameStage.getViewport().update(width, height);
@@ -209,7 +223,9 @@ public class MainMenuScreen implements Screen {
         // TODO Auto-generated method stub
 
     }
-
+/**
+ * The dispose method releases all resources from the logo and gameStage objects
+ */
     @Override
     public void dispose() {
         logo.dispose();
