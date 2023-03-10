@@ -11,6 +11,9 @@ public class Ingredient {
     private Texture currentTex;
     private Boolean prepared = false;
 
+    /**
+     * Constructor for the Ingredient class
+     */
     public Ingredient(String name, Texture notPreparedTexture, Texture preparedTexture) {
         this.name = name;
         this.prepdTex = preparedTexture;
@@ -18,14 +21,25 @@ public class Ingredient {
         currentTex = this.notPrepdTex;
     }
 
+    /**
+     * Getter function to return if ingredient is prepared
+     * @return the boolean value for whether the ingredient is prepared or not
+     */
     public boolean getState() {
         return prepared;
     }
 
+    /**
+     * Prepares an ingredient
+     * @return the true boolean value for the ingredient being prepared
+     */
     public void prepare() {
         this.prepared = true;
     }
 
+    /**
+     * Function to update the texture to either look prepared or not depending on whether the ingredient is prepared or not
+     */
     public void updateCurrentTexture() {
         if (prepared) {
             currentTex = this.prepdTex;
@@ -34,6 +48,10 @@ public class Ingredient {
         }
     }
 
+    /**
+     * Check function to check if ingredient matches required ingredient
+     * @return the boolean value for whether the ingredient matches the required ingredient
+     */
     @Override
     public boolean equals(Object ingredient) {
         Ingredient compare = (Ingredient) ingredient;
@@ -43,6 +61,10 @@ public class Ingredient {
         return false;
     }
 
+    /**
+     * Getter function to return the current texture of the ingredient
+     * @return the texture for ingredient
+     */
     public Texture getCurrentTexture() {
         return currentTex;
     }
