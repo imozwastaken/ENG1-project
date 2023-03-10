@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import java.util.ArrayList;
 import java.util.Stack;
 
-// salad recipe made up of Ingredients
+/**
+ * The class Burger represents the burger item in the game, which inherits from the recipe class
+ */
 public class Salad implements Recipe {
     ArrayList<Ingredient> recipe;
     Texture saladTex;
