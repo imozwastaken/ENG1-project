@@ -54,7 +54,7 @@ import java.util.Random;
 
 
 public class GameScreen implements Screen {
-    
+
     private final int customerNumber = 5;
     PiazzaPanic game;
     FitViewport view;
@@ -129,6 +129,7 @@ public class GameScreen implements Screen {
     ImageButton saveClickable;
 
     ImageButton stationSpeedClickable;
+    int NumServed = 0;
 
     //when you hover over a clickable it changes the cursor to a hand
     //this listener is added to all clickables
@@ -246,11 +247,15 @@ public class GameScreen implements Screen {
         spawnCooks();
         customers = new ArrayList<ArrayList<Customer>>();
         ArrayList<Customer> tmp = new ArrayList<Customer>();
-        for (int i=0; i < 3; i++) {
+        int tmpI = CustomersToServe();
+        System.out.println("Customers to serve: " + tmpI);
+
+        for (int i=0; i< tmpI; i++) {
             tmp.add(new Customer(new Actor()));
         }
         System.out.print(tmp);
         customers.add(tmp);
+        increaseNumServed(tmpI);
         // array of all progressbars created (used to update all of them in updateProgressBars function)
         bars = new HashMap<ProgressBar, Cook>();
         // pantry station
@@ -380,7 +385,7 @@ public class GameScreen implements Screen {
     public int getCustomerCount() {
         return customerCount;
     }
-
+    public void increaseNumServed(int amnt) {NumServed+=amnt;}
     public void addRep( int amount) {
         Rep += amount;
     }
@@ -495,14 +500,12 @@ public class GameScreen implements Screen {
         for (Customer c : customers.get(customerCount)) {
             if (!c.selfComplete) {
                 allComplete = false;
-                System.out.println(c.customerOrder.getRecipe());
                 break;
             } else {
                 allComplete= true;
             }
         }
 
-        System.out.println("All is complete: " + allComplete);
         // move the customers to the counter
         for (int i=0; i < customers.get(customerCount).size();i++) {
             if (!customers.get(customerCount).get(i).atCounter) {
@@ -511,25 +514,28 @@ public class GameScreen implements Screen {
                 // make the customer leave
                 System.out.println("at counter kl" + customers.get(customerCount).get(i).body.getX());
                 customers.get(customerCount).get(i).move();
-                
+
                 if (customers.get(customerCount).get(i).body.getX() > 148) {
                     System.out.println("X is past 148"+ customers.get(customerCount).get(i).body.getX());
                     customers.get(customerCount).get(i).body.remove();
                     if (!endless) {
                         // check if the game is in endless mode or not
-                        if (customerCount != customerNumber - 1) {
+                        if (NumServed != customerNumber) {
                             // spawn new customer
-    
+
                             ArrayList<Customer> tmp = new ArrayList<Customer>();
-                            int tmpI = MathUtils.random(0, 2);
-                            for (int j=0; j <= tmpI ; j++){
+                            int tmpI = CustomersToServe();
+                            System.out.println("Customers to serve: " + tmpI);
+                            for (int j=0; j < tmpI ; j++){
                                 tmp.add(new Customer(new Actor()));
                             }
                             customers.add(tmp);
                             customerCount += 1;
+                            increaseNumServed(tmpI);
+                            System.out.println("Currently served: " + NumServed);
                         } else {
                             // end game by taking the time at the game end and going to the time screen
-    
+
                             long timeTaken = System.currentTimeMillis() - gameTime;
                             alienJazz.stop();
                             if (endless) {
@@ -537,22 +543,25 @@ public class GameScreen implements Screen {
                             } else {
                                 game.setScreen(new EndGameScreen(game, timeTaken,Rep, false, 0));
                             }
-    
+
                         }
                     } else {
                         // TODO endless mode
                         ArrayList<Customer> tmp = new ArrayList<Customer>();
-                        int tmpI = MathUtils.random(0, 3);
-                        for (int j=0; j <= tmpI ; j++){
+                        int tmpI = CustomersToServe();
+                        System.out.println("Customers to serve: cc " + tmpI);
+
+                        for (int j=0; j < tmpI ; j++){
                             tmp.add(new Customer(new Actor()));
                         }
                         customers.add(tmp);
                         customerCount += 1;
+                        increaseNumServed(tmpI);
                     }
                 }
             }
         }
-        
+
     }
 
     // generate the cook
@@ -571,6 +580,46 @@ public class GameScreen implements Screen {
             stationSelected.add(i);
         }
     }
+
+    public int CustomersToServe() {
+        int num = MathUtils.random(0,10);
+        if (customerCount <= 1) {
+
+            if (num <= 7) {
+                return 1;
+            } else if (num <= 9) {
+                return 2;
+            } else {
+                return 3;
+            }
+        } else if (customerCount == 2) {
+            if (num <= 5) {
+                return 1;
+            } else if (num <= 8) {
+                return 2;
+            } else {
+                return 3;
+            }
+        } else if (customerCount == 3) {
+            if (num <= 3) {
+                return 1;
+            } else if (num <= 7) {
+                return 2;
+            } else {
+                return 3;
+            }
+        } else if (customerCount <= 5) {
+            if (num <= 2) {
+                return 1;
+            } else if (num <= 5) {
+                return 2;
+            } else {
+                return 3;
+            }
+        }
+        return num % 3;
+    }
+
 
     //process user input
     private void processInput() {
@@ -656,7 +705,7 @@ public class GameScreen implements Screen {
                             Rep--;
                             if (Rep == 0) {
                                 long timeTaken = System.currentTimeMillis() - gameTime;
-                                game.setScreen(new EndGameScreen(game, timeTaken,0, true, customerCount));
+                                game.setScreen(new EndGameScreen(game, timeTaken,0, true, NumServed)); // change this before submission to track only completed orders.
                             }
     
                         }
