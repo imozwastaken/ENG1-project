@@ -1,0 +1,13 @@
+dependencies {
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+}
+
+sourceCompatibility = 1.8
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = ["src/"]
+
+test {
+    jvmArgs += "--add-opens=java.base/java.lang=ALL-UNNAMED"
+}
