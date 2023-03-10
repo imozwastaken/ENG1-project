@@ -20,7 +20,9 @@ import com.mygdx.game.PiazzaPanic;
 import java.time.Duration;
 
 // screen which displays after the game finishes
-
+/**
+ * The EndGameScreen class inherits from Screen and represents the screen that displays after the game is finished
+ */
 public class EndGameScreen implements Screen {
     FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Odin Rounded - Bold.otf"));
     FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -41,7 +43,9 @@ public class EndGameScreen implements Screen {
     TextureRegionDrawable restartBtnDrawableHover;
     int Rep;
     String levelTimeString;
-
+/**
+ * The EndGameScreen constructor
+ */
     public EndGameScreen(PiazzaPanic game, Duration levelCompletedIn, int RepPoints) {
         // generate the styling information for the data given to this screen
         this.game = game;
@@ -52,6 +56,9 @@ public class EndGameScreen implements Screen {
         this.Rep = RepPoints;
     }
 
+    /**
+     * The show method creates listeners for the restart and exit buttons after loading their textures
+     */
     @Override
     public void show() {
         // size information
@@ -107,6 +114,9 @@ public class EndGameScreen implements Screen {
         restartBtn.setPosition(game.GAME_WIDTH / 2 - restartBtn.getWidth() / 2, game.GAME_HEIGHT / 2 - restartBtn.getHeight() / 2 - 100);
     }
 
+    /**
+     * The render method draws/renders the credit screen
+     */
     @Override
     public void render(float delta) {
         screenStage.act();
@@ -135,7 +145,9 @@ public class EndGameScreen implements Screen {
 
         screenStage.draw();
     }
-
+    /**
+     * The resize method resizes the gameStage to fit the screen
+     */
     @Override
     public void resize(int width, int height) {
         screenStage.getViewport().update(width, height);
@@ -158,13 +170,17 @@ public class EndGameScreen implements Screen {
         // TODO Auto-generated method stub
 
     }
-
+    /**
+     * The dispose method releases all resources from the levelCompleteFrame and screenStage objects
+     */
     @Override
     public void dispose() {
         levelCompleteFrame.dispose();
         screenStage.dispose();
     }
-
+/**
+ * Formats the time information
+ */
     private String humanReadableFormat(Duration duration) {
         // format the time information
         return (String.format("%sm %ss",
