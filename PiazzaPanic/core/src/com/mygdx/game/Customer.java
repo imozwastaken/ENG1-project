@@ -1,15 +1,11 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.mygdx.game.Food.Burger;
 import com.mygdx.game.Food.FoodMenu;
 import com.mygdx.game.Food.Order;
-import com.mygdx.game.Food.Salad;
 
-import java.util.ArrayList;
 
 
 public class Customer {

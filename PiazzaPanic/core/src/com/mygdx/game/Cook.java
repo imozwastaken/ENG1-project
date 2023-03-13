@@ -89,4 +89,9 @@ public class Cook {
         moveable = val;
     }
 
+//    get moveable
+    public boolean getMoveable() {
+        return moveable;
+    }
+
 }
