@@ -212,6 +212,12 @@ public class GameScreen implements Screen {
         /** it sets the pantry as the currently selected station - this moves the cook to the pantry */
         /** when the cook arrives the pantry screen is shown */
         pantryClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected, 0);
@@ -228,6 +234,12 @@ public class GameScreen implements Screen {
         /** function exectutes when you press on the frying station on screen */
         /** it sets the frying station as the currently selected station - this moves the cook to the frying station */
         fryingClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected, 1);
@@ -281,6 +293,12 @@ public class GameScreen implements Screen {
         /** function exectutes when you press on the baking station on screen */
         /** it sets the baking station as the currently selected station - this moves the cook to the baking station */
         bakingClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected, 2);
@@ -294,6 +312,12 @@ public class GameScreen implements Screen {
         /** it sets the bin station as the currently selected station - this moves the cook to the bin station */
         /** if the cook is by the bin and presses on the bin it deletes the top ingredient on the current cook's stack */
         binClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
             @Override
             public void clicked(InputEvent event, float x, float y) {
 
@@ -313,6 +337,12 @@ public class GameScreen implements Screen {
         /** function exectutes when you press on the cutting station on screen */
         /** it sets the cutting station as the currently selected station - this moves the cook to the cutting station */
         cuttingClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected, 4);
@@ -350,6 +380,12 @@ public class GameScreen implements Screen {
         /** it sets the serving station as the currently selected station - this moves the cook to the serving station */
         /** when the cook arrives the serving screen is shown */
         servingClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stationSelected.set(selected, 5);
@@ -374,6 +410,12 @@ public class GameScreen implements Screen {
         /** function executes after clicking on the close button */
         /** hides any menus that pop up */
         XbtnClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hidePantryScreen();
@@ -394,6 +436,12 @@ public class GameScreen implements Screen {
         /** unprepared lettuce button */
         lettuceClickable = createImageClickable(new Texture("lettuce.png"), 24, 24);
         lettuceClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (cooks.get(selected).CookStack.size() < 5) {
@@ -405,6 +453,12 @@ public class GameScreen implements Screen {
         /** unprepared tomato button */
         tomatoClickable = createImageClickable(new Texture("tomato.png"), 24, 24);
         tomatoClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (cooks.get(selected).CookStack.size() < 5) {
@@ -416,6 +470,12 @@ public class GameScreen implements Screen {
         /** unprepared buns button */
         bunsClickable = createImageClickable(new Texture("buns.png"), 24, 24);
         bunsClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (cooks.get(selected).CookStack.size() < 5) {
@@ -429,6 +489,12 @@ public class GameScreen implements Screen {
         /** unprepared patty button */
         pattyClickable = createImageClickable(new Texture("rawPatty.png"), 24, 24);
         pattyClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (cooks.get(selected).CookStack.size() < 5) {
@@ -451,6 +517,12 @@ public class GameScreen implements Screen {
         /** burger button */
         burgerClickable = createImageClickable(new Texture("burger.png"), 24, 24);
         burgerClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Burger recipe = new Burger();
@@ -478,6 +550,12 @@ public class GameScreen implements Screen {
         /** salad button */
         saladClickable = createImageClickable(new Texture("salad.png"), 24, 24);
         saladClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Salad recipe = new Salad();
@@ -500,6 +578,13 @@ public class GameScreen implements Screen {
         });
     }
 
+    /**
+     *
+     * @param width
+     * @param height
+     * @param color
+     * @return
+     */
     private static TextureRegionDrawable getColoredDrawable(int width, int height, Color color) {
         Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
         pixmap.setColor(color);
@@ -509,7 +594,13 @@ public class GameScreen implements Screen {
         return drawable;
     }
 
-    /** Used when the clickable region has a texture */
+    /**
+     * Used when the clickable region has a texture
+     * @param texture
+     * @param width
+     * @param height
+     * @return
+     */
     private ImageButton createImageClickable(Texture texture, float width, float height) {
         TextureRegion region = new TextureRegion(texture);
         ImageButton clickable = new ImageButton(new TextureRegionDrawable(region));
@@ -518,7 +609,12 @@ public class GameScreen implements Screen {
         return clickable;
     }
 
-    /** Used to create an invisible clickable region */
+    /**
+     * Used to create an invisible clickable region
+     * @param width
+     * @param height
+     * @return
+     */
     private ImageButton createImageClickable(int width, int height) {
         Pixmap pixmap = new Pixmap(width, height, Format.RGBA8888);
         TextureRegion region = new TextureRegion(new Texture(pixmap));
@@ -528,6 +624,10 @@ public class GameScreen implements Screen {
         return clickable;
     }
 
+    /**
+     *
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         gameCam.update();
@@ -563,6 +663,10 @@ public class GameScreen implements Screen {
             }
         }
     }
+
+    /**
+     *
+     */
     private void showRepPoints(){
         game.batch.begin();
         int x = 146;
@@ -573,6 +677,10 @@ public class GameScreen implements Screen {
         }
         game.batch.end();
     }
+
+    /**
+     *
+     */
     private void customerOperations() {
         /** move the customers to the counter */
         if (!customers.get(customerCount).atCounter) {
@@ -603,7 +711,9 @@ public class GameScreen implements Screen {
         }
     }
 
-    /** generate the cooks */
+    /**
+     * generate the cooks
+     */
     private void spawnCooks() {
         for (int i = 0; i < cookCount; i++) {
             Cook cook = new Cook(new Actor());
@@ -620,7 +730,9 @@ public class GameScreen implements Screen {
         }
     }
 
-    /**process user input */
+    /**
+     * process user input
+     */
     private void processInput() {
         /** number keys are used to select which cook is being controlled currently */
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
@@ -655,7 +767,9 @@ public class GameScreen implements Screen {
         }
     }
 
-    /**update the cooks on the screen */
+    /**
+     * update the cooks on the screen
+     */
     private void updateBatch() {
         /** this section assigns each cook a sprite from the list idles */
         /** you could potentially update this to allow for animations for the cooks when they move */
@@ -673,8 +787,11 @@ public class GameScreen implements Screen {
         game.batch.end();
     }
 
+    /**
+     * displays the orders at the top of the screen
+     * @param dt
+     */
     private void showOrders(float dt) {
-        /** displays the orders at the top of the screen */
         int x = 1;
         int y = 112;
         for (Customer customer : customers) {
@@ -710,8 +827,10 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * display the stack of ingredients being held by the current cook
+     */
     private void showCookStack() {
-        /** display the stack of ingredients being held by the current cook */
         float x = 164;
         float y = 32;
         game.batch.begin();
@@ -722,6 +841,9 @@ public class GameScreen implements Screen {
         game.batch.end();
     }
 
+    /**
+     *
+     */
     private void showStationScreens() {
         for (Cook cook : cooks) {
             if ((Math.abs(cook.CookBody.getY() - 64f) < 2) && (Math.abs(cook.CookBody.getX() - 0f) < 2)) {
@@ -733,6 +855,9 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     *
+     */
     private void showServingScreen() {
         if (showServingScreen) {
             gameStage.addActor(servingScreenFrame);
@@ -748,6 +873,9 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     *
+     */
     private void showPantryScreen() {
         if (showPantryScreen) {
             gameStage.addActor(pantryScreenFrame);
@@ -767,8 +895,10 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * moves pantry screen offscreen
+     */
     private void hidePantryScreen() {
-        /** moves pantry screen offscreen */
         pantryScreenFrame.setPosition(10000, -1);
         XbtnClickable.setPosition(10000, -1);
         lettuceClickable.setPosition(10000, -1);
@@ -777,14 +907,23 @@ public class GameScreen implements Screen {
         pattyClickable.setPosition(10000, -1);
     }
 
+    /**
+     * moves serving screen offscreen
+     */
     private void hideServingScreen() {
-        /** moves serving screen offscreen */
+
         servingScreenFrame.setPosition(10000, -1);
         XbtnClickable.setPosition(10000, -1);
         burgerClickable.setPosition(10000, -1);
         saladClickable.setPosition(10000, -1);
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param selectedCook
+     */
     public void createProgressBar(float x, float y, Cook selectedCook) {
         ProgressBarStyle style = new ProgressBarStyle();
         style.background = getColoredDrawable(20, 5, Color.GREEN);
@@ -800,6 +939,9 @@ public class GameScreen implements Screen {
         bars.put(bar, selectedCook);
     }
 
+    /**
+     *
+     */
     private void updateProgressBars() {
         if (!bars.isEmpty()) {
             for (ProgressBar bar : bars.keySet()) {
@@ -815,27 +957,47 @@ public class GameScreen implements Screen {
 
     }
 
+    /**
+     *
+     * @param width
+     * @param height
+     */
     @Override
     public void resize(int width, int height) {
         view.update(width, height);
     }
 
+    /**
+     *
+     */
     @Override
     public void show() {
     }
 
+    /**
+     *
+     */
     @Override
     public void pause() {
     }
 
+    /**
+     *
+     */
     @Override
     public void resume() {
     }
 
+    /**
+     *
+     */
     @Override
     public void hide() {
     }
 
+    /**
+     *
+     */
     @Override
     public void dispose() {
         game.batch.dispose();
