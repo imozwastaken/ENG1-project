@@ -12,7 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.PiazzaPanic;
-
+/**
+ * The CreditScreen class inherits from Screen and represents the games credit screen.
+ */
 public class CreditsScreen implements Screen{
     PiazzaPanic game;
     Texture credits = new Texture("credits.png");
@@ -39,10 +41,16 @@ public class CreditsScreen implements Screen{
     TextureRegionDrawable GUIInfoDrawable;
     ImageButton GUIInfoBtn;
 
+    /**
+     * Constructor for Credit Screen
+     */
     public CreditsScreen(PiazzaPanic game){
         this.game = game;
     }
 
+    /**
+     * The show method creates listeners for the info and back buttons after loading their textures
+     */
     @Override
     public void show() {
         view = new FitViewport(game.GAME_WIDTH, game.GAME_HEIGHT);
@@ -105,6 +113,9 @@ public class CreditsScreen implements Screen{
         gameStage.addActor(GUIInfoBtn);
     }
 
+    /**
+     * The render method draws/renders the credit screen
+     */
     @Override
     public void render(float delta) {
         gameStage.act();
@@ -125,7 +136,9 @@ public class CreditsScreen implements Screen{
         Gdx.input.setInputProcessor(gameStage);
         gameStage.draw();
     }
-
+    /**
+     * The resize method resizes the gameStage to fit the screen
+     */
     @Override
     public void resize(int width, int height) {
         gameStage.getViewport().update(width, height);
@@ -148,7 +161,9 @@ public class CreditsScreen implements Screen{
         // TODO Auto-generated method stub
         
     }
-
+    /**
+     * The dispose method releases all resources from the credits and gameStage objects
+     */
     @Override
     public void dispose() {
         credits.dispose();
