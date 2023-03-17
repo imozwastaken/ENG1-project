@@ -113,6 +113,9 @@ public class GameScreen implements Screen {
     ImageButton pattyClickable;
     ImageButton burgerClickable;
     ImageButton saladClickable;
+    ImageButton cheeseClickable;
+    ImageButton baseClickable;
+    ImageButton pizzaClickable;
 
     /**
      * Listener function to change the mouse cursor to a hand icon when hovering over clickable assets
@@ -503,6 +506,23 @@ public class GameScreen implements Screen {
             }
         });
 
+        // unprepared cheese button
+        cheeseClickable = createImageClickable(new Texture("cheese.png"), 24, 24);
+        cheeseClickable.addListener(new ClickListener() {
+            /**
+             *
+             * @param event
+             * @param x
+             * @param y
+             */
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (cooks.get(selected).CookStack.size() < 5) {
+                    cooks.get(selected).CookStack.push(new Ingredient("cheese", new Texture("cheese.png"), new Texture("cheese.png")));
+                }
+            }
+        });
+
         /** serving screen frame */
         servingScreenFrameRegion = new TextureRegion(new Texture("servingFrame.png"));
         servingScreenFrame = new ImageButton(new TextureRegionDrawable(servingScreenFrameRegion));
@@ -885,12 +905,14 @@ public class GameScreen implements Screen {
             gameStage.addActor(tomatoClickable);
             gameStage.addActor(bunsClickable);
             gameStage.addActor(pattyClickable);
+            gameStage.addActor(cheeseClickable);
             pantryScreenFrame.setPosition(10, 10);
             XbtnClickable.setPosition(7, 88);
             lettuceClickable.setPosition(25, 66);
             tomatoClickable.setPosition(53, 66);
             bunsClickable.setPosition(81, 66);
             pattyClickable.setPosition(110, 72);
+            cheeseClickable.setPosition(25, 34);
             showPantryScreen = false;
         }
     }
@@ -905,6 +927,7 @@ public class GameScreen implements Screen {
         tomatoClickable.setPosition(10000, -1);
         bunsClickable.setPosition(10000, -1);
         pattyClickable.setPosition(10000, -1);
+        cheeseClickable.setPosition(10000, -1);
     }
 
     /**
