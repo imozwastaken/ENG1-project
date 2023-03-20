@@ -77,7 +77,7 @@ public class GameScreen implements Screen {
     int selected = 0;
     ArrayList<Integer> stationSelected = new ArrayList<>();
     /** control the number of cooks */
-    int cookCount = 2; /** control how many cooks spawn -> update to allow for the value to increase */
+    int cookCount = 3; /** control how many cooks spawn -> update to allow for the value to increase */
     /** take the time at the start of the game to display the time taken to complete the round */
     Instant gameTime = Instant.now();
     /** list of active orders */
@@ -523,6 +523,21 @@ public class GameScreen implements Screen {
             }
         });
 
+        //Pizza Base Ingredient button
+        baseClickable = createImageClickable(new Texture("pizzaBase.png"), 24, 24);
+        baseClickable.addListener(new ClickListener(){
+            /**
+             * 
+             * 
+             */
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                if (cooks.get(selected).CookStack.size() < 5){
+                    cooks.get(selected).CookStack.push(new Ingredient("pizzaBase", new Texture("pizzaBase.png"), new Texture("pizzaBase.png")));
+                }
+            }
+        });
+
         /** serving screen frame */
         servingScreenFrameRegion = new TextureRegion(new Texture("servingFrame.png"));
         servingScreenFrame = new ImageButton(new TextureRegionDrawable(servingScreenFrameRegion));
@@ -906,6 +921,7 @@ public class GameScreen implements Screen {
             gameStage.addActor(bunsClickable);
             gameStage.addActor(pattyClickable);
             gameStage.addActor(cheeseClickable);
+            gameStage.addActor(baseClickable);
             pantryScreenFrame.setPosition(10, 10);
             XbtnClickable.setPosition(7, 88);
             lettuceClickable.setPosition(25, 66);
@@ -913,6 +929,7 @@ public class GameScreen implements Screen {
             bunsClickable.setPosition(81, 66);
             pattyClickable.setPosition(110, 72);
             cheeseClickable.setPosition(25, 34);
+            baseClickable.setPosition(53, 34);
             showPantryScreen = false;
         }
     }
@@ -928,6 +945,7 @@ public class GameScreen implements Screen {
         bunsClickable.setPosition(10000, -1);
         pattyClickable.setPosition(10000, -1);
         cheeseClickable.setPosition(10000, -1);
+        baseClickable.setPosition(10000, -1);
     }
 
     /**

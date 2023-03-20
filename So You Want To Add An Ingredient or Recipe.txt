@@ -16,7 +16,7 @@ Guide to adding food, because there's many steps
     - Add ingredient to pantry screen
         - About line510
             - Add new clickable image, as well as add to Chef stack
-        - About line899
+        - About line899 (in showPantryScreen method - Oli)
             - Add Actor for new ingredient, as well as its location
         - About line923
             - Hide ingredient  when pantry closed
