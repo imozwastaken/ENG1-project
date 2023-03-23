@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 /**
+<<<<<<< HEAD
  * The class Salad represents the salad item in the game, which inherits from the recipe interface
+=======
+ * The class Burger represents the burger item in the game, which inherits from the recipe class
+>>>>>>> 77bd99ece96f07f6f4a95a8107c856b7cc4d261c
  */
 public class Salad implements Recipe {
     ArrayList<Ingredient> saladRecipe;
