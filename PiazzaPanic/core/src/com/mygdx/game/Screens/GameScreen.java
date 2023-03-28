@@ -52,7 +52,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-
 public class GameScreen implements Screen {
 
     private final int customerNumber = 5;
@@ -66,11 +65,12 @@ public class GameScreen implements Screen {
     TiledMap map;
     OrthogonalTiledMapRenderer renderer;
     OrthographicCamera gameCam;
-    //Start the game with 3 reputation points
+    // Start the game with 3 reputation points
     int Rep = 3;
     Texture RepLabel = new Texture("REP.png");
     Texture RepPoint = new Texture("REPHeart.png");
-    // customer number determines how many customers will spawn over the course of the game
+    // customer number determines how many customers will spawn over the course of
+    // the game
     // 0 means infinite
     private final Array<Cook> cooks;
     private final ArrayList<ArrayList<Customer>> customers;
@@ -87,15 +87,16 @@ public class GameScreen implements Screen {
     ArrayList<Integer> stationSelected = new ArrayList<>();
     // control the number of cooks
     int cookCount = 2; // control how many cooks spawn -> update to allow for the value to increase
-    // take the time at the start of the game to display the time taken to complete the round
+    // take the time at the start of the game to display the time taken to complete
+    // the round
 
     long gameTime = System.currentTimeMillis();
 
     // list of active orders
     ArrayList<Order> orders = new ArrayList<>();
-    //used to count how much time has passed after an order is placed
+    // used to count how much time has passed after an order is placed
     float timeCount = 0;
-    //order timer font
+    // order timer font
     BitmapFont font = new BitmapFont();
     // progress bars
     HashMap<ProgressBar, Cook> bars;
@@ -111,12 +112,12 @@ public class GameScreen implements Screen {
     ImageButton cuttingClickable;
     ImageButton binClickable;
     ImageButton servingClickable;
-    //pantry and serving screen frames
+    // pantry and serving screen frames
     TextureRegion pantryScreenFrameRegion;
     ImageButton pantryScreenFrame;
     TextureRegion servingScreenFrameRegion;
     ImageButton servingScreenFrame;
-    //clickables
+    // clickables
     ImageButton XbtnClickable;
     ImageButton lettuceClickable;
     ImageButton tomatoClickable;
@@ -131,8 +132,8 @@ public class GameScreen implements Screen {
     ImageButton stationSpeedClickable;
     int NumServed = 0;
 
-    //when you hover over a clickable it changes the cursor to a hand
-    //this listener is added to all clickables
+    // when you hover over a clickable it changes the cursor to a hand
+    // this listener is added to all clickables
     ClickListener cursorHovering = new ClickListener() {
         @Override
         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -144,11 +145,11 @@ public class GameScreen implements Screen {
             Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
         }
     };
-    //UI elements
+    // UI elements
     Texture plateTex = new Texture("plate.png");
     Texture cookStackTitle = new Texture("cookStackTitle.png");
     Texture selectedCook = new Texture("selected.png");
-    //Order Textures
+    // Order Textures
     Texture burgerOrderTexture = new Texture("orderBurger.png");
     Texture saladOrderTexture = new Texture("orderSalad.png");
     Boolean showPantryScreen = false;
@@ -220,7 +221,7 @@ public class GameScreen implements Screen {
         view.setCamera(gameCam);
         view.setWorldSize(192, 144);
         gameCam.position.set(view.getWorldWidth() / 2, view.getWorldHeight() / 2, 0);
-        //set order timer font color
+        // set order timer font color
         font.setColor(Color.BLACK);
         font.getData().setScale(0.5f);
         // sprite information from the texture atlas
@@ -250,13 +251,14 @@ public class GameScreen implements Screen {
         int tmpI = CustomersToServe();
         System.out.println("Customers to serve: " + tmpI);
 
-        for (int i=0; i< tmpI; i++) {
+        for (int i = 0; i < tmpI; i++) {
             tmp.add(new Customer(new Actor()));
         }
         System.out.print(tmp);
         customers.add(tmp);
         increaseNumServed(tmpI);
-        // array of all progressbars created (used to update all of them in updateProgressBars function)
+        // array of all progressbars created (used to update all of them in
+        // updateProgressBars function)
         bars = new HashMap<ProgressBar, Cook>();
         // pantry station
         pantryClickable = pantry.getPantryClickable();
@@ -289,7 +291,7 @@ public class GameScreen implements Screen {
         binClickable.setPosition(0, 0);
         cuttingClickable.setPosition(32, 0);
         servingClickable.setPosition(96, 16);
-        saveClickable.setPosition(170,100);
+        saveClickable.setPosition(170, 100);
 
         // close button for station pop ups
         XbtnClickable = createImageClickable(new Texture("Xbtn.png"), 16, 16);
@@ -309,9 +311,12 @@ public class GameScreen implements Screen {
         pantryScreenFrame = new ImageButton(new TextureRegionDrawable(pantryScreenFrameRegion));
         pantryScreenFrame.setSize(140, 92);
 
-        /* Pantry screen buttons
-         The functions executes after clicking on any of the ingredient buttons on the pantry screen
-         Addes the ingredient to the current cook's stack (if it's less than 5 items) */
+        /*
+         * Pantry screen buttons
+         * The functions executes after clicking on any of the ingredient buttons on the
+         * pantry screen
+         * Addes the ingredient to the current cook's stack (if it's less than 5 items)
+         */
         // unprepared lettuce button
         lettuceClickable = lettuce.getLettuceClickable();
         // unprepared tomato button
@@ -328,9 +333,13 @@ public class GameScreen implements Screen {
         servingScreenFrame = new ImageButton(new TextureRegionDrawable(servingScreenFrameRegion));
         servingScreenFrame.setSize(140, 92);
 
-         /* Serving screen buttons
-         The functions executes after clicking on any of the ingredient buttons on the serving screen
-         Serves the item if all the required prepared ingredients are in the current cook's stack */
+        /*
+         * Serving screen buttons
+         * The functions executes after clicking on any of the ingredient buttons on the
+         * serving screen
+         * Serves the item if all the required prepared ingredients are in the current
+         * cook's stack
+         */
         // burger button
         burgerClickable = burger.getBurgerClickable();
         // salad button
@@ -345,59 +354,86 @@ public class GameScreen implements Screen {
         }
     }
 
-    public long getGameTime() {return gameTime;}
+    public long getGameTime() {
+        return gameTime;
+    }
+
     public void setSationSelected(int value) {
         stationSelected.set(selected, value);
     }
+
     public int getSelected() {
         return selected;
     }
+
     public Array<Cook> getCooks() {
         return cooks;
     }
+
     public void incrementFryingClicked() {
         fryingClicked++;
     }
+
     public int getFryingClicked() {
         return fryingClicked;
     }
+
     public void setPattyAtFrying(Boolean isFrying) {
         pattyAtFrying = isFrying;
     }
+
     public boolean getPattyAtFrying() {
         return pattyAtFrying;
     }
+
     public void setShowPantryScreen(Boolean show) {
         showPantryScreen = show;
     }
+
     public ArrayList<Integer> getStationSelected() {
         return stationSelected;
     }
+
     public void setStationSelected(int value) {
         stationSelected.set(selected, value);
     }
+
     public void setShowServingScreen(Boolean value) {
         showServingScreen = value;
     }
+
     public ArrayList<ArrayList<Customer>> getCustomers() {
         return customers;
     }
+
     public int getCustomerCount() {
         return customerCount;
     }
-    public void increaseNumServed(int amnt) {NumServed+=amnt;}
-    public void addRep( int amount) {
+
+    public void increaseNumServed(int amnt) {
+        NumServed += amnt;
+    }
+
+    public void addRep(int amount) {
         Rep += amount;
     }
+
     public Money getMoney() {
         return money;
     }
-    public int getRep(){return Rep;}
-    public void setRep(int rep) {Rep= rep;}
+
+    public int getRep() {
+        return Rep;
+    }
+
+    public void setRep(int rep) {
+        Rep = rep;
+    }
+
     public void initialiseLoad(JSONObject obj) {
         Rep = (int) obj.get("rep");
         gameTime = System.currentTimeMillis() + (int) obj.get("timetaken");
-        //customerCount = (int) obj.get("customersLeft");
+        // customerCount = (int) obj.get("customersLeft");
         money.addMoney((int) obj.get("Money"));
         System.out.println("Initialised shit");
     }
@@ -440,6 +476,7 @@ public class GameScreen implements Screen {
         int randomNum = rand.nextInt((max - min) + 1) + min;
         return randomNum;
     }
+
     @Override
     public void render(float delta) {
         gameCam.update();
@@ -479,16 +516,16 @@ public class GameScreen implements Screen {
         }
         money.render();
 
-        //cooks.get(selected).doUserInput(cooks.get(selected));
+        // cooks.get(selected).doUserInput(cooks.get(selected));
 
     }
 
-    private void showRepPoints(){
+    private void showRepPoints() {
         game.batch.begin();
         int x = 146;
-        game.batch.draw(RepLabel,130,134);
-        for(int i = 0; i<Rep; i++){
-            game.batch.draw(RepPoint,x,135);
+        game.batch.draw(RepLabel, 130, 134);
+        for (int i = 0; i < Rep; i++) {
+            game.batch.draw(RepPoint, x, 135);
             x += 6;
         }
         game.batch.end();
@@ -502,12 +539,12 @@ public class GameScreen implements Screen {
                 allComplete = false;
                 break;
             } else {
-                allComplete= true;
+                allComplete = true;
             }
         }
 
         // move the customers to the counter
-        for (int i=0; i < customers.get(customerCount).size();i++) {
+        for (int i = 0; i < customers.get(customerCount).size(); i++) {
             if (!customers.get(customerCount).get(i).atCounter) {
                 customers.get(customerCount).get(i).move();
             } else if (allComplete) {
@@ -516,7 +553,7 @@ public class GameScreen implements Screen {
                 customers.get(customerCount).get(i).move();
 
                 if (customers.get(customerCount).get(i).body.getX() > 148) {
-                    System.out.println("X is past 148"+ customers.get(customerCount).get(i).body.getX());
+                    System.out.println("X is past 148" + customers.get(customerCount).get(i).body.getX());
                     customers.get(customerCount).get(i).body.remove();
                     if (!endless) {
                         // check if the game is in endless mode or not
@@ -526,7 +563,7 @@ public class GameScreen implements Screen {
                             ArrayList<Customer> tmp = new ArrayList<Customer>();
                             int tmpI = CustomersToServe();
                             System.out.println("Customers to serve: " + tmpI);
-                            for (int j=0; j < tmpI ; j++){
+                            for (int j = 0; j < tmpI; j++) {
                                 tmp.add(new Customer(new Actor()));
                             }
                             customers.add(tmp);
@@ -539,9 +576,9 @@ public class GameScreen implements Screen {
                             long timeTaken = System.currentTimeMillis() - gameTime;
                             alienJazz.stop();
                             if (endless) {
-                                game.setScreen(new EndGameScreen(game, timeTaken,0, true, customerCount));
+                                game.setScreen(new EndGameScreen(game, timeTaken, 0, true, customerCount));
                             } else {
-                                game.setScreen(new EndGameScreen(game, timeTaken,Rep, false, 0));
+                                game.setScreen(new EndGameScreen(game, timeTaken, Rep, false, 0));
                             }
 
                         }
@@ -551,7 +588,7 @@ public class GameScreen implements Screen {
                         int tmpI = CustomersToServe();
                         System.out.println("Customers to serve: cc " + tmpI);
 
-                        for (int j=0; j < tmpI ; j++){
+                        for (int j = 0; j < tmpI; j++) {
                             tmp.add(new Customer(new Actor()));
                         }
                         customers.add(tmp);
@@ -573,7 +610,8 @@ public class GameScreen implements Screen {
             // scale information
             cook.CookBody.setScaleX(game.GAME_WIDTH / 16f);
             cook.CookBody.setScaleY(game.GAME_HEIGHT / 23f);
-            // cooks are stored in an array to make it easier to keep track of all things relating to them
+            // cooks are stored in an array to make it easier to keep track of all things
+            // relating to them
             // I love arrays so much
             cooks.add(cook);
             gameStage.addActor(cook.CookBody);
@@ -582,7 +620,7 @@ public class GameScreen implements Screen {
     }
 
     public int CustomersToServe() {
-        int num = MathUtils.random(0,10);
+        int num = MathUtils.random(0, 10);
         if (customerCount <= 1) {
 
             if (num <= 7) {
@@ -620,8 +658,7 @@ public class GameScreen implements Screen {
         return num % 3;
     }
 
-
-    //process user input
+    // process user input
     private void processInput() {
         // number keys are used to select which cook is being controlled currently
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
@@ -647,7 +684,7 @@ public class GameScreen implements Screen {
             money.addMoney(100);
 
         }
-        
+
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             // return to main menu
             game.setScreen(new MainMenuScreen(game));
@@ -665,10 +702,11 @@ public class GameScreen implements Screen {
         }
     }
 
-    //update the cooks on the screen
+    // update the cooks on the screen
     private void updateBatch() {
         // this section assigns each cook a sprite from the list idles
-        // you could potentially update this to allow for animations for the cooks when they move
+        // you could potentially update this to allow for animations for the cooks when
+        // they move
         game.batch.begin();
         int index = 0;
         for (Cook cook : cooks) {
@@ -678,8 +716,9 @@ public class GameScreen implements Screen {
         game.batch.draw(plateTex, 164, 25);
         game.batch.draw(cookStackTitle, 164, 120);
         game.batch.draw(idles.get(selected), 168, 1);
-        for (int i=0; i < customers.get(customerCount).size(); i++) {
-            game.batch.draw(custSkins.getSprite(customers.get(customerCount).get(i).name), customers.get(customerCount).get(i).body.getX(), customers.get(customerCount).get(i).body.getY());
+        for (int i = 0; i < customers.get(customerCount).size(); i++) {
+            game.batch.draw(custSkins.getSprite(customers.get(customerCount).get(i).name),
+                    customers.get(customerCount).get(i).body.getX(), customers.get(customerCount).get(i).body.getY());
         }
         game.batch.end();
     }
@@ -688,47 +727,59 @@ public class GameScreen implements Screen {
         // displays the orders at the top of the screen
         int x = 1;
         int y = 112;
+
+        timeCount += dt;
+        boolean shouldUpdateTimers = false; // Add a new flag to indicate whether timers should be updated
+
+        // Check if one second has passed
+        if (timeCount >= 1) {
+            shouldUpdateTimers = true;
+            timeCount = 0; // Reset timeCount outside the customer loop
+        }
+
         for (ArrayList<Customer> customerArr : customers) {
             for (Customer customer : customerArr) {
                 if ((customer.atCounter) && (!customer.selfComplete)) {
-                    timeCount += dt;
-                    //one second has passed
-                    if(timeCount >= 1){
-                        //update order timer
-                        if(customer.customerOrder.getOrderTime() >= 0){
-                            customer.customerOrder.orderTime --;
-                        }
-                        timeCount = 0;
-                        if(customer.customerOrder.getOrderTime()==0 && !customer.selfComplete){
-                            //Uncomment line below if you want the customer to leave after the order timer is gone
-                            //customer.orderComplete = true;
-                            Rep--;
-                            if (Rep == 0) {
-                                long timeTaken = System.currentTimeMillis() - gameTime;
-                                game.setScreen(new EndGameScreen(game, timeTaken,0, true, NumServed)); // change this before submission to track only completed orders.
-                            }
-    
+                    // Update order timer only if shouldUpdateTimers is true
+                    if (shouldUpdateTimers) {
+                        if (customer.customerOrder.getOrderTime() >= 0) {
+                            customer.customerOrder.orderTime--;
                         }
                     }
+
+                    if (customer.customerOrder.getOrderTime() == 0 && !customer.selfComplete
+                            && !customer.orderExpired) {
+                        // Uncomment line below if you want the customer to leave after the order timer
+                        // is gone
+                        // customer.orderComplete = true;
+                        customer.orderExpired = true;
+                        Rep--;
+                        if (Rep == 0) {
+                            long timeTaken = System.currentTimeMillis() - gameTime;
+                            game.setScreen(new EndGameScreen(game, timeTaken, 0, true, NumServed));
+                        }
+                    }
+
                     game.batch.begin();
                     if (!customer.selfComplete) {
                         game.batch.draw(customer.customerOrder.getOrderTexture(), x, y);
-                        game.batch.draw(customer.customerOrder.getRecipe().getSpeechBubbleTexture(), customer.body.getX() - 10, customer.body.getY() + 17);
-                        if(customer.customerOrder.getOrderTime()>-1){
-                            font.draw(game.batch, Integer.toString(customer.customerOrder.getOrderTime()), x+30, y+10);
+                        game.batch.draw(customer.customerOrder.getRecipe().getSpeechBubbleTexture(),
+                                customer.body.getX() - 10, customer.body.getY() + 17);
+                        if (customer.customerOrder.getOrderTime() > -1) {
+                            font.draw(game.batch, Integer.toString(customer.customerOrder.getOrderTime()), x + 30,
+                                    y + 10);
                         } else {
-                            font.draw(game.batch, "0", x+30, y+10);
+                            font.draw(game.batch, "0", x + 30, y + 10);
                         }
                     }
-                                        //order timer sets to 0 when it reaches -1
-                    
+                    // order timer sets to 0 when it reaches -1
+
                     game.batch.end();
                     // increase x value if there is more than one current order
                     x += 41;
                 }
             }
         }
-        
     }
 
     private void showCookStack() {
@@ -821,7 +872,7 @@ public class GameScreen implements Screen {
         style.background = getColoredDrawable(20, 5, Color.GREEN);
         style.knob = getColoredDrawable(0, 5, Color.WHITE);
         style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
-        float stepSize =  powerups.getStationSpeed() * 0.05f;
+        float stepSize = powerups.getStationSpeed() * 0.05f;
         System.out.println(stepSize);
         ProgressBar bar = new ProgressBar(0, 7, stepSize, false, style);
         bar.setWidth(30);
@@ -839,7 +890,7 @@ public class GameScreen implements Screen {
                 bar.setValue(bar.getValue() - bar.getStepSize());
                 if (bar.getValue() == 0) {
                     gameStage.getActors().removeValue(bar, false);
-                    //unbusy the cook
+                    // unbusy the cook
                     bars.get(bar).isBusy = false;
                     bars.remove(bar);
                 }

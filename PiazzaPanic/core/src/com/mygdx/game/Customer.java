@@ -6,8 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Food.FoodMenu;
 import com.mygdx.game.Food.Order;
 
-
-
 public class Customer {
     // god we love using arrays for dealing with this stuff
 
@@ -15,13 +13,13 @@ public class Customer {
     public boolean orderComplete = false;
     public boolean selfComplete = false;
     public boolean atCounter = false;
-
+    public boolean orderExpired = false;
     public Actor body;
     public String name;
     public Order customerOrder;
 
     public Customer(Actor skin) {
-        String[] names = {"Blue", "Red", "White", "Yellow"};
+        String[] names = { "Blue", "Red", "White", "Yellow" };
         this.name = names[MathUtils.random(0, 3)];
         this.body = skin;
         this.body.setWidth(16);
@@ -60,8 +58,6 @@ public class Customer {
             System.out.println("ORder isnt complete...");
         }
     }
-
-    
 
     private Order generateOrder() {
         FoodMenu menu = new FoodMenu();
