@@ -112,6 +112,7 @@ public class GameScreen implements Screen {
     ImageButton cuttingClickable;
     ImageButton binClickable;
     ImageButton servingClickable;
+    ImageButton extraTimeClickable;
     // pantry and serving screen frames
     TextureRegion pantryScreenFrameRegion;
     ImageButton pantryScreenFrame;
@@ -172,6 +173,7 @@ public class GameScreen implements Screen {
 
     SpeedPowerup speedPowerup;
     RepPowerup repPowerup;
+    ExtratimePowerup extratimePowerup;
     Random rand = new Random();
 
     StationSpeedPowerup stationSpeedPowerup;
@@ -206,10 +208,11 @@ public class GameScreen implements Screen {
         }
         money = new Money(game);
 
-        powerups = new Powerups(game, money);
+        powerups = new Powerups(game, money, this);
         this.speedPowerup = new SpeedPowerup(utils, this, powerups);
         this.repPowerup = new RepPowerup(utils, this, powerups);
         this.stationSpeedPowerup = new StationSpeedPowerup(utils, this, powerups);
+        this.extratimePowerup = new ExtratimePowerup(utils, this, powerups);
 
         gameStage = new Stage(view, game.batch);
 
@@ -328,6 +331,7 @@ public class GameScreen implements Screen {
         speedClickable = speedPowerup.getSpeedClickable();
         repClickable = repPowerup.getRepButton();
         stationSpeedClickable = stationSpeedPowerup.getStationClickable();
+        extraTimeClickable = extratimePowerup.getExtraTimeClickable();
         // serving screen frame
         servingScreenFrameRegion = new TextureRegion(new Texture("servingFrame.png"));
         servingScreenFrame = new ImageButton(new TextureRegionDrawable(servingScreenFrameRegion));
@@ -566,6 +570,15 @@ public class GameScreen implements Screen {
                             for (int j = 0; j < tmpI; j++) {
                                 tmp.add(new Customer(new Actor()));
                             }
+                            if (powerups.hasExtraTime()) {
+                                System.out.println("Extra time powerup active");
+                                for (Customer c : tmp) {
+                                    c.customerOrder.setOrderTime(c.customerOrder.getOrderTime() + 10);
+                                }
+                            } else {
+                                System.out.println("Extra time powerup not active");
+                            }
+
                             customers.add(tmp);
                             customerCount += 1;
                             increaseNumServed(tmpI);
@@ -832,6 +845,7 @@ public class GameScreen implements Screen {
             gameStage.addActor(speedClickable);
             gameStage.addActor(repClickable);
             gameStage.addActor(stationSpeedClickable);
+            gameStage.addActor(extraTimeClickable);
             pantryScreenFrame.setPosition(10, 10);
             XbtnClickable.setPosition(7, 88);
             lettuceClickable.setPosition(25, 66);
@@ -841,6 +855,7 @@ public class GameScreen implements Screen {
             speedClickable.setPosition(25, 40);
             repClickable.setPosition(53, 40);
             stationSpeedClickable.setPosition(75, 40);
+            extraTimeClickable.setPosition(110, 40);
 
             showPantryScreen = false;
         }
@@ -857,6 +872,7 @@ public class GameScreen implements Screen {
         speedClickable.setPosition(10000, -1);
         repClickable.setPosition(10000, -1);
         stationSpeedClickable.setPosition(10000, -1);
+        extraTimeClickable.setPosition(100000, -1);
     }
 
     public void hideServingScreen() {

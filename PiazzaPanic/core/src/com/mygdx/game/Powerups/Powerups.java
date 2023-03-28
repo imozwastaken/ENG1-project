@@ -1,9 +1,12 @@
 package com.mygdx.game.Powerups;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.mygdx.game.Customer;
 import com.mygdx.game.Money;
 import com.mygdx.game.PiazzaPanic;
+import com.mygdx.game.Screens.GameScreen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,23 +17,29 @@ public class Powerups {
     BitmapFont font;
     Money money;
     private PiazzaPanic game;
-    public Powerups(PiazzaPanic _game, Money _money) {
+    private Screen screen;
+
+    public Powerups(PiazzaPanic _game, Money _money, Screen _screen) {
         this.game = _game;
         Powerup speedPowerup = new Powerup("Speed", 5000, 0, 1, 100, 0);
         Powerup extraLife = new Powerup("ExtraLife", 1000000000, 0, 1, 300, 0);
         Powerup stationSpeed = new Powerup("FastStations", 10000, 0, 1f, 300, 0);
+        Powerup orderTimeUp = new Powerup("ExtraTime", 1000000000, 0, 10, 100, 0);
         allPowerups.put("Speed", speedPowerup);
         allPowerups.put("ExtraLife", extraLife);
         allPowerups.put("FastStations", stationSpeed);
+        allPowerups.put("ExtraTime", orderTimeUp);
         this.font = new BitmapFont();
         this.money = _money;
         font.setColor(Color.BLACK);
         font.getData().setScale(0.25f);
+        this.screen = _screen;
     }
 
     public float getSpeedMultiplier() {
         return allPowerups.get("Speed").getValue();
     }
+
     public void setSpeedMultiplier(int multiplier) {
         boolean bought = buyPowerup("Speed");
         if (bought) {
@@ -40,6 +49,11 @@ public class Powerups {
             System.out.println("Not enough money for this.");
         }
 
+    }
+
+    public boolean hasExtraTime() {
+        // return true;
+        return allPowerups.get("ExtraTime").getTimesBought() != 0;
     }
 
     public float getStationSpeed() {
@@ -56,6 +70,23 @@ public class Powerups {
         }
     }
 
+    public boolean buyExtraTime() {
+        if (allPowerups.get("ExtraTime").getTimesBought() > 0) {
+            return false;
+        }
+        boolean bought = buyPowerup("ExtraTime");
+        if (!bought) {
+            System.out.println("invalid");
+        }
+        for (ArrayList<Customer> customers : ((GameScreen) screen).getCustomers()) {
+            for (Customer c : customers) {
+                c.customerOrder.setOrderTime(c.customerOrder.getOrderTime() + 10);
+            }
+        }
+
+        return bought;
+    }
+
     public boolean buyRep() {
         if (allPowerups.get("ExtraLife").getTimesBought() > 0) {
             return false;
@@ -64,6 +95,7 @@ public class Powerups {
         if (!bought) {
             System.out.println("invalid");
         }
+
         return bought;
     }
 
@@ -85,7 +117,7 @@ public class Powerups {
     }
 
     public void checkPowerups() {
-        for (String k: allPowerups.keySet()) {
+        for (String k : allPowerups.keySet()) {
             if (allPowerups.get(k).getInitialisedTime() != 0) {
                 if (allPowerups.get(k).getExpiryTime() < System.currentTimeMillis()) {
                     resetPowerup(k);
@@ -97,7 +129,7 @@ public class Powerups {
     public void render() {
         String message = "Powerups active : ";
         StringBuilder messageBuilder = new StringBuilder(message);
-        for (String k: allPowerups.keySet()) {
+        for (String k : allPowerups.keySet()) {
             if (allPowerups.get(k).getInitialisedTime() != 0) {
                 messageBuilder.append(" ").append(k);
             }
@@ -107,6 +139,5 @@ public class Powerups {
         font.draw(game.batch, message, 127, 122);
         game.batch.end();
     }
-
 
 }
