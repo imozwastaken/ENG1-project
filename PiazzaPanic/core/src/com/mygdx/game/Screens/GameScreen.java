@@ -54,7 +54,7 @@ import java.util.Random;
 
 public class GameScreen implements Screen {
 
-    private final int customerNumber = 5;
+    private int customerNumber = 5;
     PiazzaPanic game;
     FitViewport view;
     Stage gameStage;
@@ -182,12 +182,17 @@ public class GameScreen implements Screen {
 
     private Boolean endless = false;
     JSONObject obj;
+    JSONObject config;
 
-    public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless, Boolean isLoad, String Loadfile) {
+    public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless, Boolean isLoad, String Loadfile,
+            JSONObject config) {
 
         // initialise the game
         this.game = game;
         this.view = port;
+        this.config = config;
+        this.customerNumber = config.getInt("customersToServe");
+        System.out.println("customerNumber: " + customerNumber);
         this.utils = new Utils();
         this.frying = new Frying(game, utils, this);
         this.bin = new Bin(game, utils, this);
@@ -244,8 +249,11 @@ public class GameScreen implements Screen {
 
         // music control
         // music composed by Ridley Coyte
-        alienJazz.setLooping(true);
-        alienJazz.play();
+        if (!config.getBoolean("muteMusic")) {
+            alienJazz.setLooping(true);
+            alienJazz.play();
+        }
+
         // create the instances of the cooks and first customer.
         cooks = new Array<Cook>();
         spawnCooks();
@@ -501,8 +509,18 @@ public class GameScreen implements Screen {
         showStationScreens();
         showOrders(delta);
         showRepPoints();
-        customerOperations();
-        processInput();
+        try {
+            customerOperations();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        try {
+            processInput();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         powerups.render();
         powerups.checkPowerups();
         gameStage.draw();
@@ -535,7 +553,7 @@ public class GameScreen implements Screen {
         game.batch.end();
     }
 
-    private void customerOperations() {
+    private void customerOperations() throws IOException {
         // Check if all customers have been served
         boolean allComplete = false;
         for (Customer c : customers.get(customerCount)) {
@@ -672,7 +690,7 @@ public class GameScreen implements Screen {
     }
 
     // process user input
-    private void processInput() {
+    private void processInput() throws IOException {
         // number keys are used to select which cook is being controlled currently
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
             selected = 0;
@@ -769,7 +787,12 @@ public class GameScreen implements Screen {
                         Rep--;
                         if (Rep == 0) {
                             long timeTaken = System.currentTimeMillis() - gameTime;
-                            game.setScreen(new EndGameScreen(game, timeTaken, 0, true, NumServed));
+                            try {
+                                game.setScreen(new EndGameScreen(game, timeTaken, 0, true, NumServed));
+                            } catch (IOException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
                         }
                     }
 

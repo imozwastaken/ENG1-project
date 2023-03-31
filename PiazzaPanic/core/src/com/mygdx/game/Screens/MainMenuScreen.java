@@ -12,14 +12,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.game.ConfigHandler;
 import com.mygdx.game.PiazzaPanic;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.json.JSONObject;
+
 import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
-
 
 public class MainMenuScreen implements Screen {
     PiazzaPanic game;
@@ -30,6 +33,8 @@ public class MainMenuScreen implements Screen {
     Texture exitBtnTexHover;
     Texture infoBtnTex;
     Texture infoBtnTexHover;
+    Texture settingsBtnTex;
+    Texture settingsBtnTexHover;
     Texture endlessBtnTex;
     Texture loadfileBtnTex;
     Texture loadfileBtnHover;
@@ -57,6 +62,10 @@ public class MainMenuScreen implements Screen {
     TextureRegionDrawable loadfileBtnDrawable;
     ImageButton loadfileBtn;
 
+    TextureRegion settingsBtnRegion;
+    TextureRegionDrawable settingsBtnDrawable;
+    ImageButton settingsBtn;
+
     // image buttons for when hovering on the button
     TextureRegion playBtnRegionHover;
     TextureRegionDrawable playBtnDrawableHover;
@@ -73,9 +82,18 @@ public class MainMenuScreen implements Screen {
     TextureRegion loadfileBtnRegionHover;
     TextureRegionDrawable loadfileBtnDrawableHover;
     String filepath;
-    Boolean fileOpening = false ;
+    Boolean fileOpening = false;
 
-    public MainMenuScreen(PiazzaPanic game) {
+    TextureRegion settingsBtnRegionHover;
+    TextureRegionDrawable settingsBtnDrawableHover;
+    ImageButton settingsBtnHover;
+
+    JSONObject config;
+    ConfigHandler configHandler;
+
+    public MainMenuScreen(PiazzaPanic game) throws IOException {
+        this.configHandler = new ConfigHandler();
+        this.config = configHandler.getConfig();
         this.game = game;
 
     }
@@ -90,11 +108,13 @@ public class MainMenuScreen implements Screen {
         infoBtnTex = new Texture("infoBtn.png");
         endlessBtnTex = new Texture("endless.png");
         loadfileBtnTex = new Texture("Save.png");
+        settingsBtnTex = new Texture("settings.png");
         // textures for hovered buttons
         infoBtnTexHover = new Texture("infoBtn2.png");
         playBtnTexHover = new Texture("playBtn2.png");
         exitBtnTexHover = new Texture("exitBtn2.png");
         loadfileBtnHover = new Texture("Save.png");
+        settingsBtnTexHover = new Texture("settings.png");
 
         view = new FitViewport(game.GAME_WIDTH, game.GAME_HEIGHT);
         view.getCamera().position.set(game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, 1f);
@@ -118,8 +138,12 @@ public class MainMenuScreen implements Screen {
         endlessBtn = new ImageButton(endlessBtnDrawable);
 
         loadfileBtnRegion = new TextureRegion(loadfileBtnTex);
-        loadfileBtnDrawable =  new TextureRegionDrawable(loadfileBtnRegion);
+        loadfileBtnDrawable = new TextureRegionDrawable(loadfileBtnRegion);
         loadfileBtn = new ImageButton(loadfileBtnDrawable);
+
+        settingsBtnRegion = new TextureRegion(settingsBtnTex);
+        settingsBtnDrawable = new TextureRegionDrawable(settingsBtnRegion);
+        settingsBtn = new ImageButton(settingsBtnDrawable);
 
         // hovered buttons
         playBtnRegionHover = new TextureRegion(playBtnTexHover);
@@ -133,6 +157,9 @@ public class MainMenuScreen implements Screen {
 
         loadfileBtnRegionHover = new TextureRegion(loadfileBtnHover);
         loadfileBtnDrawableHover = new TextureRegionDrawable(loadfileBtnHover);
+
+        settingsBtnRegionHover = new TextureRegion(settingsBtnTexHover);
+        settingsBtnDrawableHover = new TextureRegionDrawable(settingsBtnRegionHover);
         // listeners for hovering on the buttons
         playBtn.addListener(new ClickListener() {
             final ImageButton playNormal = new ImageButton(playBtnDrawable);
@@ -183,6 +210,22 @@ public class MainMenuScreen implements Screen {
                 infoBtn.setStyle(infoNormal.getStyle());
             }
         });
+
+        settingsBtn.addListener(new ClickListener() {
+            final ImageButton settingsNormal = new ImageButton(settingsBtnDrawable);
+            final ImageButton settingsHover = new ImageButton(settingsBtnDrawableHover);
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                settingsBtn.setStyle(settingsHover.getStyle());
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                settingsBtn.setStyle(settingsNormal.getStyle());
+            }
+        });
+
     }
 
     @Override
@@ -202,16 +245,20 @@ public class MainMenuScreen implements Screen {
         gameStage.addActor(playBtn);
         playBtn.setPosition((((game.GAME_WIDTH / 2) - (playBtn.getWidth() / 2)) - endlessBtn.getWidth() / 2) - 25, 125);
         gameStage.addActor(endlessBtn);
-        endlessBtn.setPosition((((game.GAME_WIDTH / 2) - (playBtn.getWidth() / 2)) + endlessBtn.getWidth() / 2) + 25, 125);
+        endlessBtn.setPosition((((game.GAME_WIDTH / 2) - (playBtn.getWidth() / 2)) + endlessBtn.getWidth() / 2) + 25,
+                125);
         gameStage.addActor(exitBtn);
         exitBtn.setPosition((game.GAME_WIDTH / 2) - (exitBtn.getWidth() / 2), 35);
         gameStage.addActor(loadfileBtn);
-        loadfileBtn.setPosition((((game.GAME_WIDTH / 2) - (playBtn.getWidth() / 2)) + endlessBtn.getWidth() / 2) + 25, 125);
+        loadfileBtn.setPosition((((game.GAME_WIDTH / 2) - (playBtn.getWidth() / 2)) + endlessBtn.getWidth() / 2) + 25,
+                125);
         gameStage.addActor(infoBtn);
         infoBtn.setPosition(game.GAME_WIDTH - infoBtn.getWidth(), game.GAME_HEIGHT - infoBtn.getHeight());
+        gameStage.addActor(settingsBtn);
+        settingsBtn.setPosition(game.GAME_WIDTH - infoBtn.getWidth() - 70, game.GAME_HEIGHT - infoBtn.getHeight());
 
         if (playBtn.isPressed()) {
-            game.setScreen(new GameScreen(game, view, false, false, ""));
+            game.setScreen(new GameScreen(game, view, false, false, "", this.config));
         }
 
         if (exitBtn.isPressed()) {
@@ -223,82 +270,78 @@ public class MainMenuScreen implements Screen {
             game.setScreen(new CreditsScreen(game));
         }
         if (endlessBtn.isPressed()) {
-            game.setScreen(new GameScreen(game, view, true, false, ""));
+            game.setScreen(new GameScreen(game, view, true, false, "", this.config));
         }
-       if (loadfileBtn.isPressed()) {
-           if (!fileOpening) {
-               EventQueue.invokeLater(new Runnable() {
-                   @Override
-                   public void run() {
-                       if (!fileOpening) {
-                           fileOpening = true;
-                           JFileChooser chooser = new JFileChooser();
-                           FileNameExtensionFilter filter = new FileNameExtensionFilter("json file", new String[] {"json"});
-                           chooser.setFileFilter(filter);
-                           chooser.addChoosableFileFilter(filter);
-                           int returnval = chooser.showOpenDialog(null);
-                           if (returnval == JFileChooser.APPROVE_OPTION) {
-                               filepath = chooser.getSelectedFile().getAbsolutePath();
-                               System.out.println(filepath);
-                               fileOpening = false;
+        if (settingsBtn.isPressed()) {
+            game.setScreen(new SettingsScreen(game, this.configHandler));
+        }
+        if (loadfileBtn.isPressed()) {
+            if (!fileOpening) {
+                EventQueue.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!fileOpening) {
+                            fileOpening = true;
+                            JFileChooser chooser = new JFileChooser();
+                            FileNameExtensionFilter filter = new FileNameExtensionFilter("json file",
+                                    new String[] { "json" });
+                            chooser.setFileFilter(filter);
+                            chooser.addChoosableFileFilter(filter);
+                            int returnval = chooser.showOpenDialog(null);
+                            if (returnval == JFileChooser.APPROVE_OPTION) {
+                                filepath = chooser.getSelectedFile().getAbsolutePath();
+                                System.out.println(filepath);
+                                fileOpening = false;
 
+                            } else {
+                                System.out.println(returnval);
 
-                           } else {
-                               System.out.println(returnval);
+                            }
+                        }
 
-                           }
-                       }
+                    }
+                });
 
-                   }
-               });
+            } else {
+                System.out.println("Already selecting a file");
+            }
 
-           } else {
-               System.out.println("Already selecting a file");
-           }
-
-
-
-       }
+        }
         if (!Objects.equals(filepath, "") && filepath != null) {
-            System.out.println("PATH: " +filepath);
-            game.setScreen(new GameScreen(game, view, false, true, filepath));
+            System.out.println("PATH: " + filepath);
+            game.setScreen(new GameScreen(game, view, false, true, filepath, this.config));
 
         }
 
+        // if (loadfileBtn.isPressed()) {
+        // EventQueue.invokeLater(new Runnable() {
+        // @Override
+        // public void run() {
+        // if (!fileOpening) {
+        // fileOpening = true;
+        // JFileChooser chooser = new JFileChooser();
+        // FileNameExtensionFilter filter = new FileNameExtensionFilter("json file", new
+        // String[] {"json"});
+        // chooser.setFileFilter(filter);
+        // chooser.addChoosableFileFilter(filter);
+        // int returnval = chooser.showOpenDialog(null);
+        // if (returnval == JFileChooser.APPROVE_OPTION) {
+        // filepath = chooser.getSelectedFile().getAbsolutePath();
+        // System.out.println(filepath);
+        // fileOpening = false;
 
-       //if (loadfileBtn.isPressed()) {
-       //    EventQueue.invokeLater(new Runnable() {
-       //        @Override
-       //        public void run() {
-       //            if (!fileOpening) {
-       //                fileOpening = true;
-       //                JFileChooser chooser = new JFileChooser();
-       //                FileNameExtensionFilter filter = new FileNameExtensionFilter("json file", new String[] {"json"});
-       //                chooser.setFileFilter(filter);
-       //                chooser.addChoosableFileFilter(filter);
-       //                int returnval = chooser.showOpenDialog(null);
-       //                if (returnval == JFileChooser.APPROVE_OPTION) {
-       //                    filepath = chooser.getSelectedFile().getAbsolutePath();
-       //                    System.out.println(filepath);
-       //                    fileOpening = false;
+        // } else {
+        // System.out.println(returnval);
 
+        // }
+        // } else {
+        // System.out.println("Already selecting a file");
+        // }
+        //
+        // }
 
-       //                } else {
-       //                    System.out.println(returnval);
-
-       //                }
-       //            } else {
-       //                System.out.println("Already selecting a file");
-       //            }
-       //
-       //        }
-
-
-
-
-
-       //    });
-       //}
+        // });
+        // }
         Gdx.input.setInputProcessor(gameStage);
         gameStage.draw();
     }

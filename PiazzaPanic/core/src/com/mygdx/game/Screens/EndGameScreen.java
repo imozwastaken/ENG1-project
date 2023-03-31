@@ -16,11 +16,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.game.ConfigHandler;
 import com.mygdx.game.PiazzaPanic;
 
 import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+
+import org.json.JSONObject;
 
 // screen which displays after the game finishes
 
@@ -46,9 +49,14 @@ public class EndGameScreen implements Screen {
     String levelTimeString;
     Boolean endless;
     int customersServed;
+    ConfigHandler configHandler;
+    JSONObject config;
 
-    public EndGameScreen(PiazzaPanic game, long levelCompletedIn, int RepPoints, boolean endless, int customersServed) {
+    public EndGameScreen(PiazzaPanic game, long levelCompletedIn, int RepPoints, boolean endless, int customersServed)
+            throws IOException {
         // generate the styling information for the data given to this screen
+        this.configHandler = new ConfigHandler();
+        this.config = configHandler.getConfig();
         this.game = game;
         this.endless = endless;
         this.customersServed = customersServed;
@@ -109,9 +117,11 @@ public class EndGameScreen implements Screen {
         });
 
         screenStage.addActor(exitBtn);
-        exitBtn.setPosition(game.GAME_WIDTH / 2 - exitBtn.getWidth() / 2, game.GAME_HEIGHT / 2 - exitBtn.getHeight() / 2 - 250);
+        exitBtn.setPosition(game.GAME_WIDTH / 2 - exitBtn.getWidth() / 2,
+                game.GAME_HEIGHT / 2 - exitBtn.getHeight() / 2 - 250);
         screenStage.addActor(restartBtn);
-        restartBtn.setPosition(game.GAME_WIDTH / 2 - restartBtn.getWidth() / 2, game.GAME_HEIGHT / 2 - restartBtn.getHeight() / 2 - 100);
+        restartBtn.setPosition(game.GAME_WIDTH / 2 - restartBtn.getWidth() / 2,
+                game.GAME_HEIGHT / 2 - restartBtn.getHeight() / 2 - 100);
     }
 
     @Override
@@ -131,18 +141,22 @@ public class EndGameScreen implements Screen {
             font.draw(game.batch, "REPUTATION:" + Rep, 420, 425);
         }
 
-
         game.batch.end();
 
         screenStage.getViewport().apply();
 
         if (restartBtn.isPressed()) {
-            game.setScreen(new GameScreen(game, view, false, false, ""));
+            game.setScreen(new GameScreen(game, view, false, false, "", this.config));
         }
 
         if (exitBtn.isPressed()) {
             dispose();
-            game.setScreen(new MainMenuScreen(game));
+            try {
+                game.setScreen(new MainMenuScreen(game));
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
 
         screenStage.draw();
@@ -185,4 +199,3 @@ public class EndGameScreen implements Screen {
     }
 
 }
-

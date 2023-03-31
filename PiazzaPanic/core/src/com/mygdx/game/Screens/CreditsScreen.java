@@ -1,4 +1,7 @@
 package com.mygdx.game.Screens;
+
+import java.io.IOException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,17 +16,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.PiazzaPanic;
 
-public class CreditsScreen implements Screen{
+public class CreditsScreen implements Screen {
     PiazzaPanic game;
     Texture credits = new Texture("credits.png");
     Texture backBtnTex = new Texture("backBtn.png");
     Texture backBtnTexHover = new Texture("backBtn2.png");
     Texture assetsInfoBtnTex = new Texture("infoBtn_50.png");
     Texture GUIInfoBtnTex = new Texture("infoBtn_50.png");
-    
+
     FitViewport view;
     Stage gameStage;
-    
+
     TextureRegion backBtnRegion;
     TextureRegionDrawable backBtnDrawable;
     ImageButton backBtn;
@@ -39,17 +42,18 @@ public class CreditsScreen implements Screen{
     TextureRegionDrawable GUIInfoDrawable;
     ImageButton GUIInfoBtn;
 
-    public CreditsScreen(PiazzaPanic game){
+    public CreditsScreen(PiazzaPanic game) {
         this.game = game;
     }
 
     @Override
     public void show() {
+        System.out.println("CreditsScreen");
         view = new FitViewport(game.GAME_WIDTH, game.GAME_HEIGHT);
         view.getCamera().position.set(game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, 1f);
         gameStage = new Stage(view, game.batch);
 
-        //Buttons
+        // Buttons
         backBtnRegion = new TextureRegion(backBtnTex);
         backBtnDrawable = new TextureRegionDrawable(backBtnRegion);
         backBtn = new ImageButton(backBtnDrawable);
@@ -62,25 +66,27 @@ public class CreditsScreen implements Screen{
         GUIInfoDrawable = new TextureRegionDrawable(GUIInfoRegion);
         GUIInfoBtn = new ImageButton(GUIInfoDrawable);
 
-        //hovered button
+        // hovered button
         backBtnRegionHover = new TextureRegion(backBtnTexHover);
         backBtnDrawableHover = new TextureRegionDrawable(backBtnRegionHover);
 
-        //listen for hover
-        backBtn.addListener(new ClickListener(){
+        // listen for hover
+        backBtn.addListener(new ClickListener() {
             final ImageButton backNormal = new ImageButton(backBtnDrawable);
             final ImageButton backHover = new ImageButton(backBtnDrawableHover);
+
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 backBtn.setStyle(backHover.getStyle());
             }
+
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 backBtn.setStyle(backNormal.getStyle());
             }
         });
 
-        assetsInfoBtn.addListener(new ClickListener(){
+        assetsInfoBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.net.openURI("https://limezu.itch.io/");
@@ -88,17 +94,17 @@ public class CreditsScreen implements Screen{
             }
         });
 
-        GUIInfoBtn.addListener(new ClickListener(){
+        GUIInfoBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.net.openURI("https://www.gamedevmarket.net/asset/game-gui-free/");
                 super.clicked(event, x, y);
             }
         });
-        
-        //place buttons on stage
+
+        // place buttons on stage
         gameStage.addActor(backBtn);
-        backBtn.setPosition(0,game.GAME_HEIGHT-backBtn.getHeight());
+        backBtn.setPosition(0, game.GAME_HEIGHT - backBtn.getHeight());
         assetsInfoBtn.setPosition(735, 145);
         GUIInfoBtn.setPosition(677, 98);
         gameStage.addActor(assetsInfoBtn);
@@ -113,14 +119,19 @@ public class CreditsScreen implements Screen{
         view.apply();
 
         game.batch.setProjectionMatrix(view.getCamera().combined);
-		game.batch.begin();
-		game.batch.draw(credits, ((game.GAME_WIDTH/2) - (credits.getWidth()/2)), 60);
-		game.batch.end();
+        game.batch.begin();
+        game.batch.draw(credits, ((game.GAME_WIDTH / 2) - (credits.getWidth() / 2)), 60);
+        game.batch.end();
 
         gameStage.getViewport().apply();
 
-        if (backBtn.isPressed()){
-            game.setScreen(new MainMenuScreen(game));
+        if (backBtn.isPressed()) {
+            try {
+                game.setScreen(new MainMenuScreen(game));
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         Gdx.input.setInputProcessor(gameStage);
         gameStage.draw();
@@ -134,19 +145,19 @@ public class CreditsScreen implements Screen{
     @Override
     public void pause() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void resume() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void hide() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -154,5 +165,5 @@ public class CreditsScreen implements Screen{
         credits.dispose();
         gameStage.dispose();
     }
-    
+
 }
