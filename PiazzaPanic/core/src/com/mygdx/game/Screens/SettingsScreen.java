@@ -2,6 +2,7 @@ package com.mygdx.game.Screens;
 
 import java.io.IOException;
 
+import com.badlogic.gdx.graphics.Color;
 import org.json.JSONObject;
 
 import com.badlogic.gdx.Gdx;
@@ -33,7 +34,11 @@ public class SettingsScreen implements Screen {
     Texture uncheckedBox = new Texture("unchecked_box.png");
     Texture backBtnTex = new Texture("backBtn.png");
     Texture backBtnTexHover = new Texture("backBtn2.png");
+    Texture diffBtnTex;
+    Texture diffBtnTexHover;
 
+
+    Texture hardBtnTexHover;
     FitViewport view;
     TextureRegion checkedBoxRegion;
     TextureRegion uncheckedBoxRegion;
@@ -50,6 +55,7 @@ public class SettingsScreen implements Screen {
     TextureRegionDrawable backBtnDrawableHover;
 
     JSONObject config;
+    String currentDifficulty = "Easy";
 
     public SettingsScreen(PiazzaPanic game, ConfigHandler configHandler) {
         this.game = game;
@@ -60,6 +66,7 @@ public class SettingsScreen implements Screen {
     @Override
     public void show() {
         System.out.println("SettingsScreen");
+
         checked = config.getBoolean("muteMusic");
         view = new FitViewport(game.GAME_WIDTH, game.GAME_HEIGHT);
         view.getCamera().position.set(game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, 1f);
@@ -79,7 +86,7 @@ public class SettingsScreen implements Screen {
         uncheckedBoxDrawable = new TextureRegionDrawable(uncheckedBoxRegion);
 
         checkedBoxBtn = new ImageButton(checked ? checkedBoxDrawable : uncheckedBoxDrawable);
-        checkedBoxBtn.setPosition((game.GAME_WIDTH / 2) - (checkedBox.getWidth() / 2), 60);
+        checkedBoxBtn.setPosition((game.GAME_WIDTH / 2) - (checkedBox.getWidth() / 2), game.GAME_HEIGHT - 350);
 
         BitmapFont font = new BitmapFont();
         TextField.TextFieldFilter numOnly = new TextField.TextFieldFilter.DigitsOnlyFilter();
@@ -88,7 +95,7 @@ public class SettingsScreen implements Screen {
         textFieldStyle.fontColor = com.badlogic.gdx.graphics.Color.BLACK;
         int currentServe = config.getInt("customersToServe");
         final TextField numberInput = new TextField(String.valueOf(currentServe), textFieldStyle);
-        numberInput.setPosition((game.GAME_WIDTH / 2) - (numberInput.getWidth() / 2), 200);
+        numberInput.setPosition((game.GAME_WIDTH / 2) - (numberInput.getWidth() / 2), game.GAME_HEIGHT - 300);
         numberInput.setSize(200, 40);
         Texture inputBg = new Texture("inp.png");
         NinePatch inputNinePatch = new NinePatch(inputBg, 10, 10, 10, 10);
@@ -96,6 +103,14 @@ public class SettingsScreen implements Screen {
         inputBoxBackground.setLeftWidth(10);
         numberInput.getStyle().background = inputBoxBackground;
         numberInput.setTextFieldFilter(numOnly);
+
+        TextButton.TextButtonStyle diffButtonStyle = new TextButton.TextButtonStyle();
+        diffButtonStyle.font = font;
+        diffButtonStyle.fontColor = Color.BLACK;
+        diffButtonStyle.up = new NinePatchDrawable(new NinePatch(new Texture("inp.png"), 10,10,10,10));
+        diffButtonStyle.down = new NinePatchDrawable(new NinePatch(new Texture("inp.png"), 10,10,10,10));
+        final TextButton difficultyButton = new TextButton(currentDifficulty, diffButtonStyle);
+        difficultyButton.setPosition((game.GAME_WIDTH / 2) - (difficultyButton.getWidth() -2), 200);
 
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = font;
@@ -119,6 +134,24 @@ public class SettingsScreen implements Screen {
                 checkedBoxBtn.setStyle(newStyle);
                 super.clicked(event, x, y);
             }
+        });
+
+        difficultyButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Difficulty pressed, "+ currentDifficulty);
+                if (currentDifficulty == "Easy") {
+                    currentDifficulty = "Medium";
+
+                } else if (currentDifficulty == "Medium") {
+                    currentDifficulty = "Hard";
+                } else {
+                    currentDifficulty = "Easy";
+                }
+                difficultyButton.setText(currentDifficulty);
+                super.clicked(event, x, y);
+            }
+
         });
 
         button.addListener(new ClickListener() {
@@ -156,6 +189,7 @@ public class SettingsScreen implements Screen {
         gameStage.addActor(numberInput);
         gameStage.addActor(button);
         gameStage.addActor(backBtn);
+        gameStage.addActor(difficultyButton);
     }
 
     public void render(float delta) {
