@@ -19,6 +19,14 @@ public class Money {
         this.currentMoney = 0;
         this.game = _game;
     }
+
+    public Money(PiazzaPanic _game, BitmapFont font) {
+        this.font = font;
+        font.setColor(new Color(0.52156866f, 0.73333335f, 0.39607844f, 1.0f));
+        font.getData().setScale(0.45f);
+        this.currentMoney = 0;
+        this.game = _game;
+    }
     public void addMoney(int amount) {
         currentMoney += amount;
     }

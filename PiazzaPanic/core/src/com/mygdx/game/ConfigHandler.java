@@ -18,6 +18,14 @@ public class ConfigHandler {
         System.out.println("Config: " + content);
         config = new JSONObject(content);
     }
+    public ConfigHandler(String path) throws IOException {
+        System.out.println(path);
+        configPath = path;
+        System.out.println("Config path: " + configPath);
+        String content = new String(Files.readAllBytes(Paths.get(configPath)));
+        System.out.println("Config: " + content);
+        config = new JSONObject(content);
+    }
 
     public JSONObject getConfig() {
         return config;
@@ -28,7 +36,7 @@ public class ConfigHandler {
     }
 
     public boolean muteMode() {
-        return config.getBoolean("muteMode");
+        return config.getBoolean("muteMusic");
     }
 
     public void setCustomersToServe(int customersToServe) {
