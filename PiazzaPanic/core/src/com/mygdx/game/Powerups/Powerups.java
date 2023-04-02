@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Powerups {
-    HashMap<String, Powerup> allPowerups = new HashMap<String, Powerup>();
+    public HashMap<String, Powerup> allPowerups = new HashMap<String, Powerup>();
 
     BitmapFont font;
     Money money;
