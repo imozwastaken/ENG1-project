@@ -1,0 +1,72 @@
+name: Release dev builds
+
+on:
+  workflow_run:
+    workflows: [Java CI with Gradle]
+    types: [completed]
+    branches: [master, testing,dev]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2.3.3
+        with:
+          gradle-version: 6.7.1
+          arguments: desktop:dist
+      - name: Rename jar file
+        run: |
+          cd desktop/build/libs
+          VER=`git rev-parse --short HEAD`
+          mv desktop-1.0.jar team17-piazzaPanic.jar
+      - name: Automatically release
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest-dev"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            desktop/build/libs/*.jar
+
+      - name: Test
+        uses: gradle/gradle-build-action@v2.3.3
+        with:
+          arguments: tests:test
+
+      - name: Upload test coverage report
+        uses: dorny/test-reporter@v1.6.0
+        env:
+          GIT_AUTHOR_NAME: 'Hari Bhandari'
+          GIT_AUTHOR_EMAIL: '2012bhandari.ha@gmail.com'
+          GIT_COMMITTER_NAME: 'Hari Bhandari'
+          GIT_COMMITTER_EMAIL: '2012bhandari.ha@gmail.com'
+        with:
+          format: cobertura
+          path-to-report: desktop/build/test-results/test/coverage/test/coverage.xml
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: Generate code coverage report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.17
+        with:
+          reports: 'desktop/build/test-results/test/coverage/test/**/coverage.cobertura.xml'
+          targetdir: 'coverage-report'
+          reporttypes: 'HtmlInline_AzurePipelines'
+
+      - name: Upload code coverage report
+        uses: PavanMudigonda/markdown-reporter@v0.1
+        with:
+          title: Test coverage report
+          path: coverage-report/Summary.md
