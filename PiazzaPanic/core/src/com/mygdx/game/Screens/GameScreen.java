@@ -185,7 +185,7 @@ public class GameScreen implements Screen {
     JSONObject config;
 
     public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless, Boolean isLoad, String Loadfile,
-            JSONObject config) {
+            JSONObject config) throws IOException {
 
         // initialise the game
         this.game = game;
@@ -211,9 +211,9 @@ public class GameScreen implements Screen {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        money = new Money(game);
+        money = new Money(game, config.getString("difficulty"));
 
-        powerups = new Powerups(game, money, this);
+        powerups = new Powerups(game, money, this, config.getString("difficulty"));
         this.speedPowerup = new SpeedPowerup(utils, this, powerups);
         this.repPowerup = new RepPowerup(utils, this, powerups);
         this.stationSpeedPowerup = new StationSpeedPowerup(utils, this, powerups);
@@ -447,7 +447,7 @@ public class GameScreen implements Screen {
         gameTime = System.currentTimeMillis() + (int) obj.get("timetaken");
         // customerCount = (int) obj.get("customersLeft");
         money.addMoney((int) obj.get("Money"));
-        System.out.println("Initialised shit");
+
     }
 
     public void loadJSON(String Loadfile) throws IOException {
@@ -482,11 +482,6 @@ public class GameScreen implements Screen {
         clickable.setSize(width, height);
         clickable.addListener(cursorHovering);
         return clickable;
-    }
-
-    public int RandomNumber(int max, int min) {
-        int randomNum = rand.nextInt((max - min) + 1) + min;
-        return randomNum;
     }
 
     @Override

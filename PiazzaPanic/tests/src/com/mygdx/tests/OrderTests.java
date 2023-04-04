@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.internal.matchers.Or;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 @RunWith(GdxTestRunner.class)
@@ -19,7 +20,7 @@ public class OrderTests {
 
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         order = new Order("burger", new Texture("orderBurger.png"), new Burger());
     }
 

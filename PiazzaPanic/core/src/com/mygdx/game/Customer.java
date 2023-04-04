@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Food.FoodMenu;
 import com.mygdx.game.Food.Order;
 
+import java.io.IOException;
+
 public class Customer {
     // god we love using arrays for dealing with this stuff
 
@@ -18,7 +20,7 @@ public class Customer {
     public String name;
     public Order customerOrder;
 
-    public Customer(Actor skin) {
+    public Customer(Actor skin) throws IOException {
         String[] names = { "Blue", "Red", "White", "Yellow" };
         this.name = names[MathUtils.random(0, 3)];
         this.body = skin;
@@ -59,7 +61,7 @@ public class Customer {
         }
     }
 
-    private Order generateOrder() {
+    private Order generateOrder() throws IOException {
         FoodMenu menu = new FoodMenu();
         return menu.getRandomOrder();
     }

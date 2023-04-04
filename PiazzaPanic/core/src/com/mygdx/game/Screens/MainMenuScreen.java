@@ -258,7 +258,11 @@ public class MainMenuScreen implements Screen {
         settingsBtn.setPosition(game.GAME_WIDTH - infoBtn.getWidth() - 70, game.GAME_HEIGHT - infoBtn.getHeight());
 
         if (playBtn.isPressed()) {
-            game.setScreen(new GameScreen(game, view, false, false, "", this.config));
+            try {
+                game.setScreen(new GameScreen(game, view, false, false, "", this.config));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         if (exitBtn.isPressed()) {
@@ -270,7 +274,11 @@ public class MainMenuScreen implements Screen {
             game.setScreen(new CreditsScreen(game));
         }
         if (endlessBtn.isPressed()) {
-            game.setScreen(new GameScreen(game, view, true, false, "", this.config));
+            try {
+                game.setScreen(new GameScreen(game, view, true, false, "", this.config));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         if (settingsBtn.isPressed()) {
             game.setScreen(new SettingsScreen(game, this.configHandler));
@@ -309,7 +317,11 @@ public class MainMenuScreen implements Screen {
         }
         if (!Objects.equals(filepath, "") && filepath != null) {
             System.out.println("PATH: " + filepath);
-            game.setScreen(new GameScreen(game, view, false, true, filepath, this.config));
+            try {
+                game.setScreen(new GameScreen(game, view, false, true, filepath, this.config));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
         }
 

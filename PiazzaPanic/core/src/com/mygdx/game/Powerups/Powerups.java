@@ -19,12 +19,20 @@ public class Powerups {
     private PiazzaPanic game;
     private Screen screen;
 
-    public Powerups(PiazzaPanic _game, Money _money, Screen _screen) {
+    public Powerups(PiazzaPanic _game, Money _money, Screen _screen, String difficulty) {
         this.game = _game;
-        Powerup speedPowerup = new Powerup("Speed", 5000, 0, 1, 100, 0);
-        Powerup extraLife = new Powerup("ExtraLife", 1000000000, 0, 1, 300, 0);
-        Powerup stationSpeed = new Powerup("FastStations", 10000, 0, 1f, 300, 0);
-        Powerup orderTimeUp = new Powerup("ExtraTime", 1000000000, 0, 10, 100, 0);
+        int priceIncrease;
+        if (difficulty.equals("Easy")) {
+            priceIncrease = 0;
+        } else if (difficulty.equals("Medium")) {
+            priceIncrease = 25;
+        } else {
+            priceIncrease = 50;
+        }
+        Powerup speedPowerup = new Powerup("Speed", 5000, 0, 1, 100, 0, priceIncrease);
+        Powerup extraLife = new Powerup("ExtraLife", 1000000000, 0, 1, 300, 0, priceIncrease);
+        Powerup stationSpeed = new Powerup("FastStations", 10000, 0, 1f, 300, 0, priceIncrease);
+        Powerup orderTimeUp = new Powerup("ExtraTime", 1000000000, 0, 10, 100, 0, priceIncrease);
         allPowerups.put("Speed", speedPowerup);
         allPowerups.put("ExtraLife", extraLife);
         allPowerups.put("FastStations", stationSpeed);

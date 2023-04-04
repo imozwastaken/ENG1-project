@@ -34,6 +34,7 @@ public class ConfigHandler {
     public int getCustomersToServe() {
         return config.getInt("customersToServe");
     }
+    public String getDifficulty() {return config.getString("difficulty");}
 
     public boolean muteMode() {
         return config.getBoolean("muteMusic");
@@ -46,6 +47,11 @@ public class ConfigHandler {
 
     public void setMuteMode(boolean muteMode) {
         config.put("muteMusic", muteMode);
+        saveConfig();
+    }
+
+    public void setDifficulty(String difficulty) {
+        config.put("difficulty", difficulty);
         saveConfig();
     }
 

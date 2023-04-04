@@ -3,13 +3,14 @@ package com.mygdx.game.Food;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class FoodMenu {
 
     private final ArrayList<Order> orderOptions;
 
-    public FoodMenu() {
+    public FoodMenu() throws IOException {
         this.orderOptions = new ArrayList<>();
 
         // Add order options here

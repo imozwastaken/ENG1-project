@@ -66,7 +66,7 @@ public class SettingsScreen implements Screen {
     @Override
     public void show() {
         System.out.println("SettingsScreen");
-
+        currentDifficulty = config.getString("difficulty");
         checked = config.getBoolean("muteMusic");
         view = new FitViewport(game.GAME_WIDTH, game.GAME_HEIGHT);
         view.getCamera().position.set(game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, 1f);
@@ -165,6 +165,7 @@ public class SettingsScreen implements Screen {
                 }
                 configHandler.setCustomersToServe(Integer.parseInt(inputtedNum));
                 configHandler.setMuteMode(checked);
+                configHandler.setDifficulty(currentDifficulty);
                 super.clicked(event, x, y);
             }
         });
