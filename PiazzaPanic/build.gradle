@@ -14,6 +14,7 @@ buildscript {
     }
 }
 
+
 allprojects {
     apply plugin: "eclipse"
 
@@ -55,10 +56,54 @@ project(":desktop") {
 project(":core") {
     apply plugin: "java-library"
 
-
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        
+        implementation 'org.json:json:20220924'
+    }
+}
+
+project(":tests") {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'java-library'
+
+    sourceSets.test.java.srcDirs = ["src/"]
+
+    dependencies {
+        implementation project(":core")
+
+        implementation  "junit:junit:4.+"
+        implementation  "org.mockito:mockito-all:1.9.+"
+
+        implementation  "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        implementation  "com.badlogicgames.gdx:gdx:$gdxVersion"
+
+        testImplementation "junit:junit:4.+"
+
+        testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+        testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        implementation 'org.json:json:20220924'
+    }
+
+    gradle.projectsEvaluated {
+        // include src from all dependent projects (compile dependency) in JaCoCo test report
+        jacocoTestReport {
+            // get all projects we have a (compile) dependency on
+            def projs = configurations.implementation.getAllDependencies().withType(ProjectDependency).collect{it.getDependencyProject()}
+            projs.each {
+                additionalSourceDirs files(it.sourceSets.main.java.srcDirs)
+                additionalClassDirs files(it.sourceSets.main.output)
+            }
+
+            reports {
+                // Generate HTML for local preview, xml for CI
+                xml.required = true
+                html.enabled = true
+                xml.outputLocation = layout.buildDirectory.file("jacoco.xml")
+                csv.enabled = false
+            }
+        }
     }
 }

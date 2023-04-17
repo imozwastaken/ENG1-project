@@ -27,6 +27,8 @@ Escape - Return to main menu.
 DEBUG KEYS:
 Enter - Skip current customer
 M - Prepare all held ingredients
+L - Mute music 
+P - Grant speed perk
 
 NOTES:
 We have included two folders in this repository containing the specific spritesheets with the animations for the cooks and customers.
