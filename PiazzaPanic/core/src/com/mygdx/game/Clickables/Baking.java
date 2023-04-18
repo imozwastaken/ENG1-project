@@ -32,7 +32,7 @@ public class Baking {
                 bakedPizza.prepare();
                 bakedPizza.updateCurrentTexture();
                 if ((Math.abs(screen.getCooks().get(screen.getSelected()).CookBody.getY() - 64f) < 2)
-                        && (Math.abs(cooks.get(selected).CookBody.getX() - 64f) < 2)) {
+                        && (Math.abs(cooks.get(selected).CookBody.getX() - 64f) < 2) && screen.bakingUnlocked()) {
                     if (!(screen.getCooks().get(screen.getSelected()).isBusy)) {
                         // used to limit to preping only one ingredient per press
                         boolean ingredientDone = false;
@@ -72,7 +72,11 @@ public class Baking {
                         }
                     }
                 } else {
-                    System.out.println("Cook not at station");
+                    if (screen.bakingUnlocked()) {
+                        System.out.println("Cook not at station");
+                    } else {
+                        System.out.println("Baking station not unlocked");
+                    }
                 }
             }
         });
