@@ -106,7 +106,9 @@ public class GameScreen implements Screen {
     ImageButton pantryClickable;
     ImageButton fryingClickable;
     int fryingClicked = 0;
+    int bakingClicked = 0;
     boolean pattyAtFrying = false;
+    boolean pizzaAtBaking = false;
     Texture flipBtn = new Texture("flipBtn.png");
     ImageButton bakingClickable;
     ImageButton cuttingClickable;
@@ -129,6 +131,7 @@ public class GameScreen implements Screen {
     ImageButton speedClickable;
     ImageButton repClickable;
     ImageButton saveClickable;
+    ImageButton pizzaClickable;
 
     ImageButton stationSpeedClickable;
     int NumServed = 0;
@@ -170,6 +173,7 @@ public class GameScreen implements Screen {
     BunClickable bun;
     PattyClickable patty;
     Savegame save;
+    PizzaClickable pizza;
 
     SpeedPowerup speedPowerup;
     RepPowerup repPowerup;
@@ -206,6 +210,7 @@ public class GameScreen implements Screen {
         this.lettuce = new LettuceClickable(utils, this);
         this.tomato = new TomatoClickable(utils, this);
         this.patty = new PattyClickable(utils, this);
+        this.pizza = new PizzaClickable(utils, this);
         try {
             this.save = new Savegame(game, utils, this);
         } catch (IOException e) {
@@ -286,15 +291,13 @@ public class GameScreen implements Screen {
         // cutting station
         cuttingClickable = cutting.getCuttingClickable();
         gameStage.addActor(cuttingClickable);
-
         // serving station
         servingClickable = serving.getServingClickable();
         gameStage.addActor(servingClickable);
-
         // save game
         saveClickable = save.getSaveClickable();
         gameStage.addActor(saveClickable);
-
+        // pizza
         // adding the station clickables to the screen
         pantryClickable.setPosition(0, 64);
         fryingClickable.setPosition(32, 64);
@@ -340,6 +343,7 @@ public class GameScreen implements Screen {
         repClickable = repPowerup.getRepButton();
         stationSpeedClickable = stationSpeedPowerup.getStationClickable();
         extraTimeClickable = extratimePowerup.getExtraTimeClickable();
+        pizzaClickable = pizza.getPizzaClickable();
         // serving screen frame
         servingScreenFrameRegion = new TextureRegion(new Texture("servingFrame.png"));
         servingScreenFrame = new ImageButton(new TextureRegionDrawable(servingScreenFrameRegion));
@@ -386,8 +390,24 @@ public class GameScreen implements Screen {
         fryingClicked++;
     }
 
+    public void incrementBakingClicked() {
+        bakingClicked++;
+    }
+
     public int getFryingClicked() {
         return fryingClicked;
+    }
+
+    public int getBakingClicked() {
+        return bakingClicked;
+    }
+
+    public void setPizzaAtBaking(Boolean isBaking) {
+        pizzaAtBaking = isBaking;
+    }
+
+    public boolean getPizzaAtBaking() {
+        return pizzaAtBaking;
     }
 
     public void setPattyAtFrying(Boolean isFrying) {
@@ -523,6 +543,12 @@ public class GameScreen implements Screen {
         if (pattyAtFrying) {
             game.batch.begin();
             game.batch.draw(flipBtn, 30, 80);
+            game.batch.end();
+        }
+
+        if (pizzaAtBaking) {
+            game.batch.begin();
+            game.batch.draw(flipBtn, 85, 78);
             game.batch.end();
         }
 
@@ -864,6 +890,7 @@ public class GameScreen implements Screen {
             gameStage.addActor(repClickable);
             gameStage.addActor(stationSpeedClickable);
             gameStage.addActor(extraTimeClickable);
+            gameStage.addActor(pizzaClickable);
             pantryScreenFrame.setPosition(10, 10);
             XbtnClickable.setPosition(7, 88);
             lettuceClickable.setPosition(25, 66);
@@ -874,6 +901,7 @@ public class GameScreen implements Screen {
             repClickable.setPosition(53, 40);
             stationSpeedClickable.setPosition(75, 40);
             extraTimeClickable.setPosition(110, 40);
+            pizzaClickable.setPosition(25, 17);
 
             showPantryScreen = false;
         }
@@ -891,6 +919,7 @@ public class GameScreen implements Screen {
         repClickable.setPosition(10000, -1);
         stationSpeedClickable.setPosition(10000, -1);
         extraTimeClickable.setPosition(100000, -1);
+        pizzaClickable.setPosition(10000, -1);
     }
 
     public void hideServingScreen() {
