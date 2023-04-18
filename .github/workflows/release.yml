@@ -19,11 +19,10 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
       - name: Build with Gradle
+        run: ./gradlew desktop:dist
         working-directory: ./PiazzaPanic
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: 6.7.1
-          arguments: desktop:dist
+        env:
+          JAVA_HOME: ${{ steps.setup-jdk.outputs.path }}
       - name: Rename jar file
         run: |
           cd PiazzaPanic/desktop/build/libs
@@ -39,4 +38,3 @@ jobs:
           prerelease: true
           files: |
             PiazzaPanic/desktop/build/libs/*.jar
-
