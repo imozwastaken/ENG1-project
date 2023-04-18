@@ -1,6 +1,8 @@
 name: Release dev builds
 
 on:
+  push:
+    branches: [main, testing, dev]
   workflow_run:
     workflows: [Java CI with Gradle]
     types: [completed]
