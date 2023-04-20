@@ -134,8 +134,9 @@ public class GameScreen implements Screen {
     ImageButton saveClickable;
     ImageButton pizzaClickable;
     ImageButton unlockBakingClickable;
-
+    ImageButton potatoClickable;
     ImageButton stationSpeedClickable;
+    ImageButton cheeseClickable;
     int NumServed = 0;
 
     // when you hover over a clickable it changes the cursor to a hand
@@ -171,11 +172,13 @@ public class GameScreen implements Screen {
     SaladClickable saladC;
     BurgerClickable burger;
     LettuceClickable lettuce;
+    PotatoClickable potato;
     TomatoClickable tomato;
     BunClickable bun;
     PattyClickable patty;
     Savegame save;
     PizzaClickable pizza;
+    CheeseClickable cheese;
     UnlockBaking unlock;
 
     SpeedPowerup speedPowerup;
@@ -214,7 +217,9 @@ public class GameScreen implements Screen {
         this.tomato = new TomatoClickable(utils, this);
         this.patty = new PattyClickable(utils, this);
         this.pizza = new PizzaClickable(utils, this);
+        this.potato = new PotatoClickable(utils, this);
         this.unlock = new UnlockBaking(utils, this);
+        this.cheese = new CheeseClickable(utils, this);
         try {
             this.save = new Savegame(game, utils, this);
         } catch (IOException e) {
@@ -345,11 +350,13 @@ public class GameScreen implements Screen {
         bunsClickable = bun.getBunClickable();
         // unprepared patty button
         pattyClickable = patty.getPattyClickable();
+        potatoClickable = potato.getPotatoClickable();
         speedClickable = speedPowerup.getSpeedClickable();
         repClickable = repPowerup.getRepButton();
         stationSpeedClickable = stationSpeedPowerup.getStationClickable();
         extraTimeClickable = extratimePowerup.getExtraTimeClickable();
         pizzaClickable = pizza.getPizzaClickable();
+        cheeseClickable = cheese.getCheeseClickable();
         unlockBakingClickable = unlock.getUnlockBakingButton();
         // serving screen frame
         servingScreenFrameRegion = new TextureRegion(new Texture("servingFrame.png"));
@@ -907,6 +914,8 @@ public class GameScreen implements Screen {
             gameStage.addActor(extraTimeClickable);
             gameStage.addActor(pizzaClickable);
             gameStage.addActor(unlockBakingClickable);
+            gameStage.addActor(potatoClickable);
+            gameStage.addActor(cheeseClickable);
             pantryScreenFrame.setPosition(10, 10);
             XbtnClickable.setPosition(7, 88);
             lettuceClickable.setPosition(25, 66);
@@ -918,6 +927,8 @@ public class GameScreen implements Screen {
             stationSpeedClickable.setPosition(75, 40);
             extraTimeClickable.setPosition(110, 40);
             pizzaClickable.setPosition(25, 17);
+            potatoClickable.setPosition(81, 17);
+            cheeseClickable.setPosition(110, 17);
             if (bakingUnlocked) {
                 unlockBakingClickable.setPosition(10000, -1);
             } else {
@@ -942,6 +953,8 @@ public class GameScreen implements Screen {
         extraTimeClickable.setPosition(100000, -1);
         pizzaClickable.setPosition(10000, -1);
         unlockBakingClickable.setPosition(10000, -1);
+        potatoClickable.setPosition(10000, -1);
+        cheeseClickable.setPosition(10000, -1);
     }
 
     public void hideServingScreen() {
