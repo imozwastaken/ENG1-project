@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CustomerTests {
     private Customer customer;
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         customer = new Customer(new Actor());
     }
 

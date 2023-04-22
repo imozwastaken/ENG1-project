@@ -24,7 +24,7 @@ public class MoneyTests {
     public void setUp() {
         System.out.println("Setting up class");
         game = Mockito.mock(PiazzaPanic.class);
-        money = new Money(game);
+        money = new Money(game, "Easy");
     }
 
     @After
@@ -35,6 +35,7 @@ public class MoneyTests {
         money.addMoney(100);
         assertEquals(100, money.getCurrentMoney());
         System.out.println("Adding money test success");
+
     }
 
     @Test

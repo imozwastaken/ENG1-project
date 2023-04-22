@@ -3,6 +3,7 @@ package com.mygdx.tests;
 import static org.junit.Assert.*;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.mygdx.game.Customer;
 import com.mygdx.game.Food.Burger;
 import com.mygdx.game.Food.Order;
@@ -26,12 +27,13 @@ public class PowerupsTest {
     public void setUp() {
         System.out.println("Setting up class");
         game = Mockito.mock(PiazzaPanic.class);
-        money = new Money(game);
+        BitmapFont font = new BitmapFont();
+        money = new Money(game, "Easy");
 
     }
     @Test
     public void testBuyPowerup() {
-        Powerups powerups = new Powerups(game, money, null);
+        Powerups powerups = new Powerups(game, money, null, "");
 
         // set current money to 200
         money.addMoney(200);
@@ -44,7 +46,7 @@ public class PowerupsTest {
     }
     @Test
     public void testBuyPowerupInsufficientFunds() {
-        Powerups powerups = new Powerups(game, money, null);
+        Powerups powerups = new Powerups(game, money, null, "");
 
         // set current money to 50
         money.addMoney(50);
@@ -59,7 +61,7 @@ public class PowerupsTest {
     @Test
     public void testGetSpeedMultiplier() {
         money.addMoney(1000);
-        Powerups powerups = new Powerups(game, money, null);
+        Powerups powerups = new Powerups(game, money, null, "");
 
         // check default speed multiplier value
         assertEquals(1, powerups.getSpeedMultiplier(), 0.01f);
@@ -74,7 +76,7 @@ public class PowerupsTest {
     @Test
     public void testGetStationSpeed() {
         money.addMoney(3000);
-        Powerups powerups = new Powerups(game, money, null);
+        Powerups powerups = new Powerups(game, money, null, "");
 
 
         // check default station speed value
