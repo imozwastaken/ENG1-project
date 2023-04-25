@@ -25,6 +25,7 @@ jobs:
           JAVA_HOME: ${{ steps.setup-jdk.outputs.path }}
       - name: Build and test
         run: ./gradlew clean test --info
+        working-directory: ./PiazzaPanic
       - name: Upload test output
         if: always()
         uses: actions/upload-artifact@v2
