@@ -23,14 +23,14 @@ jobs:
         working-directory: ./PiazzaPanic
         env:
           JAVA_HOME: ${{ steps.setup-jdk.outputs.path }}
-      - name: Run JUnit tests
-        uses: gradle/gradle-build-action@v2.3.3
+      - name: Build and test
+        run: ./gradlew clean test --info
+      - name: Upload test output
+        if: always()
+        uses: actions/upload-artifact@v2
         with:
-          arguments: :tests:test
-          working-directory: ./PiazzaPanic
-          java-version: '11'
-          gradle-version: '7.5.1'
-
+          name: test-results
+          path: build/test-results/**/*.xml
       - name: Rename jar file
         run: |
           cd PiazzaPanic/desktop/build/libs
