@@ -9,7 +9,6 @@ import com.mygdx.game.Cook;
 import com.mygdx.game.Food.Ingredient;
 import com.mygdx.game.PiazzaPanic;
 import com.mygdx.game.Screens.GameScreen;
-import sun.nio.ch.Util;
 
 public class Frying {
     ImageButton fryingClickable;
