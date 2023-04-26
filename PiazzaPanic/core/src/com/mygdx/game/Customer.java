@@ -19,8 +19,9 @@ public class Customer {
     public Actor body;
     public String name;
     public Order customerOrder;
+    public boolean bakingUnlocked = false;
 
-    public Customer(Actor skin) throws IOException {
+    public Customer(Actor skin, boolean _bakingUnlocked) throws IOException {
         String[] names = { "Blue", "Red", "White", "Yellow" };
         this.name = names[MathUtils.random(0, 3)];
         this.body = skin;
@@ -28,6 +29,7 @@ public class Customer {
         this.body.setHeight(23);
         this.body.setX(144);
         this.body.setY(80);
+        bakingUnlocked = _bakingUnlocked;
 
         // TODO add all possible orders here
 
@@ -62,7 +64,7 @@ public class Customer {
     }
 
     private Order generateOrder() throws IOException {
-        FoodMenu menu = new FoodMenu();
+        FoodMenu menu = new FoodMenu(bakingUnlocked);
         return menu.getRandomOrder();
     }
 }

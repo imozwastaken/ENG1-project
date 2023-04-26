@@ -9,8 +9,8 @@ import java.util.ArrayList;
 public class FoodMenu {
 
     private final ArrayList<Order> orderOptions;
-
-    public FoodMenu() throws IOException {
+    public boolean bakingUnlocked = false;
+    public FoodMenu(boolean _bakingUnlocked) throws IOException {
         this.orderOptions = new ArrayList<>();
 
         // Add order options here
@@ -18,6 +18,7 @@ public class FoodMenu {
         this.orderOptions.add(new Order("salad", new Texture("orderSalad.png"), new Salad()));
         this.orderOptions.add(new Order("potato", new Texture("orderPotato.png"), new Potato()));
         this.orderOptions.add(new Order("pizza", new Texture("orderPizza.png"), new Pizza()));
+        bakingUnlocked = _bakingUnlocked;
     }
 
     public ArrayList<Order> getOrderOptions() {
@@ -26,7 +27,12 @@ public class FoodMenu {
 
     public Order getRandomOrder() {
 //        return orderOptions.get(2);
-        return orderOptions.get(MathUtils.random(3, 3));
+        if (bakingUnlocked) {
+            return orderOptions.get(MathUtils.random(0, 3));
+        } else {
+            return  orderOptions.get(MathUtils.random(0, 1));
+        }
+
     }
 
     // Uncomment when logic added for adding a baking station

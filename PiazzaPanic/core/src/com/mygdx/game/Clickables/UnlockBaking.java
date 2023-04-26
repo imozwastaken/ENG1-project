@@ -15,7 +15,7 @@ public class UnlockBaking {
         unlockBakingButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (screen.getMoney().getCurrentMoney() >= 0 && !screen.bakingUnlocked()) {
+                if (screen.getMoney().getCurrentMoney() >= 100 && !screen.bakingUnlocked()) {
                     screen.getMoney().addMoney(-100);
                     screen.setBakingUnlocked(true);
                 } else {

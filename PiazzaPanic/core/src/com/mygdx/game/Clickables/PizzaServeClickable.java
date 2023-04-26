@@ -28,7 +28,7 @@ public class PizzaServeClickable {
                 ArrayList<ArrayList<Customer>> customers = screen.getCustomers();
                 int customerCount = screen.getCustomerCount();
                 Pizza recipe = new Pizza();
-                Ingredient pizzaBase = new Ingredient("prepdPizza", null, null);
+                Ingredient pizzaBase = new Ingredient("pizza", null, null);
                 pizzaBase.prepare();
                 Ingredient lettuce = new Ingredient("lettuce", null, null);
                 lettuce.prepare();
@@ -37,9 +37,13 @@ public class PizzaServeClickable {
                         if (customers.get(customerCount).get(i).customerOrder.getName() == "pizza") {
                             if (!customers.get(customerCount).get(i).selfComplete == true) {
                                 System.out.println("Served pizza");
+                                System.out.println(cooks.get(selected).CookStack.elementAt(0));
                                 cooks.get(selected).CookStack.remove(pizzaBase);
                                 cooks.get(selected).CookStack.remove(lettuce);
+
                                 customers.get(customerCount).get(i).selfComplete = true;
+                                System.out.println("MONEY");
+                                System.out.println( screen.getMoney());
                                 screen.getMoney().addMoney(100);
                                 screen.hideServingScreen();
                                 cooks.get(selected).isBusy = false;
