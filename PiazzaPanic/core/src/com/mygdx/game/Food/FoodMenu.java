@@ -17,7 +17,7 @@ public class FoodMenu {
         this.orderOptions.add(new Order("burger", new Texture("orderBurger.png"), new Burger()));
         this.orderOptions.add(new Order("salad", new Texture("orderSalad.png"), new Salad()));
         this.orderOptions.add(new Order("potato", new Texture("orderPotato.png"), new Potato()));
-        //        this.orderOptions.add(new Order("pizza", new Texture("orderPizza"), new Pizza()));
+        this.orderOptions.add(new Order("pizza", new Texture("orderPizza.png"), new Pizza()));
     }
 
     public ArrayList<Order> getOrderOptions() {
@@ -26,7 +26,7 @@ public class FoodMenu {
 
     public Order getRandomOrder() {
 //        return orderOptions.get(2);
-        return orderOptions.get(MathUtils.random(0, 1));
+        return orderOptions.get(MathUtils.random(3, 3));
     }
 
     // Uncomment when logic added for adding a baking station

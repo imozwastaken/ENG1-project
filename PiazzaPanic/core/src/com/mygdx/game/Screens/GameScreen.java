@@ -137,6 +137,7 @@ public class GameScreen implements Screen {
     ImageButton potatoClickable;
     ImageButton stationSpeedClickable;
     ImageButton cheeseClickable;
+    ImageButton pizzaServableClickable;
     int NumServed = 0;
 
     // when you hover over a clickable it changes the cursor to a hand
@@ -180,7 +181,7 @@ public class GameScreen implements Screen {
     PizzaClickable pizza;
     CheeseClickable cheese;
     UnlockBaking unlock;
-
+    PizzaServeClickable pizzaServe;
     SpeedPowerup speedPowerup;
     RepPowerup repPowerup;
     ExtratimePowerup extratimePowerup;
@@ -220,6 +221,7 @@ public class GameScreen implements Screen {
         this.potato = new PotatoClickable(utils, this);
         this.unlock = new UnlockBaking(utils, this);
         this.cheese = new CheeseClickable(utils, this);
+        this.pizzaServe = new PizzaServeClickable(game, utils, this);
         try {
             this.save = new Savegame(game, utils, this);
         } catch (IOException e) {
@@ -358,6 +360,7 @@ public class GameScreen implements Screen {
         pizzaClickable = pizza.getPizzaClickable();
         cheeseClickable = cheese.getCheeseClickable();
         unlockBakingClickable = unlock.getUnlockBakingButton();
+        pizzaServableClickable = pizzaServe.getPizzaServeClickable();
         // serving screen frame
         servingScreenFrameRegion = new TextureRegion(new Texture("servingFrame.png"));
         servingScreenFrame = new ImageButton(new TextureRegionDrawable(servingScreenFrameRegion));
@@ -886,15 +889,19 @@ public class GameScreen implements Screen {
 
     private void showServingScreen() {
         if (showServingScreen) {
+            System.out.println("Showing serving screen");
             gameStage.addActor(servingScreenFrame);
             gameStage.addActor(XbtnClickable);
             XbtnClickable.toFront();
             gameStage.addActor(burgerClickable);
             gameStage.addActor(saladClickable);
+            gameStage.addActor(pizzaServableClickable);
             servingScreenFrame.setPosition(10, 10);
             XbtnClickable.setPosition(7, 88);
             burgerClickable.setPosition(25, 66);
             saladClickable.setPosition(53, 66);
+            pizzaServableClickable.setPosition(77, 66);
+            pizzaServableClickable.toFront();
             showServingScreen = false;
         }
     }
@@ -963,6 +970,7 @@ public class GameScreen implements Screen {
         XbtnClickable.setPosition(10000, -1);
         burgerClickable.setPosition(10000, -1);
         saladClickable.setPosition(10000, -1);
+        pizzaServableClickable.setPosition(100000,-1);
     }
 
     public void createProgressBar(float x, float y, Cook selectedCook) {

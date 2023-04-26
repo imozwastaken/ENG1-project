@@ -19,7 +19,7 @@ public class Pizza implements Recipe {
         lettuce.prepare();
         recipe.add(lettuce);
 
-        this.pizzaTex = new Texture("pizza.png");
+        this.pizzaTex = new Texture("prepdPizza.png");
         this.speechBubble = new Texture("orderPizzaBubble.png");
     }
     @Override
