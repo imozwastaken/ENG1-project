@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.ConfigHandler;
 
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 
 public class Order {
     Texture orderTex;
@@ -14,8 +15,15 @@ public class Order {
     public Integer orderTime = 40;
     
     public Order(String name,Texture orderTexture, Recipe orderRecipe) throws IOException {
-        configHandler = new ConfigHandler();
-        String difficulty = configHandler.getDifficulty();
+        String difficulty = null;
+
+        try {
+            ConfigHandler configHandler = new ConfigHandler();
+            difficulty = configHandler.getDifficulty();
+        } catch (NoSuchFileException e) {
+            System.out.println("Error: " + e.getMessage());
+            difficulty = "Easy";
+        }
         this.name = name;
         this.orderTex = orderTexture;
         this.orderRecipe = orderRecipe;
