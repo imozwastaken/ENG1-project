@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import java.awt.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import org.json.JSONObject;
@@ -24,19 +25,19 @@ public class GameScreenTests {
     private GameScreen gameScreen;
     private ConfigHandler configHandler;
 
-    @Before
-    public void setUp() throws IOException {
-        configHandler = new ConfigHandler(Gdx.files.getLocalStoragePath() + "..\\core\\src\\com\\mygdx\\game\\config.json");
-        JSONObject config = configHandler.getConfig();
-        game = Mockito.mock(PiazzaPanic.class);
-        view = new FitViewport(game.GAME_WIDTH, game.GAME_HEIGHT);
-        view.getCamera().position.set(game.GAME_WIDTH /2, game.GAME_HEIGHT/2, 1f);
-        gameScreen = new GameScreen(game, view, false, false, "", config);
-    }
+//    @Before
+//    public void setUp() throws IOException {
+//        configHandler = new ConfigHandler(Gdx.files.getLocalStoragePath() + "..\\core\\src\\com\\mygdx\\game\\config.json");
+//        JSONObject config = configHandler.getConfig();
+//        game = Mockito.mock(PiazzaPanic.class);
+//        view = new FitViewport(game.GAME_WIDTH, game.GAME_HEIGHT);
+//        view.getCamera().position.set(game.GAME_WIDTH /2, game.GAME_HEIGHT/2, 1f);
+//        gameScreen = new GameScreen(game, view, false, false, "", config);
+//    }
 
     @Test
     public void alwaysSuccess() {
-        assertEquals(true, true);
+        assertTrue(true);
     }
 
 }

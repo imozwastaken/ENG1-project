@@ -38,7 +38,7 @@ import com.mygdx.game.Food.Burger;
 import com.mygdx.game.Food.Ingredient;
 import com.mygdx.game.Food.Order;
 import com.mygdx.game.Food.Salad;
-
+import com.mygdx.game.Clickables.UnlockBaking;
 import com.mygdx.game.Powerups.Powerups;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -106,7 +106,10 @@ public class GameScreen implements Screen {
     ImageButton pantryClickable;
     ImageButton fryingClickable;
     int fryingClicked = 0;
+    int bakingClicked = 0;
     boolean pattyAtFrying = false;
+    boolean pizzaAtBaking = false;
+    boolean bakingUnlocked = false;
     Texture flipBtn = new Texture("flipBtn.png");
     ImageButton bakingClickable;
     ImageButton cuttingClickable;
@@ -129,8 +132,11 @@ public class GameScreen implements Screen {
     ImageButton speedClickable;
     ImageButton repClickable;
     ImageButton saveClickable;
-
+    ImageButton pizzaClickable;
+    ImageButton unlockBakingClickable;
+    ImageButton potatoClickable;
     ImageButton stationSpeedClickable;
+    ImageButton cheeseClickable;
     int NumServed = 0;
 
     // when you hover over a clickable it changes the cursor to a hand
@@ -166,10 +172,14 @@ public class GameScreen implements Screen {
     SaladClickable saladC;
     BurgerClickable burger;
     LettuceClickable lettuce;
+    PotatoClickable potato;
     TomatoClickable tomato;
     BunClickable bun;
     PattyClickable patty;
     Savegame save;
+    PizzaClickable pizza;
+    CheeseClickable cheese;
+    UnlockBaking unlock;
 
     SpeedPowerup speedPowerup;
     RepPowerup repPowerup;
@@ -206,6 +216,10 @@ public class GameScreen implements Screen {
         this.lettuce = new LettuceClickable(utils, this);
         this.tomato = new TomatoClickable(utils, this);
         this.patty = new PattyClickable(utils, this);
+        this.pizza = new PizzaClickable(utils, this);
+        this.potato = new PotatoClickable(utils, this);
+        this.unlock = new UnlockBaking(utils, this);
+        this.cheese = new CheeseClickable(utils, this);
         try {
             this.save = new Savegame(game, utils, this);
         } catch (IOException e) {
@@ -286,15 +300,15 @@ public class GameScreen implements Screen {
         // cutting station
         cuttingClickable = cutting.getCuttingClickable();
         gameStage.addActor(cuttingClickable);
-
         // serving station
         servingClickable = serving.getServingClickable();
         gameStage.addActor(servingClickable);
-
         // save game
         saveClickable = save.getSaveClickable();
         gameStage.addActor(saveClickable);
-
+        // unlock baking
+        unlockBakingClickable = unlock.getUnlockBakingButton();
+        // pizza
         // adding the station clickables to the screen
         pantryClickable.setPosition(0, 64);
         fryingClickable.setPosition(32, 64);
@@ -336,10 +350,14 @@ public class GameScreen implements Screen {
         bunsClickable = bun.getBunClickable();
         // unprepared patty button
         pattyClickable = patty.getPattyClickable();
+        potatoClickable = potato.getPotatoClickable();
         speedClickable = speedPowerup.getSpeedClickable();
         repClickable = repPowerup.getRepButton();
         stationSpeedClickable = stationSpeedPowerup.getStationClickable();
         extraTimeClickable = extratimePowerup.getExtraTimeClickable();
+        pizzaClickable = pizza.getPizzaClickable();
+        cheeseClickable = cheese.getCheeseClickable();
+        unlockBakingClickable = unlock.getUnlockBakingButton();
         // serving screen frame
         servingScreenFrameRegion = new TextureRegion(new Texture("servingFrame.png"));
         servingScreenFrame = new ImageButton(new TextureRegionDrawable(servingScreenFrameRegion));
@@ -386,8 +404,32 @@ public class GameScreen implements Screen {
         fryingClicked++;
     }
 
+    public void incrementBakingClicked() {
+        bakingClicked++;
+    }
+
     public int getFryingClicked() {
         return fryingClicked;
+    }
+
+    public int getBakingClicked() {
+        return bakingClicked;
+    }
+
+    public boolean bakingUnlocked() {
+        return bakingUnlocked;
+    }
+
+    public void setBakingUnlocked(boolean value) {
+        bakingUnlocked = value;
+    }
+
+    public void setPizzaAtBaking(Boolean isBaking) {
+        pizzaAtBaking = isBaking;
+    }
+
+    public boolean getPizzaAtBaking() {
+        return pizzaAtBaking;
     }
 
     public void setPattyAtFrying(Boolean isFrying) {
@@ -523,6 +565,12 @@ public class GameScreen implements Screen {
         if (pattyAtFrying) {
             game.batch.begin();
             game.batch.draw(flipBtn, 30, 80);
+            game.batch.end();
+        }
+
+        if (pizzaAtBaking) {
+            game.batch.begin();
+            game.batch.draw(flipBtn, 85, 78);
             game.batch.end();
         }
 
@@ -864,6 +912,10 @@ public class GameScreen implements Screen {
             gameStage.addActor(repClickable);
             gameStage.addActor(stationSpeedClickable);
             gameStage.addActor(extraTimeClickable);
+            gameStage.addActor(pizzaClickable);
+            gameStage.addActor(unlockBakingClickable);
+            gameStage.addActor(potatoClickable);
+            gameStage.addActor(cheeseClickable);
             pantryScreenFrame.setPosition(10, 10);
             XbtnClickable.setPosition(7, 88);
             lettuceClickable.setPosition(25, 66);
@@ -874,6 +926,14 @@ public class GameScreen implements Screen {
             repClickable.setPosition(53, 40);
             stationSpeedClickable.setPosition(75, 40);
             extraTimeClickable.setPosition(110, 40);
+            pizzaClickable.setPosition(25, 17);
+            potatoClickable.setPosition(81, 17);
+            cheeseClickable.setPosition(110, 17);
+            if (bakingUnlocked) {
+                unlockBakingClickable.setPosition(10000, -1);
+            } else {
+                unlockBakingClickable.setPosition(53, 17);
+            }
 
             showPantryScreen = false;
         }
@@ -891,6 +951,10 @@ public class GameScreen implements Screen {
         repClickable.setPosition(10000, -1);
         stationSpeedClickable.setPosition(10000, -1);
         extraTimeClickable.setPosition(100000, -1);
+        pizzaClickable.setPosition(10000, -1);
+        unlockBakingClickable.setPosition(10000, -1);
+        potatoClickable.setPosition(10000, -1);
+        cheeseClickable.setPosition(10000, -1);
     }
 
     public void hideServingScreen() {
