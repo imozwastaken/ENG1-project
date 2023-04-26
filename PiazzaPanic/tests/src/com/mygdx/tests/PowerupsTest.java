@@ -33,7 +33,7 @@ public class PowerupsTest {
     }
     @Test
     public void testBuyPowerup() {
-        Powerups powerups = new Powerups(game, money, null, "");
+        Powerups powerups = new Powerups(game, money, null, "Easy");
 
         // set current money to 200
         money.addMoney(200);
