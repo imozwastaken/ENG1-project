@@ -64,7 +64,7 @@ public class Burger implements Recipe {
             if (ingredient.equals(buns)) {
                 foundBuns = true;
             }
-            if (ingredient.equals(patty)) {
+            if (ingredient.equals(patty) && !ingredient.getBurnt()) {
                 foundPatty = true;
                 if (patty.getBurnt()) {
                     isBurnt = true;

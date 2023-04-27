@@ -50,6 +50,7 @@ public class Frying {
                             }
                         }
                         if (!(selectedIngredient == null)) {
+
                             cooks.get(selected).isBusy = true;
                             screen.createProgressBar(24, 86, cooks.get(selected));
                             screen.incrementFryingClicked();

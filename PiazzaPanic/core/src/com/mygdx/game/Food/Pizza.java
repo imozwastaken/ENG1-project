@@ -48,7 +48,7 @@ public class Pizza implements Recipe {
         Ingredient lettuce = new Ingredient("lettuce", null, null, null);
         lettuce.prepare();
         for (Ingredient ingredient: ingredients) {
-            if (ingredient.equals(pizzaBase)) {
+            if (ingredient.equals(pizzaBase) && !ingredient.getBurnt()) {
                 foundPizzaBase = true;
             }
             if (ingredient.equals(lettuce)) {

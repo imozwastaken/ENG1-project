@@ -41,7 +41,7 @@ public class Potato implements Recipe{
         potato.prepare();
         for (Ingredient ingredient: ingredients) {
 
-            if (ingredient.equals(potato)) {
+            if (ingredient.equals(potato) && !ingredient.getBurnt()) {
                 System.out.println("Found potato");
                 foundPotato = true;
             } else {

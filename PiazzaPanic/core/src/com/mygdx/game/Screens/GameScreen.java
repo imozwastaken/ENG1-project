@@ -575,6 +575,7 @@ public class GameScreen implements Screen {
         gameStage.draw();
 
         if (pattyAtFrying) {
+            System.out.println("Frying patty");
             game.batch.begin();
             game.batch.draw(flipBtn, 30, 80);
             game.batch.end();
