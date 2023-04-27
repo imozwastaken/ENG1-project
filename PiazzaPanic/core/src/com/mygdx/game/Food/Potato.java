@@ -52,6 +52,11 @@ public class Potato implements Recipe{
         return foundPotato;
     }
 
+    public void setBurnt() {
+        isBurnt = true;
+        potatoTex = new Texture("burntPotato.png");
+    }
+
     public Boolean getIsBurnt() {
         return isBurnt;
     }

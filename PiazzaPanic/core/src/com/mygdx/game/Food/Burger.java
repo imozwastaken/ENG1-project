@@ -45,6 +45,10 @@ public class Burger implements Recipe {
 
     public Boolean getIsBurnt() { return isBurnt; }
 
+    public void setBurnt() {
+        isBurnt = true;
+    }
+
     @Override
     public Boolean has(Stack<Ingredient> ingredients) {
         boolean foundBuns = false;

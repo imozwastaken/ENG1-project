@@ -10,6 +10,8 @@ public class Pizza implements Recipe {
     Texture pizzaTex;
     Texture speechBubble;
 
+    boolean isBurnt;
+
     public Pizza() {
         this.recipe = new ArrayList<Ingredient>();
         Ingredient pizzaBase = new Ingredient("pizza", new Texture("rawPizza.png"), new Texture("prepdPizza.png"), null);
@@ -56,8 +58,12 @@ public class Pizza implements Recipe {
         return foundPizzaBase && foundLettuce;
     }
 
-    @Override
+    public void setBurnt() {
+        isBurnt = true;
+        pizzaTex = new Texture("burntPizza.png");
+    }
+
     public Boolean getIsBurnt() {
-        return null;
+        return isBurnt;
     }
 }
