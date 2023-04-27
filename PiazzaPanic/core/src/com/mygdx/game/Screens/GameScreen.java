@@ -580,12 +580,6 @@ public class GameScreen implements Screen {
 
         handlePattyFrying(Gdx.graphics.getDeltaTime());
         handlePizzaBaking(Gdx.graphics.getDeltaTime());
-        if (pizzaAtBaking) {
-            game.batch.begin();
-            game.batch.draw(flipBtn, 85, 78);
-            game.batch.end();
-        }
-
         handlePotatoBaking(Gdx.graphics.getDeltaTime());
 
         for (int i = 0; i < cookCount; i++) {
