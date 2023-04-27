@@ -200,6 +200,8 @@ public class GameScreen implements Screen {
     JSONObject config;
     private HashMap<ProgressBar, Float> pattyTimers = new HashMap<>();
     private float pattyFryingTime = 0;
+    private float potatoBakingTime = 0;
+    private float pizzaBakingTime = 0;
 
     public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless, Boolean isLoad, String Loadfile,
             JSONObject config) throws IOException {
@@ -577,18 +579,14 @@ public class GameScreen implements Screen {
         gameStage.draw();
 
         handlePattyFrying(Gdx.graphics.getDeltaTime());
-
+        handlePizzaBaking(Gdx.graphics.getDeltaTime());
         if (pizzaAtBaking) {
             game.batch.begin();
             game.batch.draw(flipBtn, 85, 78);
             game.batch.end();
         }
 
-        if (potatoAtBaking) {
-            game.batch.begin();
-            game.batch.draw(flipBtn, 85,78);
-            game.batch.end();
-        }
+        handlePotatoBaking(Gdx.graphics.getDeltaTime());
 
         for (int i = 0; i < cookCount; i++) {
             if (!cooks.get(i).isBusy) {
@@ -626,6 +624,38 @@ public class GameScreen implements Screen {
                 flippedPatty.updateCurrentTexture();
             }
             pattyFryingTime = 0;
+        }
+    }
+
+    public void handlePotatoBaking(float delta) {
+            if (potatoAtBaking) {
+
+                potatoBakingTime += delta;
+                game.batch.begin();
+                game.batch.draw(flipBtn, 85, 78);
+                game.batch.end();
+            } else {
+                if (potatoBakingTime >= 10) {
+                    Ingredient flippedPotato = cooks.get(selected).CookStack.peek();
+                    flippedPotato.setBurnt();
+                    flippedPotato.updateCurrentTexture();
+                }
+                potatoBakingTime = 0;
+            }
+    }
+
+    public void handlePizzaBaking(float delta) {
+        if (pizzaAtBaking) {
+            pizzaBakingTime += delta;
+            game.batch.begin();
+            game.batch.draw(flipBtn, 85, 78);
+            game.batch.end();
+        } else {
+            if (pizzaBakingTime >= 10) {
+                Ingredient flippedPizza = cooks.get(selected).CookStack.peek();
+                flippedPizza.setBurnt();
+                flippedPizza.updateCurrentTexture();
+            }
         }
     }
 
