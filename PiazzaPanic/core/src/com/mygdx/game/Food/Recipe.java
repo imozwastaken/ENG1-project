@@ -13,4 +13,6 @@ public interface Recipe {
     Texture getSpeechBubbleTexture();
 
     Boolean has(Stack<Ingredient> ingredients);
+
+    Boolean getIsBurnt();
 }

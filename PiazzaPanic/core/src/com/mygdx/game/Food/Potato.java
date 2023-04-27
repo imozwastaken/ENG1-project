@@ -9,9 +9,10 @@ public class Potato implements Recipe{
     ArrayList<Ingredient> recipe;
     Texture potatoTex;
     Texture speechBubble;
+    boolean isBurnt = false;
     public Potato() {
         this.recipe = new ArrayList<Ingredient>();
-        Ingredient potato = new Ingredient("potato", new Texture("potato.png"), new Texture("potatoCooked.png"));
+        Ingredient potato = new Ingredient("potato", new Texture("potato.png"), new Texture("potatoCooked.png"), new Texture("burntPotato.png"));
         potato.prepare();
         recipe.add(potato);
         this.potatoTex = new Texture("potatoCooked.png");
@@ -36,7 +37,7 @@ public class Potato implements Recipe{
     public Boolean has(Stack<Ingredient> ingredients) {
 
         boolean foundPotato = false;
-        Ingredient potato = new Ingredient("potato", null, null);
+        Ingredient potato = new Ingredient("potato", null, null, null);
         potato.prepare();
         for (Ingredient ingredient: ingredients) {
 
@@ -49,5 +50,9 @@ public class Potato implements Recipe{
             }
         }
         return foundPotato;
+    }
+
+    public Boolean getIsBurnt() {
+        return isBurnt;
     }
 }

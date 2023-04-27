@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Screens.MainMenuScreen;
 
 public class PiazzaPanic extends Game {
-    public final int GAME_HEIGHT = 720;
     public final int GAME_WIDTH = 1280;
+    public final int GAME_HEIGHT = 720;
     public SpriteBatch batch;
     // private FitViewport fit;
 

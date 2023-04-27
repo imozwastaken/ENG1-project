@@ -12,10 +12,10 @@ public class Pizza implements Recipe {
 
     public Pizza() {
         this.recipe = new ArrayList<Ingredient>();
-        Ingredient pizzaBase = new Ingredient("pizza", new Texture("rawPizza.png"), new Texture("prepdPizza.png"));
+        Ingredient pizzaBase = new Ingredient("pizza", new Texture("rawPizza.png"), new Texture("prepdPizza.png"), null);
         pizzaBase.prepare();
         recipe.add(pizzaBase);
-        Ingredient lettuce = new Ingredient("lettuce", new Texture("lettuce.png"), new Texture("prepdLettuce.png"));
+        Ingredient lettuce = new Ingredient("lettuce", new Texture("lettuce.png"), new Texture("prepdLettuce.png"), null);
         lettuce.prepare();
         recipe.add(lettuce);
 
@@ -41,9 +41,9 @@ public class Pizza implements Recipe {
     public Boolean has(Stack<Ingredient> ingredients) {
         boolean foundPizzaBase = false;
         boolean foundLettuce = false;
-        Ingredient pizzaBase = new Ingredient("pizza", null, null);
+        Ingredient pizzaBase = new Ingredient("pizza", null, null, null);
         pizzaBase.prepare();
-        Ingredient lettuce = new Ingredient("lettuce", null, null);
+        Ingredient lettuce = new Ingredient("lettuce", null, null, null);
         lettuce.prepare();
         for (Ingredient ingredient: ingredients) {
             if (ingredient.equals(pizzaBase)) {
@@ -54,5 +54,10 @@ public class Pizza implements Recipe {
             }
         }
         return foundPizzaBase && foundLettuce;
+    }
+
+    @Override
+    public Boolean getIsBurnt() {
+        return null;
     }
 }
