@@ -18,7 +18,7 @@ public class CustomerTests {
     private Customer customer;
     @Before
     public void setUp() throws IOException {
-        customer = new Customer(new Actor());
+        customer = new Customer(new Actor(), false);
     }
 
     @After

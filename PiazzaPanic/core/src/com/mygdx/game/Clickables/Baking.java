@@ -28,9 +28,12 @@ public class Baking {
                 screen.setSationSelected(2);
 
                 Ingredient bakedPizza = new Ingredient("pizza", new Texture("rawPizza.png"),
-                        new Texture("prepdPizza.png"));
+                        new Texture("prepdPizza.png"), new Texture("burntPizza.png"));
                 bakedPizza.prepare();
                 bakedPizza.updateCurrentTexture();
+                Ingredient bakedPotato = new Ingredient("potato", new Texture("potato.png"), new Texture("potatoCooked.png"), new Texture("burntPotato.png"));
+                bakedPotato.prepare();
+                bakedPotato.updateCurrentTexture();
                 if ((Math.abs(screen.getCooks().get(screen.getSelected()).CookBody.getY() - 64f) < 2)
                         && (Math.abs(cooks.get(selected).CookBody.getX() - 64f) < 2) && screen.bakingUnlocked()) {
                     if (!(screen.getCooks().get(screen.getSelected()).isBusy)) {
@@ -41,10 +44,10 @@ public class Baking {
                         // station again
                         // while busy creates a progress bar to indicate when the cook can move again
                         for (Ingredient ingredient : screen.getCooks().get(screen.getSelected()).CookStack) {
-                            if ((ingredient.name == "pizza") && (!ingredient.getState()) && (!ingredientDone)) {
+                            if ((ingredient.name == "pizza" || ingredient.name == "potato") && (!ingredient.getState()) && (!ingredientDone)) {
                                 selectedIngredient = ingredient;
                             } else {
-                                System.out.println("No pizza to bake");
+                                System.out.println("No pizza or potato to bake");
                             }
                         }
                         if (!(selectedIngredient == null)) {
@@ -55,11 +58,22 @@ public class Baking {
                             // patty to be prepared)
                             if ((screen.getBakingClicked()) % 2 == 0) {
                                 ingredientDone = true;
-                                cooks.get(selected).CookStack.push(bakedPizza);
-                                screen.setPizzaAtBaking(false);
+                                if (selectedIngredient.name == "pizza") {
+                                    cooks.get(selected).CookStack.push(bakedPizza);
+                                    screen.setPizzaAtBaking(false);
+                                } else if (selectedIngredient.name == "potato") {
+                                    cooks.get(selected).CookStack.push(bakedPotato);
+                                    screen.setAtPotatoBaking(false);
+                                }
+
                             } else {
                                 cooks.get(selected).CookStack.remove(selectedIngredient);
-                                screen.setPizzaAtBaking(true);
+                                if (selectedIngredient.name == "pizza") {
+                                    screen.setPizzaAtBaking(true);
+
+                                } else if(selectedIngredient.name == "potato") {
+                                    screen.setAtPotatoBaking(true);
+                                }
                             }
                         } else {
                             if (screen.getPizzaAtBaking()) {
@@ -68,6 +82,12 @@ public class Baking {
                                 screen.incrementBakingClicked();
                                 cooks.get(selected).CookStack.push(bakedPizza);
                                 screen.setPizzaAtBaking(false);
+                            } else if (screen.getAtPotatoBaking()) {
+                                cooks.get(selected).isBusy = true;
+                                screen.createProgressBar(80, 86, cooks.get(selected));
+                                screen.incrementBakingClicked();
+                                cooks.get(selected).CookStack.push(bakedPotato);
+                                screen.setAtPotatoBaking(false);
                             }
                         }
                     }

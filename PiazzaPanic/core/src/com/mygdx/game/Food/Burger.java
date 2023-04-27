@@ -11,15 +11,17 @@ public class Burger implements Recipe {
     Texture bugerTex;
     Texture speechBubble;
 
+    boolean isBurnt = false;
+
     public Burger() {
         this.recipe = new ArrayList<Ingredient>();
-        Ingredient patty = new Ingredient("patty", new Texture("rawPatty.png"), new Texture("prepdPatty.png"));
+        Ingredient patty = new Ingredient("patty", new Texture("rawPatty.png"), new Texture("prepdPatty.png"), new Texture("burntPatty.png"));
         patty.prepare();
         recipe.add(patty);
-        Ingredient buns = new Ingredient("buns", new Texture("buns.png"), new Texture("buns.png"));
+        Ingredient buns = new Ingredient("buns", new Texture("buns.png"), new Texture("buns.png"), null);
         buns.prepare();
         recipe.add(buns);
-        Ingredient lettuce = new Ingredient("lettuce", new Texture("lettuce.png"), new Texture("prepdLettuce.png"));
+        Ingredient lettuce = new Ingredient("lettuce", new Texture("lettuce.png"), new Texture("prepdLettuce.png"), null);
         lettuce.prepare();
         recipe.add(lettuce);
         this.bugerTex = new Texture("burger.png");
@@ -31,8 +33,6 @@ public class Burger implements Recipe {
         return recipe;
     }
 
-
-
     @Override
     public Texture getTexture() {
         return bugerTex;
@@ -43,23 +43,32 @@ public class Burger implements Recipe {
         return speechBubble;
     }
 
+    public Boolean getIsBurnt() { return isBurnt; }
+
+    public void setBurnt() {
+        isBurnt = true;
+    }
+
     @Override
     public Boolean has(Stack<Ingredient> ingredients) {
         boolean foundBuns = false;
         boolean foundPatty = false;
         boolean foundLettuce = false;
-        Ingredient buns = new Ingredient("buns", null, null);
+        Ingredient buns = new Ingredient("buns", null, null, null);
         buns.prepare();
-        Ingredient patty = new Ingredient("patty", null, null);
+        Ingredient patty = new Ingredient("patty", null, null, null);
         patty.prepare();
-        Ingredient lettuce = new Ingredient("lettuce", null, null);
+        Ingredient lettuce = new Ingredient("lettuce", null, null, null);
         lettuce.prepare();
         for (Ingredient ingredient : ingredients) {
             if (ingredient.equals(buns)) {
                 foundBuns = true;
             }
-            if (ingredient.equals(patty)) {
+            if (ingredient.equals(patty) && !ingredient.getBurnt()) {
                 foundPatty = true;
+                if (patty.getBurnt()) {
+                    isBurnt = true;
+                }
             }
             if (ingredient.equals(lettuce)) {
                 foundLettuce = true;

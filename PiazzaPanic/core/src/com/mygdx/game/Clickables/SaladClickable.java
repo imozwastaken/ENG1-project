@@ -25,9 +25,9 @@ public class SaladClickable {
                 int selected = screen.getSelected();
                 int customerCount = screen.getCustomerCount();
                 com.mygdx.game.Food.Salad recipe = new com.mygdx.game.Food.Salad();
-                Ingredient tomato = new Ingredient("tomato", null, null);
+                Ingredient tomato = new Ingredient("tomato", null, null, null);
                 tomato.prepare();
-                Ingredient lettuce = new Ingredient("lettuce", null, null);
+                Ingredient lettuce = new Ingredient("lettuce", null, null, null);
                 lettuce.prepare();
                 if (recipe.has(cooks.get(selected).CookStack)) {
                     for (int i = 0; i < customers.get(customerCount).size(); i++) {

@@ -23,7 +23,7 @@ public class PizzaClickable {
                     if (cooks.get(selected).CookStack.size() < 5) {
                         cooks.get(selected).CookStack
                                 .push(new Ingredient("pizza", new Texture("rawPizza.png"),
-                                        new Texture("prepdPizza.png")));
+                                        new Texture("prepdPizza.png"), new Texture("burntPizza.png")));
                     }
                 }
 

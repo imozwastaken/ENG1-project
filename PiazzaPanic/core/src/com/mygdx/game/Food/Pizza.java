@@ -10,16 +10,18 @@ public class Pizza implements Recipe {
     Texture pizzaTex;
     Texture speechBubble;
 
+    boolean isBurnt;
+
     public Pizza() {
         this.recipe = new ArrayList<Ingredient>();
-        Ingredient pizzaBase = new Ingredient("pizza", new Texture("rawPizza.png"), new Texture("prepdPizza.png"));
+        Ingredient pizzaBase = new Ingredient("pizza", new Texture("rawPizza.png"), new Texture("prepdPizza.png"), null);
         pizzaBase.prepare();
         recipe.add(pizzaBase);
-        Ingredient lettuce = new Ingredient("lettuce", new Texture("lettuce.png"), new Texture("prepdLettuce.png"));
+        Ingredient lettuce = new Ingredient("lettuce", new Texture("lettuce.png"), new Texture("prepdLettuce.png"), null);
         lettuce.prepare();
         recipe.add(lettuce);
 
-        this.pizzaTex = new Texture("pizza.png");
+        this.pizzaTex = new Texture("prepdPizza.png");
         this.speechBubble = new Texture("orderPizzaBubble.png");
     }
     @Override
@@ -41,12 +43,12 @@ public class Pizza implements Recipe {
     public Boolean has(Stack<Ingredient> ingredients) {
         boolean foundPizzaBase = false;
         boolean foundLettuce = false;
-        Ingredient pizzaBase = new Ingredient("pizza", null, null);
+        Ingredient pizzaBase = new Ingredient("pizza", null, null, null);
         pizzaBase.prepare();
-        Ingredient lettuce = new Ingredient("lettuce", null, null);
+        Ingredient lettuce = new Ingredient("lettuce", null, null, null);
         lettuce.prepare();
         for (Ingredient ingredient: ingredients) {
-            if (ingredient.equals(pizzaBase)) {
+            if (ingredient.equals(pizzaBase) && !ingredient.getBurnt()) {
                 foundPizzaBase = true;
             }
             if (ingredient.equals(lettuce)) {
@@ -54,5 +56,14 @@ public class Pizza implements Recipe {
             }
         }
         return foundPizzaBase && foundLettuce;
+    }
+
+    public void setBurnt() {
+        isBurnt = true;
+        pizzaTex = new Texture("burntPizza.png");
+    }
+
+    public Boolean getIsBurnt() {
+        return isBurnt;
     }
 }

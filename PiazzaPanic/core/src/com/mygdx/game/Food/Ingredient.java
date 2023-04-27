@@ -6,15 +6,19 @@ import com.badlogic.gdx.graphics.Texture;
 public class Ingredient {
     private final Texture prepdTex;
     private final Texture notPrepdTex;
+    private final Texture burntTex;
     // patty, buns, lettuce, tomato
     public String name;
     private Texture currentTex;
     private Boolean prepared = false;
 
-    public Ingredient(String name, Texture notPreparedTexture, Texture preparedTexture) {
+    private Boolean burnt = false;
+
+    public Ingredient(String name, Texture notPreparedTexture, Texture preparedTexture, Texture burntTexture) {
         this.name = name;
         this.prepdTex = preparedTexture;
         this.notPrepdTex = notPreparedTexture;
+        this.burntTex = burntTexture;
         currentTex = this.notPrepdTex;
     }
 
@@ -26,9 +30,13 @@ public class Ingredient {
         this.prepared = true;
     }
 
+    public void setBurnt() { this.burnt = true; }
+
     public void updateCurrentTexture() {
-        if (prepared) {
+        if (prepared && !burnt) {
             currentTex = this.prepdTex;
+        } else if (prepared && burnt) {
+            currentTex = this.burntTex;
         } else {
             currentTex = this.notPrepdTex;
         }
@@ -45,5 +53,9 @@ public class Ingredient {
 
     public Texture getCurrentTexture() {
         return currentTex;
+    }
+
+    public Boolean getBurnt() {
+        return burnt;
     }
 }

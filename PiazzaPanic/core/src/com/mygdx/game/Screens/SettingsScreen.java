@@ -26,6 +26,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.ConfigHandler;
 import com.mygdx.game.PiazzaPanic;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 public class SettingsScreen implements Screen {
     PiazzaPanic game;
@@ -61,6 +63,15 @@ public class SettingsScreen implements Screen {
         this.game = game;
         this.configHandler = configHandler;
         this.config = configHandler.getConfig();
+    }
+
+    private Label createLabel(String text, float x, float y, BitmapFont font) {
+        LabelStyle labelStyle = new LabelStyle();
+        labelStyle.font = font;
+        labelStyle.fontColor = com.badlogic.gdx.graphics.Color.BLACK;
+        Label label = new Label(text, labelStyle);
+        label.setPosition(x, y);
+        return label;
     }
 
     @Override
@@ -191,6 +202,21 @@ public class SettingsScreen implements Screen {
         gameStage.addActor(button);
         gameStage.addActor(backBtn);
         gameStage.addActor(difficultyButton);
+
+        checkedBoxBtn.setPosition(game.GAME_WIDTH / 2 - checkedBoxBtn.getWidth()/2, (float) (game.GAME_HEIGHT * 0.5));
+        numberInput.setPosition(game.GAME_WIDTH / 2 - numberInput.getWidth() /2, (float) (game.GAME_HEIGHT * 0.3));
+        button.setPosition(game.GAME_WIDTH/2 - button.getWidth()/2, (float) (game.GAME_HEIGHT * 0.1));
+        difficultyButton.setPosition(game.GAME_WIDTH / 2 - difficultyButton.getWidth()/2, (float) (game.GAME_HEIGHT * 0.7));
+
+        Label checkedBoxLabel = createLabel("Mute Music", game.GAME_WIDTH / 2 - checkedBoxBtn.getWidth() / 2 - 90, (float) (game.GAME_HEIGHT * 0.5), font);
+        Label numberInputLabel = createLabel("Customers to Serve", game.GAME_WIDTH / 2 - numberInput.getWidth() / 2, (float) (game.GAME_HEIGHT * 0.3 + numberInput.getHeight() + 10), font);
+        Label submitButtonLabel = createLabel("Submit", game.GAME_WIDTH / 2 - button.getWidth() / 2, (float) (game.GAME_HEIGHT * 0.1 + button.getHeight() + 10), font);
+        Label difficultyButtonLabel = createLabel("Difficulty", game.GAME_WIDTH / 2 - difficultyButton.getWidth() / 2, (float) (game.GAME_HEIGHT * 0.7 + difficultyButton.getHeight() + 10), font);
+        gameStage.addActor(checkedBoxLabel);
+        gameStage.addActor(numberInputLabel);
+        gameStage.addActor(submitButtonLabel);
+        gameStage.addActor(difficultyButtonLabel);
+
     }
 
     public void render(float delta) {

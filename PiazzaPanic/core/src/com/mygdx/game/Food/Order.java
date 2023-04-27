@@ -15,15 +15,9 @@ public class Order {
     public Integer orderTime = 40;
     
     public Order(String name,Texture orderTexture, Recipe orderRecipe) throws IOException {
-        String difficulty = null;
-
-        try {
-            ConfigHandler configHandler = new ConfigHandler();
-            difficulty = configHandler.getDifficulty();
-        } catch (NoSuchFileException e) {
-            System.out.println("Error: " + e.getMessage());
-            difficulty = "Easy";
-        }
+        String difficulty;
+        ConfigHandler configHandler = new ConfigHandler();
+        difficulty = configHandler.getDifficulty();
         this.name = name;
         this.orderTex = orderTexture;
         this.orderRecipe = orderRecipe;

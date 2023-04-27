@@ -110,6 +110,7 @@ public class GameScreen implements Screen {
     boolean pattyAtFrying = false;
     boolean pizzaAtBaking = false;
     boolean bakingUnlocked = false;
+    boolean potatoAtBaking = false;
     Texture flipBtn = new Texture("flipBtn.png");
     ImageButton bakingClickable;
     ImageButton cuttingClickable;
@@ -137,6 +138,8 @@ public class GameScreen implements Screen {
     ImageButton potatoClickable;
     ImageButton stationSpeedClickable;
     ImageButton cheeseClickable;
+    ImageButton pizzaServableClickable;
+    ImageButton potatoServeClickable;
     int NumServed = 0;
 
     // when you hover over a clickable it changes the cursor to a hand
@@ -180,8 +183,10 @@ public class GameScreen implements Screen {
     PizzaClickable pizza;
     CheeseClickable cheese;
     UnlockBaking unlock;
-
+    PizzaServeClickable pizzaServe;
+    PotatoServeClickable potatoServe;
     SpeedPowerup speedPowerup;
+
     RepPowerup repPowerup;
     ExtratimePowerup extratimePowerup;
     Random rand = new Random();
@@ -202,6 +207,8 @@ public class GameScreen implements Screen {
         this.view = port;
         this.config = config;
         this.customerNumber = config.getInt("customersToServe");
+        System.out.println("SERVING: ");
+        System.out.println(customerNumber);
         System.out.println("customerNumber: " + customerNumber);
         this.utils = new Utils();
         this.frying = new Frying(game, utils, this);
@@ -220,6 +227,8 @@ public class GameScreen implements Screen {
         this.potato = new PotatoClickable(utils, this);
         this.unlock = new UnlockBaking(utils, this);
         this.cheese = new CheeseClickable(utils, this);
+        this.pizzaServe = new PizzaServeClickable(game, utils, this);
+        this.potatoServe = new PotatoServeClickable(game, utils, this);
         try {
             this.save = new Savegame(game, utils, this);
         } catch (IOException e) {
@@ -277,7 +286,7 @@ public class GameScreen implements Screen {
         System.out.println("Customers to serve: " + tmpI);
 
         for (int i = 0; i < tmpI; i++) {
-            tmp.add(new Customer(new Actor()));
+            tmp.add(new Customer(new Actor(), bakingUnlocked));
         }
         System.out.print(tmp);
         customers.add(tmp);
@@ -358,6 +367,8 @@ public class GameScreen implements Screen {
         pizzaClickable = pizza.getPizzaClickable();
         cheeseClickable = cheese.getCheeseClickable();
         unlockBakingClickable = unlock.getUnlockBakingButton();
+        pizzaServableClickable = pizzaServe.getPizzaServeClickable();
+        potatoServeClickable = potatoServe.getPotatoServeClickable();
         // serving screen frame
         servingScreenFrameRegion = new TextureRegion(new Texture("servingFrame.png"));
         servingScreenFrame = new ImageButton(new TextureRegionDrawable(servingScreenFrameRegion));
@@ -431,7 +442,8 @@ public class GameScreen implements Screen {
     public boolean getPizzaAtBaking() {
         return pizzaAtBaking;
     }
-
+    public void setAtPotatoBaking(Boolean isBaking) {potatoAtBaking = isBaking;}
+    public boolean getAtPotatoBaking() {return potatoAtBaking;}
     public void setPattyAtFrying(Boolean isFrying) {
         pattyAtFrying = isFrying;
     }
@@ -563,6 +575,7 @@ public class GameScreen implements Screen {
         gameStage.draw();
 
         if (pattyAtFrying) {
+            System.out.println("Frying patty");
             game.batch.begin();
             game.batch.draw(flipBtn, 30, 80);
             game.batch.end();
@@ -571,6 +584,12 @@ public class GameScreen implements Screen {
         if (pizzaAtBaking) {
             game.batch.begin();
             game.batch.draw(flipBtn, 85, 78);
+            game.batch.end();
+        }
+
+        if (potatoAtBaking) {
+            game.batch.begin();
+            game.batch.draw(flipBtn, 85,78);
             game.batch.end();
         }
 
@@ -622,14 +641,14 @@ public class GameScreen implements Screen {
                     customers.get(customerCount).get(i).body.remove();
                     if (!endless) {
                         // check if the game is in endless mode or not
-                        if (NumServed != customerNumber) {
+                        if (NumServed < customerNumber) {
                             // spawn new customer
 
                             ArrayList<Customer> tmp = new ArrayList<Customer>();
                             int tmpI = CustomersToServe();
                             System.out.println("Customers to serve: " + tmpI);
                             for (int j = 0; j < tmpI; j++) {
-                                tmp.add(new Customer(new Actor()));
+                                tmp.add(new Customer(new Actor(), bakingUnlocked));
                             }
                             if (powerups.hasExtraTime()) {
                                 System.out.println("Extra time powerup active");
@@ -663,7 +682,7 @@ public class GameScreen implements Screen {
                         System.out.println("Customers to serve: cc " + tmpI);
 
                         for (int j = 0; j < tmpI; j++) {
-                            tmp.add(new Customer(new Actor()));
+                            tmp.add(new Customer(new Actor(), bakingUnlocked));
                         }
                         customers.add(tmp);
                         customerCount += 1;
@@ -886,15 +905,21 @@ public class GameScreen implements Screen {
 
     private void showServingScreen() {
         if (showServingScreen) {
+            System.out.println("Showing serving screen");
             gameStage.addActor(servingScreenFrame);
             gameStage.addActor(XbtnClickable);
             XbtnClickable.toFront();
             gameStage.addActor(burgerClickable);
             gameStage.addActor(saladClickable);
+            gameStage.addActor(pizzaServableClickable);
+            gameStage.addActor(potatoServeClickable);
             servingScreenFrame.setPosition(10, 10);
             XbtnClickable.setPosition(7, 88);
             burgerClickable.setPosition(25, 66);
             saladClickable.setPosition(53, 66);
+            pizzaServableClickable.setPosition(77, 66);
+            potatoServeClickable.setPosition(100, 66);
+            pizzaServableClickable.toFront();
             showServingScreen = false;
         }
     }
@@ -963,6 +988,8 @@ public class GameScreen implements Screen {
         XbtnClickable.setPosition(10000, -1);
         burgerClickable.setPosition(10000, -1);
         saladClickable.setPosition(10000, -1);
+        pizzaServableClickable.setPosition(100000,-1);
+        potatoServeClickable.setPosition(100000, -1);
     }
 
     public void createProgressBar(float x, float y, Cook selectedCook) {
