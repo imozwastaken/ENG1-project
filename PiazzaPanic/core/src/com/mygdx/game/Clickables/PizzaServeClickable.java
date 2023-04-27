@@ -28,9 +28,9 @@ public class PizzaServeClickable {
                 ArrayList<ArrayList<Customer>> customers = screen.getCustomers();
                 int customerCount = screen.getCustomerCount();
                 Pizza recipe = new Pizza();
-                Ingredient pizzaBase = new Ingredient("pizza", null, null);
+                Ingredient pizzaBase = new Ingredient("pizza", null, null, null);
                 pizzaBase.prepare();
-                Ingredient lettuce = new Ingredient("lettuce", null, null);
+                Ingredient lettuce = new Ingredient("lettuce", null, null,  null);
                 lettuce.prepare();
                 if (recipe.has(cooks.get(selected).CookStack)) {
                     for (int i=0;i<customers.get(customerCount).size(); i++) {

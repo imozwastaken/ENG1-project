@@ -28,10 +28,10 @@ public class Baking {
                 screen.setSationSelected(2);
 
                 Ingredient bakedPizza = new Ingredient("pizza", new Texture("rawPizza.png"),
-                        new Texture("prepdPizza.png"));
+                        new Texture("prepdPizza.png"), new Texture("burntPizza.png"));
                 bakedPizza.prepare();
                 bakedPizza.updateCurrentTexture();
-                Ingredient bakedPotato = new Ingredient("potato", new Texture("potato.png"), new Texture("potatoCooked.png"));
+                Ingredient bakedPotato = new Ingredient("potato", new Texture("potato.png"), new Texture("potatoCooked.png"), new Texture("burntPotato.png"));
                 bakedPotato.prepare();
                 bakedPotato.updateCurrentTexture();
                 if ((Math.abs(screen.getCooks().get(screen.getSelected()).CookBody.getY() - 64f) < 2)

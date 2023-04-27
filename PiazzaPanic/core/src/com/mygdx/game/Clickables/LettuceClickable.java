@@ -23,7 +23,7 @@ public class LettuceClickable {
                 Array<Cook> cooks = screen.getCooks();
                 int selected = screen.getSelected();
                 if (cooks.get(selected).CookStack.size() < 5) {
-                    cooks.get(selected).CookStack.push(new Ingredient("lettuce", new Texture("lettuce.png"), new Texture("prepdLettuce.png")));
+                    cooks.get(selected).CookStack.push(new Ingredient("lettuce", new Texture("lettuce.png"), new Texture("prepdLettuce.png"), null));
                 }
             }
         });

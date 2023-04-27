@@ -28,7 +28,7 @@ public class PotatoServeClickable {
                 ArrayList<ArrayList<Customer>> customers = screen.getCustomers();
                 int customerCount = screen.getCustomerCount();
                 Potato recipe = new Potato();
-                Ingredient potato = new Ingredient("potato", null, null);
+                Ingredient potato = new Ingredient("potato", null, null, null);
                 potato.prepare();
                 if (recipe.has(cooks.get(selected).CookStack)) {
                     for (int i=0; i<customers.get(customerCount).size();i++) {

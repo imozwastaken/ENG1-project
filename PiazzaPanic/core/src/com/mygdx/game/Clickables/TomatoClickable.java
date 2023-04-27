@@ -19,7 +19,7 @@ public class TomatoClickable {
                 Array<Cook> cooks = screen.getCooks();
                 int selected = screen.getSelected();
                 if (cooks.get(selected).CookStack.size() < 5) {
-                    cooks.get(selected).CookStack.push(new Ingredient("tomato", new Texture("tomato.png"), new Texture("prepdTomato.png")));
+                    cooks.get(selected).CookStack.push(new Ingredient("tomato", new Texture("tomato.png"), new Texture("prepdTomato.png"), null));
                 }
             }
         });

@@ -32,7 +32,7 @@ public class Frying {
                 // stationSelected.set(selected, 1);
                 // boolean ingredientAtStation = false;
                 Ingredient cookedPatty = new Ingredient("patty", new Texture("rawPatty.png"),
-                        new Texture("prepdPatty.png"));
+                        new Texture("prepdPatty.png"), new Texture("burntPatty.png"));
                 cookedPatty.prepare();
                 cookedPatty.updateCurrentTexture();
                 if ((Math.abs(screen.getCooks().get(screen.getSelected()).CookBody.getY() - 64f) < 2)

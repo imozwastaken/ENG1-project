@@ -19,7 +19,7 @@ public class BunClickable {
                 Array<Cook> cooks = screen.getCooks();
                 int selected = screen.getSelected();
                 if (cooks.get(selected).CookStack.size() < 5) {
-                    Ingredient buns = new Ingredient("buns", new Texture("buns.png"), new Texture("buns.png"));
+                    Ingredient buns = new Ingredient("buns", new Texture("buns.png"), new Texture("buns.png"), null);
                     buns.prepare();
                     cooks.get(selected).CookStack.push(buns);
                 }

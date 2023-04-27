@@ -20,7 +20,7 @@ public class PattyClickable {
                 Array<Cook> cooks = screen.getCooks();
                 int selected = screen.getSelected();
                 if (cooks.get(selected).CookStack.size() < 5) {
-                    cooks.get(selected).CookStack.push(new Ingredient("patty", new Texture("rawPatty.png"), new Texture("prepdPatty.png")));
+                    cooks.get(selected).CookStack.push(new Ingredient("patty", new Texture("rawPatty.png"), new Texture("prepdPatty.png"), new Texture("burntPatty.png")));
                 }
             }
         });

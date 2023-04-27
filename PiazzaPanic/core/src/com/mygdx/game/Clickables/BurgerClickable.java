@@ -26,11 +26,11 @@ public class BurgerClickable {
                 ArrayList<ArrayList<Customer>> customers = screen.getCustomers();
                 int customerCount = screen.getCustomerCount();
                 Burger recipe = new Burger();
-                Ingredient buns = new Ingredient("buns", null, null);
+                Ingredient buns = new Ingredient("buns", null, null, null);
                 buns.prepare();
-                Ingredient patty = new Ingredient("patty", null, null);
+                Ingredient patty = new Ingredient("patty", null, null, null);
                 patty.prepare();
-                Ingredient lettuce = new Ingredient("lettuce", null, null);
+                Ingredient lettuce = new Ingredient("lettuce", null, null, null);
                 lettuce.prepare();
                 if (recipe.has(cooks.get(selected).CookStack)) {
                     for (int i = 0; i < customers.get(customerCount).size(); i++) {

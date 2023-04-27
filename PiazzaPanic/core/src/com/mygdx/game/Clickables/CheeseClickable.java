@@ -21,7 +21,7 @@ public class CheeseClickable {
                 Array<Cook> cooks = screen.getCooks();
                 int selected = screen.getSelected();
                 if (cooks.get(selected).CookStack.size() < 5) {
-                    cooks.get(selected).CookStack.push(new Ingredient("cheese", new Texture("cheese.png"), new Texture("cheese.png")));
+                    cooks.get(selected).CookStack.push(new Ingredient("cheese", new Texture("cheese.png"), new Texture("cheese.png"), null));
                 }
             }
         });
