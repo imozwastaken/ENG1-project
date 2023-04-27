@@ -198,6 +198,8 @@ public class GameScreen implements Screen {
     private Boolean endless = false;
     JSONObject obj;
     JSONObject config;
+    private HashMap<ProgressBar, Float> pattyTimers = new HashMap<>();
+    private float pattyFryingTime = 0;
 
     public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless, Boolean isLoad, String Loadfile,
             JSONObject config) throws IOException {
@@ -574,12 +576,7 @@ public class GameScreen implements Screen {
         powerups.checkPowerups();
         gameStage.draw();
 
-        if (pattyAtFrying) {
-            System.out.println("Frying patty");
-            game.batch.begin();
-            game.batch.draw(flipBtn, 30, 80);
-            game.batch.end();
-        }
+        handlePattyFrying(Gdx.graphics.getDeltaTime());
 
         if (pizzaAtBaking) {
             game.batch.begin();
@@ -613,6 +610,23 @@ public class GameScreen implements Screen {
             x += 6;
         }
         game.batch.end();
+    }
+
+    public void handlePattyFrying(float delta) {
+        if (pattyAtFrying) {
+
+            pattyFryingTime += delta;
+            game.batch.begin();
+            game.batch.draw(flipBtn, 30, 80);
+            game.batch.end();
+        } else {
+            if (pattyFryingTime >= 10) {
+                Ingredient flippedPatty = cooks.get(selected).CookStack.peek();
+                flippedPatty.setBurnt();
+                flippedPatty.updateCurrentTexture();
+            }
+            pattyFryingTime = 0;
+        }
     }
 
     private void customerOperations() throws IOException {
@@ -1021,6 +1035,9 @@ public class GameScreen implements Screen {
                 }
             }
         }
+    }
+
+    public void controlBurning() {
 
     }
 
