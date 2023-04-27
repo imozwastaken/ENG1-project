@@ -1,28 +1,27 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.mygdx.game.Food.Burger;
+import com.mygdx.game.Food.FoodMenu;
 import com.mygdx.game.Food.Order;
-import com.mygdx.game.Food.Salad;
 
-import java.util.ArrayList;
-
+import java.io.IOException;
 
 public class Customer {
     // god we love using arrays for dealing with this stuff
-    private final ArrayList<Order> orderOptions = new ArrayList<>();
+
     private final float targetY = MathUtils.random(16, 48);
     public boolean orderComplete = false;
+    public boolean selfComplete = false;
     public boolean atCounter = false;
+    public boolean orderExpired = false;
     public Actor body;
     public String name;
     public Order customerOrder;
 
-    public Customer(Actor skin) {
-        String[] names = {"Blue", "Red", "White", "Yellow"};
+    public Customer(Actor skin) throws IOException {
+        String[] names = { "Blue", "Red", "White", "Yellow" };
         this.name = names[MathUtils.random(0, 3)];
         this.body = skin;
         this.body.setWidth(16);
@@ -31,8 +30,6 @@ public class Customer {
         this.body.setY(80);
 
         // TODO add all possible orders here
-        orderOptions.add(new Order("burger", new Texture("orderBurger.png"), new Burger()));
-        orderOptions.add(new Order("salad", new Texture("orderSalad.png"), new Salad()));
 
         this.customerOrder = generateOrder();
     }
@@ -56,13 +53,16 @@ public class Customer {
                     atCounter = true;
                 }
             }
-        } else if (orderComplete) {
+        } else if (selfComplete) {
             // if an order is complete, move the customer offscreen to the right
             body.setX(body.getX() + 50 * Gdx.graphics.getDeltaTime());
+        } else {
+            System.out.println("ORder isnt complete...");
         }
     }
 
-    private Order generateOrder() {
-        return orderOptions.get(MathUtils.random(0, 1));
+    private Order generateOrder() throws IOException {
+        FoodMenu menu = new FoodMenu();
+        return menu.getRandomOrder();
     }
 }
