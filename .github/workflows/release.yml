@@ -42,9 +42,10 @@ jobs:
         if: always()
         with:
           name: "${{ matrix.os }} Test Report"
-          path: build/test-results/**/*.xml
+          path: PiazzaPanic/build/test-results/test/*.xml
           reporter: java-junit
           fail-on-error: true
+
 
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
