@@ -16,8 +16,12 @@ public class Order {
     
     public Order(String name,Texture orderTexture, Recipe orderRecipe) throws IOException {
         String difficulty;
-        ConfigHandler configHandler = new ConfigHandler();
-        difficulty = configHandler.getDifficulty();
+        try {
+            ConfigHandler configHandler = new ConfigHandler();
+            difficulty = configHandler.getDifficulty();
+        } catch (NoSuchFileException e) {
+            difficulty = "Easy";
+        }
         this.name = name;
         this.orderTex = orderTexture;
         this.orderRecipe = orderRecipe;
