@@ -42,11 +42,8 @@ public class Potato implements Recipe{
         for (Ingredient ingredient: ingredients) {
 
             if (ingredient.equals(potato) && !ingredient.getBurnt()) {
-                System.out.println("Found potato");
                 foundPotato = true;
             } else {
-                System.out.println(ingredient.name);
-                System.out.println(potato.name);
             }
         }
         return foundPotato;

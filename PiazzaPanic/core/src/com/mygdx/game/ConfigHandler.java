@@ -18,25 +18,20 @@ public class ConfigHandler {
     String configPath = Gdx.files.getLocalStoragePath() + "core\\src\\com\\mygdx\\game\\config.json";
 
     public ConfigHandler() throws IOException {
-        System.out.println("Config path: " + configPath);
         if (!Files.exists(Paths.get(configPath))) {
             Files.createFile(Paths.get(configPath));
             Files.write(Paths.get(configPath), "{\"difficulty\":\"Easy\",\"muteMusic\":false,\"customersToServe\":5,\"maxTimeToServe\":10}".getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
         }
         String content = new String(Files.readAllBytes(Paths.get(configPath)));
-        System.out.println("Config: " + content);
         config = new JSONObject(content);
     }
     public ConfigHandler(String path) throws IOException {
-        System.out.println(path);
         configPath = path;
         if (!Files.exists(Paths.get(configPath))) {
             Files.createFile(Paths.get(configPath));
             Files.write(Paths.get(configPath), "{\"difficulty\":\"Easy\",\"muteMusic\":false,\"customersToServe\":5,\"maxTimeToServe\":10}".getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
         }
-        System.out.println("Config path: " + configPath);
         String content = new String(Files.readAllBytes(Paths.get(configPath)));
-        System.out.println("Config: " + content);
         config = new JSONObject(content);
     }
 

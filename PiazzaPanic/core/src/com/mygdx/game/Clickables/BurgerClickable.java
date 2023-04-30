@@ -36,7 +36,6 @@ public class BurgerClickable {
                     for (int i = 0; i < customers.get(customerCount).size(); i++) {
                         if (customers.get(customerCount).get(i).customerOrder.getName() == "burger") {
                             if (!customers.get(customerCount).get(i).selfComplete == true) {
-                                System.out.println("Served burger");
                                 cooks.get(selected).CookStack.remove(buns);
                                 cooks.get(selected).CookStack.remove(patty);
                                 cooks.get(selected).CookStack.remove(lettuce);
@@ -49,7 +48,6 @@ public class BurgerClickable {
                             }
                             
                         } else {
-                            System.out.println(customers.get(customerCount).get(i).customerOrder.getName());
                         }
                     }
                     

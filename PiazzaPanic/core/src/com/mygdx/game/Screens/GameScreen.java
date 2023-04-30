@@ -75,6 +75,7 @@ public class GameScreen implements Screen {
     private final Array<Cook> cooks;
     private final ArrayList<ArrayList<Customer>> customers;
     // sprite handling
+    public float[][] locations = {{0, 64}, {32, 64}, {64, 64}, {0, 32}, {48, 28}, {80, 48}, {100000, -1}};
     Sprite alex;
     Sprite amelia;
     Sprite adam;
@@ -118,6 +119,7 @@ public class GameScreen implements Screen {
     ImageButton servingClickable;
     ImageButton extraTimeClickable;
     // pantry and serving screen frames
+    ImageButton extraChefClickable;
     TextureRegion pantryScreenFrameRegion;
     ImageButton pantryScreenFrame;
     TextureRegion servingScreenFrameRegion;
@@ -189,6 +191,7 @@ public class GameScreen implements Screen {
 
     RepPowerup repPowerup;
     ExtratimePowerup extratimePowerup;
+    ExtraChef extraChefPowerup;
     Random rand = new Random();
 
     StationSpeedPowerup stationSpeedPowerup;
@@ -203,6 +206,8 @@ public class GameScreen implements Screen {
     private float potatoBakingTime = 0;
     private float pizzaBakingTime = 0;
 
+    boolean isInitialMove = true;
+    boolean thirdChefUnlocked = false;
     public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless, Boolean isLoad, String Loadfile,
             JSONObject config) throws IOException {
 
@@ -211,9 +216,7 @@ public class GameScreen implements Screen {
         this.view = port;
         this.config = config;
         this.customerNumber = config.getInt("customersToServe");
-        System.out.println("SERVING: ");
-        System.out.println(customerNumber);
-        System.out.println("customerNumber: " + customerNumber);
+
         this.utils = new Utils();
         this.frying = new Frying(game, utils, this);
         this.bin = new Bin(game, utils, this);
@@ -245,6 +248,7 @@ public class GameScreen implements Screen {
         this.repPowerup = new RepPowerup(utils, this, powerups);
         this.stationSpeedPowerup = new StationSpeedPowerup(utils, this, powerups);
         this.extratimePowerup = new ExtratimePowerup(utils, this, powerups);
+        this.extraChefPowerup = new ExtraChef(utils, this, powerups);
 
         gameStage = new Stage(view, game.batch);
 
@@ -287,7 +291,7 @@ public class GameScreen implements Screen {
         customers = new ArrayList<ArrayList<Customer>>();
         ArrayList<Customer> tmp = new ArrayList<Customer>();
         int tmpI = CustomersToServe();
-        System.out.println("Customers to serve: " + tmpI);
+
 
         for (int i = 0; i < tmpI; i++) {
             tmp.add(new Customer(new Actor(), bakingUnlocked));
@@ -319,6 +323,10 @@ public class GameScreen implements Screen {
         // save game
         saveClickable = save.getSaveClickable();
         gameStage.addActor(saveClickable);
+        extraChefClickable = extraChefPowerup.getExtraChefClickable();
+        extraChefClickable.setScale(0.7f);
+        gameStage.addActor(extraChefClickable);
+
         // unlock baking
         unlockBakingClickable = unlock.getUnlockBakingButton();
         // pizza
@@ -330,6 +338,7 @@ public class GameScreen implements Screen {
         cuttingClickable.setPosition(32, 0);
         servingClickable.setPosition(96, 16);
         saveClickable.setPosition(170, 100);
+        extraChefClickable.setPosition(110, 120);
 
         // close button for station pop ups
         XbtnClickable = createImageClickable(new Texture("Xbtn.png"), 16, 16);
@@ -397,6 +406,7 @@ public class GameScreen implements Screen {
                 throw new RuntimeException(e);
             }
         }
+
     }
 
     public long getGameTime() {
@@ -417,6 +427,38 @@ public class GameScreen implements Screen {
 
     public void incrementFryingClicked() {
         fryingClicked++;
+    }
+
+    public void setChef(int chefCount) {
+
+
+        thirdChefUnlocked = true;
+        int freeStation = findFreeStation();
+        isInitialMove = true;
+        stationSelected.set(2, freeStation);
+
+    }
+
+    public int findFreeStation() {
+        ArrayList<Integer> listA = new ArrayList<>();
+        for (int i=0;i<=5;i++) {
+            listA.add(i);
+        }
+        for (int i : stationSelected) {
+            for (int j = 0; j < listA.size(); j++) {
+                if (listA.get(j) == i) {
+                    listA.remove(j);
+                }
+            }
+        }
+        return listA.get(0);
+    }
+
+    public void resetCooks() {
+        for (Cook cook : cooks) {
+            cook.CookBody.remove();
+        }
+        cooks.clear();
     }
 
     public void incrementBakingClicked() {
@@ -582,11 +624,27 @@ public class GameScreen implements Screen {
         handlePizzaBaking(Gdx.graphics.getDeltaTime());
         handlePotatoBaking(Gdx.graphics.getDeltaTime());
 
+
         for (int i = 0; i < cookCount; i++) {
             if (!cooks.get(i).isBusy) {
-                cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected, powerups, selected);
+                cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected, powerups, selected, isInitialMove);
+
+            }
+
+        }
+        if (isInitialMove) {
+            boolean anynot = false;
+            for (int i = 0; i<cookCount;i++) {
+                if (locations[stationSelected.get(i)][0] - cooks.get(i).CookBody.getX() > 1|| locations[stationSelected.get(i)][1] - cooks.get(i).CookBody.getY() > 1) {
+                    anynot = true;
+                }
+            }
+            if (!anynot) {
+                isInitialMove = false;
             }
         }
+
+
         money.render();
 
         // cooks.get(selected).doUserInput(cooks.get(selected));
@@ -671,11 +729,9 @@ public class GameScreen implements Screen {
                 customers.get(customerCount).get(i).move();
             } else if (allComplete) {
                 // make the customer leave
-                System.out.println("at counter kl" + customers.get(customerCount).get(i).body.getX());
                 customers.get(customerCount).get(i).move();
 
                 if (customers.get(customerCount).get(i).body.getX() > 148) {
-                    System.out.println("X is past 148" + customers.get(customerCount).get(i).body.getX());
                     customers.get(customerCount).get(i).body.remove();
                     if (!endless) {
                         // check if the game is in endless mode or not
@@ -684,23 +740,19 @@ public class GameScreen implements Screen {
 
                             ArrayList<Customer> tmp = new ArrayList<Customer>();
                             int tmpI = CustomersToServe();
-                            System.out.println("Customers to serve: " + tmpI);
                             for (int j = 0; j < tmpI; j++) {
                                 tmp.add(new Customer(new Actor(), bakingUnlocked));
                             }
                             if (powerups.hasExtraTime()) {
-                                System.out.println("Extra time powerup active");
                                 for (Customer c : tmp) {
                                     c.customerOrder.setOrderTime(c.customerOrder.getOrderTime() + 10);
                                 }
                             } else {
-                                System.out.println("Extra time powerup not active");
                             }
 
                             customers.add(tmp);
                             customerCount += 1;
                             increaseNumServed(tmpI);
-                            System.out.println("Currently served: " + NumServed);
                         } else {
                             // end game by taking the time at the game end and going to the time screen
 
@@ -717,7 +769,6 @@ public class GameScreen implements Screen {
                         // TODO endless mode
                         ArrayList<Customer> tmp = new ArrayList<Customer>();
                         int tmpI = CustomersToServe();
-                        System.out.println("Customers to serve: cc " + tmpI);
 
                         for (int j = 0; j < tmpI; j++) {
                             tmp.add(new Customer(new Actor(), bakingUnlocked));
@@ -746,7 +797,11 @@ public class GameScreen implements Screen {
             // I love arrays so much
             cooks.add(cook);
             gameStage.addActor(cook.CookBody);
-            stationSelected.add(i);
+            if (i == 2) {
+                stationSelected.add(6);
+            } else {
+                stationSelected.add(i);
+            }
         }
     }
 
@@ -801,7 +856,7 @@ public class GameScreen implements Screen {
             powerups.setSpeedMultiplier(2);
         }
         // TODO add statements for adding more cooks here
-        if (cookCount > 2 && Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
+        if (cookCount > 2 && Gdx.input.isKeyPressed(Input.Keys.NUM_3) && thirdChefUnlocked) {
             selected = 2;
         }
         for (int i = 0; i < cooks.size; i++) {
@@ -943,7 +998,6 @@ public class GameScreen implements Screen {
 
     private void showServingScreen() {
         if (showServingScreen) {
-            System.out.println("Showing serving screen");
             gameStage.addActor(servingScreenFrame);
             gameStage.addActor(XbtnClickable);
             XbtnClickable.toFront();
@@ -1036,7 +1090,6 @@ public class GameScreen implements Screen {
         style.knob = getColoredDrawable(0, 5, Color.WHITE);
         style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
         float stepSize = powerups.getStationSpeed() * 0.05f;
-        System.out.println(stepSize);
         ProgressBar bar = new ProgressBar(0, 7, stepSize, false, style);
         bar.setWidth(30);
         bar.setHeight(5);

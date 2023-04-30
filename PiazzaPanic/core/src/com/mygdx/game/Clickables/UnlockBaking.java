@@ -19,7 +19,6 @@ public class UnlockBaking {
                     screen.getMoney().addMoney(-100);
                     screen.setBakingUnlocked(true);
                 } else {
-                    System.out.println("Not enough money");
                 }
             }
         });
