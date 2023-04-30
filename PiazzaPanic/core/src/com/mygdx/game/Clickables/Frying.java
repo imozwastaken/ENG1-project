@@ -60,6 +60,7 @@ public class Frying {
                                 cooks.get(selected).CookStack.push(cookedPatty);
                                 screen.setPattyAtFrying(false);
                             } else {
+                                System.out.println("Waiting for flip to be pressed.");
                                 cooks.get(selected).CookStack.remove(selectedIngredient);
                                 screen.setPattyAtFrying(true);
                             }
