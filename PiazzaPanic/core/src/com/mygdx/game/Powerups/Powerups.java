@@ -41,6 +41,7 @@ public class Powerups {
         allPowerups.put("FastStations", stationSpeed);
         allPowerups.put("ExtraTime", orderTimeUp);
         allPowerups.put("ExtraChef", thirdChef);
+        allPowerups.put("DoubleMoney", doubleMoney);
         this.font = new BitmapFont();
         this.money = _money;
         font.setColor(Color.BLACK);
