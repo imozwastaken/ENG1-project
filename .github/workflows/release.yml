@@ -34,9 +34,12 @@ jobs:
           path: build/test-results/**/*.xml
       - name: Rename jar file
         run: |
+          pwd
+          ls -la
           cd PiazzaPanic/desktop/build/libs
           VER=`git rev-parse --short HEAD`
           mv desktop-1.0.jar team17-piazzaPanic.jar
+
       - name: Automatically release
         uses: softprops/action-gh-release@v1
         env:
