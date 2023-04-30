@@ -34,7 +34,7 @@ public class Powerups {
         Powerup extraLife = new Powerup("ExtraLife", 1000000000, 0, 1, 300, 0, priceIncrease);
         Powerup stationSpeed = new Powerup("FastStations", 10000, 0, 1f, 300, 0, priceIncrease);
         Powerup orderTimeUp = new Powerup("ExtraTime", 1000000000, 0, 10, 100, 0, priceIncrease);
-        Powerup thirdChef = new Powerup("ExtraChef", 1000000000, 0, 2, 200, 0, priceIncrease);
+        Powerup thirdChef = new Powerup("ExtraChef", 1000000000, 0, 2, 100, 0, priceIncrease);
         allPowerups.put("Speed", speedPowerup);
         allPowerups.put("ExtraLife", extraLife);
         allPowerups.put("FastStations", stationSpeed);
@@ -57,17 +57,20 @@ public class Powerups {
             allPowerups.get("Speed").setInitialisedTime(System.currentTimeMillis());
             allPowerups.get("Speed").setValue(multiplier);
         } else {
+            System.out.println("Not enough money for this.");
         }
 
     }
 
-    public void setChefCount(int count) {
+    public boolean setChefCount(int count) {
         boolean bought = buyPowerup("ExtraChef");
         if (bought) {
             allPowerups.get("ExtraChef").setInitialisedTime(System.currentTimeMillis());
             allPowerups.get("ExtraChef").setValue(3);
+            return true;
         } else {
             System.out.println("Not enough money for this");
+            return false;
         }
     }
 
@@ -86,6 +89,7 @@ public class Powerups {
             allPowerups.get("FastStations").setInitialisedTime(System.currentTimeMillis());
             allPowerups.get("FastStations").setValue(multiplier);
         } else {
+            System.out.println("Not enough money for this.");
         }
     }
 
@@ -94,7 +98,9 @@ public class Powerups {
             return false;
         }
         boolean bought = buyPowerup("ExtraTime");
-
+        if (!bought) {
+            System.out.println("invalid");
+        }
         for (ArrayList<Customer> customers : ((GameScreen) screen).getCustomers()) {
             for (Customer c : customers) {
                 c.customerOrder.setOrderTime(c.customerOrder.getOrderTime() + 10);
@@ -109,6 +115,9 @@ public class Powerups {
             return false;
         }
         boolean bought = buyPowerup("ExtraLife");
+        if (!bought) {
+            System.out.println("invalid");
+        }
 
         return bought;
     }

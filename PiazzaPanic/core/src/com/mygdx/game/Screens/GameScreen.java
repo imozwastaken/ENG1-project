@@ -75,7 +75,7 @@ public class GameScreen implements Screen {
     private final Array<Cook> cooks;
     private final ArrayList<ArrayList<Customer>> customers;
     // sprite handling
-    public float[][] locations = {{0, 64}, {32, 64}, {64, 64}, {0, 32}, {48, 28}, {80, 48}};
+    public float[][] locations = {{0, 64}, {32, 64}, {64, 64}, {0, 32}, {48, 28}, {80, 48}, {100000, -1}};
     Sprite alex;
     Sprite amelia;
     Sprite adam;
@@ -87,7 +87,7 @@ public class GameScreen implements Screen {
     int selected = 0;
     ArrayList<Integer> stationSelected = new ArrayList<>();
     // control the number of cooks
-    int cookCount = 2; // control how many cooks spawn -> update to allow for the value to increase
+    int cookCount = 3; // control how many cooks spawn -> update to allow for the value to increase
     // take the time at the start of the game to display the time taken to complete
     // the round
 
@@ -119,6 +119,7 @@ public class GameScreen implements Screen {
     ImageButton servingClickable;
     ImageButton extraTimeClickable;
     // pantry and serving screen frames
+    ImageButton extraChefClickable;
     TextureRegion pantryScreenFrameRegion;
     ImageButton pantryScreenFrame;
     TextureRegion servingScreenFrameRegion;
@@ -190,6 +191,7 @@ public class GameScreen implements Screen {
 
     RepPowerup repPowerup;
     ExtratimePowerup extratimePowerup;
+    ExtraChef extraChefPowerup;
     Random rand = new Random();
 
     StationSpeedPowerup stationSpeedPowerup;
@@ -205,6 +207,7 @@ public class GameScreen implements Screen {
     private float pizzaBakingTime = 0;
 
     boolean isInitialMove = true;
+    boolean thirdChefUnlocked = false;
     public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless, Boolean isLoad, String Loadfile,
             JSONObject config) throws IOException {
 
@@ -245,6 +248,7 @@ public class GameScreen implements Screen {
         this.repPowerup = new RepPowerup(utils, this, powerups);
         this.stationSpeedPowerup = new StationSpeedPowerup(utils, this, powerups);
         this.extratimePowerup = new ExtratimePowerup(utils, this, powerups);
+        this.extraChefPowerup = new ExtraChef(utils, this, powerups);
 
         gameStage = new Stage(view, game.batch);
 
@@ -319,6 +323,10 @@ public class GameScreen implements Screen {
         // save game
         saveClickable = save.getSaveClickable();
         gameStage.addActor(saveClickable);
+        extraChefClickable = extraChefPowerup.getExtraChefClickable();
+        extraChefClickable.setScale(0.7f);
+        gameStage.addActor(extraChefClickable);
+
         // unlock baking
         unlockBakingClickable = unlock.getUnlockBakingButton();
         // pizza
@@ -330,6 +338,7 @@ public class GameScreen implements Screen {
         cuttingClickable.setPosition(32, 0);
         servingClickable.setPosition(96, 16);
         saveClickable.setPosition(170, 100);
+        extraChefClickable.setPosition(110, 120);
 
         // close button for station pop ups
         XbtnClickable = createImageClickable(new Texture("Xbtn.png"), 16, 16);
@@ -397,6 +406,7 @@ public class GameScreen implements Screen {
                 throw new RuntimeException(e);
             }
         }
+
     }
 
     public long getGameTime() {
@@ -417,6 +427,38 @@ public class GameScreen implements Screen {
 
     public void incrementFryingClicked() {
         fryingClicked++;
+    }
+
+    public void setChef(int chefCount) {
+
+
+        thirdChefUnlocked = true;
+        int freeStation = findFreeStation();
+        isInitialMove = true;
+        stationSelected.set(2, freeStation);
+
+    }
+
+    public int findFreeStation() {
+        ArrayList<Integer> listA = new ArrayList<>();
+        for (int i=0;i<=5;i++) {
+            listA.add(i);
+        }
+        for (int i : stationSelected) {
+            for (int j = 0; j < listA.size(); j++) {
+                if (listA.get(j) == i) {
+                    listA.remove(j);
+                }
+            }
+        }
+        return listA.get(0);
+    }
+
+    public void resetCooks() {
+        for (Cook cook : cooks) {
+            cook.CookBody.remove();
+        }
+        cooks.clear();
     }
 
     public void incrementBakingClicked() {
@@ -755,7 +797,11 @@ public class GameScreen implements Screen {
             // I love arrays so much
             cooks.add(cook);
             gameStage.addActor(cook.CookBody);
-            stationSelected.add(i);
+            if (i == 2) {
+                stationSelected.add(6);
+            } else {
+                stationSelected.add(i);
+            }
         }
     }
 
@@ -810,7 +856,7 @@ public class GameScreen implements Screen {
             powerups.setSpeedMultiplier(2);
         }
         // TODO add statements for adding more cooks here
-        if (cookCount > 2 && Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
+        if (cookCount > 2 && Gdx.input.isKeyPressed(Input.Keys.NUM_3) && thirdChefUnlocked) {
             selected = 2;
         }
         for (int i = 0; i < cooks.size; i++) {

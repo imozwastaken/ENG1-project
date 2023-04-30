@@ -14,7 +14,7 @@ import java.util.Stack;
 public class Cook {
     public Stack<Ingredient> CookStack;
     public Actor CookBody;
-    public float[][] locations = {{0, 64}, {32, 64}, {64, 64}, {0, 32}, {48, 28}, {80, 48}};
+    public float[][] locations = {{0, 64}, {32, 64}, {64, 64}, {0, 32}, {48, 28}, {80, 48}, {0,-25}};
     public boolean isBusy = false;
     private float speed = 1f;
     private float x;
@@ -39,7 +39,7 @@ public class Cook {
                 }
             }
         }
-
+        System.out.println(stations);
         if (canMove) {
             // method to move a cook from their current position to a station
             if (cook.getX() != locations[index][0] || cook.getY() != locations[index][1]) {
