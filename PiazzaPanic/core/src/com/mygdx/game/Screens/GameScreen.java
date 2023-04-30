@@ -213,9 +213,7 @@ public class GameScreen implements Screen {
         this.view = port;
         this.config = config;
         this.customerNumber = config.getInt("customersToServe");
-        System.out.println("SERVING: ");
-        System.out.println(customerNumber);
-        System.out.println("customerNumber: " + customerNumber);
+
         this.utils = new Utils();
         this.frying = new Frying(game, utils, this);
         this.bin = new Bin(game, utils, this);
@@ -289,7 +287,7 @@ public class GameScreen implements Screen {
         customers = new ArrayList<ArrayList<Customer>>();
         ArrayList<Customer> tmp = new ArrayList<Customer>();
         int tmpI = CustomersToServe();
-        System.out.println("Customers to serve: " + tmpI);
+
 
         for (int i = 0; i < tmpI; i++) {
             tmp.add(new Customer(new Actor(), bakingUnlocked));
@@ -587,7 +585,6 @@ public class GameScreen implements Screen {
 
         for (int i = 0; i < cookCount; i++) {
             if (!cooks.get(i).isBusy) {
-                System.out.println(isInitialMove);
                 cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected, powerups, selected, isInitialMove);
 
             }
@@ -690,11 +687,9 @@ public class GameScreen implements Screen {
                 customers.get(customerCount).get(i).move();
             } else if (allComplete) {
                 // make the customer leave
-                System.out.println("at counter kl" + customers.get(customerCount).get(i).body.getX());
                 customers.get(customerCount).get(i).move();
 
                 if (customers.get(customerCount).get(i).body.getX() > 148) {
-                    System.out.println("X is past 148" + customers.get(customerCount).get(i).body.getX());
                     customers.get(customerCount).get(i).body.remove();
                     if (!endless) {
                         // check if the game is in endless mode or not
@@ -703,23 +698,19 @@ public class GameScreen implements Screen {
 
                             ArrayList<Customer> tmp = new ArrayList<Customer>();
                             int tmpI = CustomersToServe();
-                            System.out.println("Customers to serve: " + tmpI);
                             for (int j = 0; j < tmpI; j++) {
                                 tmp.add(new Customer(new Actor(), bakingUnlocked));
                             }
                             if (powerups.hasExtraTime()) {
-                                System.out.println("Extra time powerup active");
                                 for (Customer c : tmp) {
                                     c.customerOrder.setOrderTime(c.customerOrder.getOrderTime() + 10);
                                 }
                             } else {
-                                System.out.println("Extra time powerup not active");
                             }
 
                             customers.add(tmp);
                             customerCount += 1;
                             increaseNumServed(tmpI);
-                            System.out.println("Currently served: " + NumServed);
                         } else {
                             // end game by taking the time at the game end and going to the time screen
 
@@ -736,7 +727,6 @@ public class GameScreen implements Screen {
                         // TODO endless mode
                         ArrayList<Customer> tmp = new ArrayList<Customer>();
                         int tmpI = CustomersToServe();
-                        System.out.println("Customers to serve: cc " + tmpI);
 
                         for (int j = 0; j < tmpI; j++) {
                             tmp.add(new Customer(new Actor(), bakingUnlocked));
@@ -962,7 +952,6 @@ public class GameScreen implements Screen {
 
     private void showServingScreen() {
         if (showServingScreen) {
-            System.out.println("Showing serving screen");
             gameStage.addActor(servingScreenFrame);
             gameStage.addActor(XbtnClickable);
             XbtnClickable.toFront();
@@ -1055,7 +1044,6 @@ public class GameScreen implements Screen {
         style.knob = getColoredDrawable(0, 5, Color.WHITE);
         style.knobAfter = getColoredDrawable(20, 5, Color.WHITE);
         float stepSize = powerups.getStationSpeed() * 0.05f;
-        System.out.println(stepSize);
         ProgressBar bar = new ProgressBar(0, 7, stepSize, false, style);
         bar.setWidth(30);
         bar.setHeight(5);

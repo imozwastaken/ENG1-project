@@ -22,7 +22,6 @@ public class Baking {
         bakingClickable.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Baking clicked");
                 Array<Cook> cooks = screen.getCooks();
                 int selected = screen.getSelected();
                 screen.setSationSelected(2);
@@ -47,7 +46,6 @@ public class Baking {
                             if ((ingredient.name == "pizza" || ingredient.name == "potato") && (!ingredient.getState()) && (!ingredientDone)) {
                                 selectedIngredient = ingredient;
                             } else {
-                                System.out.println("No pizza or potato to bake");
                             }
                         }
                         if (!(selectedIngredient == null)) {
@@ -92,11 +90,7 @@ public class Baking {
                         }
                     }
                 } else {
-                    if (screen.bakingUnlocked()) {
-                        System.out.println("Cook not at station");
-                    } else {
-                        System.out.println("Baking station not unlocked");
-                    }
+
                 }
             }
         });

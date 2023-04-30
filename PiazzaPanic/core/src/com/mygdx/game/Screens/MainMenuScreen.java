@@ -298,25 +298,19 @@ public class MainMenuScreen implements Screen {
                             int returnval = chooser.showOpenDialog(null);
                             if (returnval == JFileChooser.APPROVE_OPTION) {
                                 filepath = chooser.getSelectedFile().getAbsolutePath();
-                                System.out.println(filepath);
                                 fileOpening = false;
 
                             } else {
-                                System.out.println(returnval);
-
                             }
                         }
 
                     }
                 });
 
-            } else {
-                System.out.println("Already selecting a file");
-            }
+            } else {}
 
         }
         if (!Objects.equals(filepath, "") && filepath != null) {
-            System.out.println("PATH: " + filepath);
             try {
                 game.setScreen(new GameScreen(game, view, false, true, filepath, this.config));
             } catch (IOException e) {

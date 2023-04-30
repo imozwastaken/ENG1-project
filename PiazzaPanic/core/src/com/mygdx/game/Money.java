@@ -29,16 +29,11 @@ public class Money {
     }
 
     public void addMoney(int amount) {
-        System.out.println("money being added");
-        System.out.println("difficulty: " + difficulty);
         if (difficulty.equals("Easy")) {
-            System.out.println("easy money");
             currentMoney += amount;
         } else if (difficulty.equals("Medium")) {
-            System.out.println("medium money");
             currentMoney += amount * 0.9;
         } else if (difficulty.equals("Hard")) {
-            System.out.println("hard money");
             currentMoney += amount * 0.7;
         }
     }

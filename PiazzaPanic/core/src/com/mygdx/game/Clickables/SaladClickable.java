@@ -33,7 +33,6 @@ public class SaladClickable {
                     for (int i = 0; i < customers.get(customerCount).size(); i++) {
                     if (customers.get(customerCount).get(i).customerOrder.getName() == "salad") {
                         if (!customers.get(customerCount).get(i).selfComplete) {
-                            System.out.println("Served salad");
                             cooks.get(selected).CookStack.remove(tomato);
                             cooks.get(selected).CookStack.remove(lettuce);
                             customers.get(customerCount).get(i).selfComplete = true;
