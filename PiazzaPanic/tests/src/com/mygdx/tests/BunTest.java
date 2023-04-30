@@ -30,7 +30,7 @@ public class BunTest {
 
     @Test
     public void bunClickableIsNotNull() {
-        ImageButton bakingClickable = bun.getBunClickable();
-        assertNotNull(bakingClickable);
+        ImageButton bunClickable = bun.getBunClickable();
+        assertNotNull(bunClickable);
     }
 }

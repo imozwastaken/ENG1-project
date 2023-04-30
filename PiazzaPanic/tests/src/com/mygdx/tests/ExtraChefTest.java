@@ -33,7 +33,7 @@ public class ExtraChefTest {
 
     @Test
     public void extraChefClickableIsNotNull() {
-        ImageButton bakingClickable = extraChef.getExtraChefClickable();
-        assertNotNull(bakingClickable);
+        ImageButton extraChefClickable = extraChef.getExtraChefClickable();
+        assertNotNull(extraChefClickable);
     }
 }

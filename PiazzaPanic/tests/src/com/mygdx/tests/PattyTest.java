@@ -29,7 +29,7 @@ public class PattyTest {
 
     @Test
     public void pattyClickableIsNotNull() {
-        ImageButton bakingClickable = patty.getPattyClickable();
-        assertNotNull(bakingClickable);
+        ImageButton pattyClickable = patty.getPattyClickable();
+        assertNotNull(pattyClickable);
     }
 }

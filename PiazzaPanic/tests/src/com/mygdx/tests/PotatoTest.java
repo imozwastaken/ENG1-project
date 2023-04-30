@@ -28,8 +28,8 @@ public class PotatoTest {
 
     @Test
     public void potatoClickableIsNotNull() {
-        ImageButton bakingClickable = potatoClickable.getPotatoClickable();
-        assertNotNull(bakingClickable);
+        ImageButton potatoClickable1 = potatoClickable.getPotatoClickable();
+        assertNotNull(potatoClickable1);
     }
 
 }

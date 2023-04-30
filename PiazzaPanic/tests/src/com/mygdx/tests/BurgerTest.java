@@ -29,7 +29,7 @@ public class BurgerTest {
 
     @Test
     public void bunClickableIsNotNull() {
-        ImageButton bakingClickable = burger.getBurgerClickable();
-        assertNotNull(bakingClickable);
+        ImageButton burgerClickable = burger.getBurgerClickable();
+        assertNotNull(burgerClickable);
     }
 }

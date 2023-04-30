@@ -29,7 +29,7 @@ public class BinTest {
 
     @Test
     public void binClickableIsNotNull() {
-        ImageButton bakingClickable = bin.getBinClickable();
-        assertNotNull(bakingClickable);
+        ImageButton binClickable = bin.getBinClickable();
+        assertNotNull(binClickable);
     }
 }

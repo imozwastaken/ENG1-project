@@ -32,7 +32,7 @@ public class RepTest {
 
     @Test
     public void repClickableIsNotNull() {
-        ImageButton bakingClickable = rep.getRepButton();
-        assertNotNull(bakingClickable);
+        ImageButton repButton = rep.getRepButton();
+        assertNotNull(repButton);
     }
 }

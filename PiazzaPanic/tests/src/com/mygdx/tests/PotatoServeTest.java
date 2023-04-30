@@ -30,7 +30,7 @@ public class PotatoServeTest {
 
     @Test
     public void potatoClickableIsNotNull() {
-        ImageButton bakingClickable = potatoServeClickable.getPotatoServeClickable();
-        assertNotNull(bakingClickable);
+        ImageButton potatoServeClickable1 = potatoServeClickable.getPotatoServeClickable();
+        assertNotNull(potatoServeClickable1);
     }
 }

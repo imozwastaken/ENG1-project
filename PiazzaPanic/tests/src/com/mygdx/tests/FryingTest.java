@@ -29,7 +29,7 @@ public class FryingTest {
 
     @Test
     public void fryingClickableIsNotNull() {
-        ImageButton bakingClickable = frying.createFryingClickable();
-        assertNotNull(bakingClickable);
+        ImageButton fryingClickable = frying.createFryingClickable();
+        assertNotNull(fryingClickable);
     }
 }

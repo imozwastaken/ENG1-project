@@ -8,10 +8,11 @@ import com.mygdx.game.PiazzaPanic;
 import com.mygdx.game.Screens.GameScreen;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import static org.junit.Assert.assertNotNull;
-
+@RunWith(GdxTestRunner.class)
 public class PizzaTest {
     private PiazzaPanic game;
     private Utils utils;
@@ -28,7 +29,7 @@ public class PizzaTest {
 
     @Test
     public void pizzaClickableIsNotNull() {
-        ImageButton bakingClickable = pizzaClickable.getPizzaClickable();
-        assertNotNull(bakingClickable);
+        ImageButton pizzaClickable1 = pizzaClickable.getPizzaClickable();
+        assertNotNull(pizzaClickable1);
     }
 }

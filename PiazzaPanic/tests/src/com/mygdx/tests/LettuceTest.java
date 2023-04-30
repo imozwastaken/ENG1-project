@@ -29,7 +29,7 @@ public class LettuceTest {
 
     @Test
     public void lettuceClickableIsNotNull() {
-        ImageButton bakingClickable = lettuce.getLettuceClickable();
-        assertNotNull(bakingClickable);
+        ImageButton lettuceClickable = lettuce.getLettuceClickable();
+        assertNotNull(lettuceClickable);
     }
 }

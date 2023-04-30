@@ -31,7 +31,7 @@ public class ExtraTimeTest {
 
     @Test
     public void extraTimeClickableIsNotNull() {
-        ImageButton bakingClickable = extratimePowerup.getExtraTimeClickable();
-        assertNotNull(bakingClickable);
+        ImageButton extraTimeClickable = extratimePowerup.getExtraTimeClickable();
+        assertNotNull(extraTimeClickable);
     }
 }

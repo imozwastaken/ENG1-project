@@ -30,7 +30,7 @@ public class CuttingTest {
 
     @Test
     public void cuttingClickableNotNull() {
-        ImageButton bakingClickable = cutting.getCuttingClickable();
-        assertNotNull(bakingClickable);
+        ImageButton cuttingClickable = cutting.getCuttingClickable();
+        assertNotNull(cuttingClickable);
     }
 }

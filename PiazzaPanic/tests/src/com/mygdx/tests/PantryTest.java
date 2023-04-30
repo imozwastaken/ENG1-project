@@ -29,7 +29,7 @@ public class PantryTest {
 
     @Test
     public void pantryClickableIsNotNull() {
-        ImageButton bakingClickable = pantry.getPantryClickable();
-        assertNotNull(bakingClickable);
+        ImageButton pantryClickable = pantry.getPantryClickable();
+        assertNotNull(pantryClickable);
     }
 }
