@@ -13,6 +13,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            codecov: true
+          - os: windows-latest
+            codecov: false
+          - os: macos-latest
+            codecov: false
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -29,6 +36,40 @@ jobs:
         working-directory: ./PiazzaPanic
         env:
           JAVA_HOME: ${{ steps.setup-jdk.outputs.path }}
+      
+      - name: Test Report
+        uses: dorny/test-reporter@v1.6.0
+        if: always()
+        with:
+          name: "${{ matrix.os }} Test Report"
+          path: build/test-results/**/*.xml
+          reporter: java-junit
+          fail-on-error: true
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        if: ${{ matrix.codecov && success() }}
+        with:
+          dotnet-version: 6.x
+          dotnet-quality: 'ga'
+
+      - name: ReportGenerator
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.17
+        if: ${{ matrix.codecov && success() }}
+        with:
+          reports: build/jacoco.xml
+          targetdir: out
+          reporttypes: MarkdownSummaryGithub
+
+      - name: Publish Coverage Report
+        uses: PavanMudigonda/markdown-reporter@v0.1
+        if: ${{ matrix.codecov && success() }}
+        with:
+          markdown_path: out/SummaryGithub.md
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          report_name: Coverage Report
+          report_title: Code Coverage Report
+
       - name: Upload test output
         if: always()
         uses: actions/upload-artifact@v2
