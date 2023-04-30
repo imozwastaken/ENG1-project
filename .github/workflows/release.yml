@@ -18,14 +18,14 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+      - name: Test
+        run: ./gradlew clean test --info
+        working-directory: ./PiazzaPanic
       - name: Build with Gradle
         run: ./gradlew desktop:dist
         working-directory: ./PiazzaPanic
         env:
           JAVA_HOME: ${{ steps.setup-jdk.outputs.path }}
-      - name: Test
-        run: ./gradlew clean test --info
-        working-directory: ./PiazzaPanic
       - name: Upload test output
         if: always()
         uses: actions/upload-artifact@v2
@@ -39,7 +39,6 @@ jobs:
           cd PiazzaPanic/desktop/build/libs
           VER=`git rev-parse --short HEAD`
           mv desktop-1.0.jar team17-piazzaPanic.jar
-
       - name: Automatically release
         uses: softprops/action-gh-release@v1
         env:
@@ -50,4 +49,3 @@ jobs:
           prerelease: true
           files: |
             PiazzaPanic/desktop/build/libs/*.jar
-  
