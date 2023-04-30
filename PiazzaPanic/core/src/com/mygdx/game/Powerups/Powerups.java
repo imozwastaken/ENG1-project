@@ -3,6 +3,7 @@ package com.mygdx.game.Powerups;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Interpolation;
 import com.mygdx.game.Customer;
 import com.mygdx.game.Money;
 import com.mygdx.game.PiazzaPanic;
@@ -33,10 +34,12 @@ public class Powerups {
         Powerup extraLife = new Powerup("ExtraLife", 1000000000, 0, 1, 300, 0, priceIncrease);
         Powerup stationSpeed = new Powerup("FastStations", 10000, 0, 1f, 300, 0, priceIncrease);
         Powerup orderTimeUp = new Powerup("ExtraTime", 1000000000, 0, 10, 100, 0, priceIncrease);
+        Powerup thirdChef = new Powerup("ExtraChef", 1000000000, 0, 2, 200, 0, priceIncrease);
         allPowerups.put("Speed", speedPowerup);
         allPowerups.put("ExtraLife", extraLife);
         allPowerups.put("FastStations", stationSpeed);
         allPowerups.put("ExtraTime", orderTimeUp);
+        allPowerups.put("ExtraChef", thirdChef);
         this.font = new BitmapFont();
         this.money = _money;
         font.setColor(Color.BLACK);
@@ -57,6 +60,16 @@ public class Powerups {
             System.out.println("Not enough money for this.");
         }
 
+    }
+
+    public void setChefCount(int count) {
+        boolean bought = buyPowerup("ExtraChef");
+        if (bought) {
+            allPowerups.get("ExtraChef").setInitialisedTime(System.currentTimeMillis());
+            allPowerups.get("ExtraChef").setValue(3);
+        } else {
+            System.out.println("Not enough money for this");
+        }
     }
 
     public boolean hasExtraTime() {
