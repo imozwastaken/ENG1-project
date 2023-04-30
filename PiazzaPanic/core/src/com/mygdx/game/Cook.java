@@ -35,16 +35,10 @@ public class Cook {
         if (!isAutoMove) {
             for (int i = 0; i < stations.size(); i++) {
                 if ((stations.get(i) == index) && (i != tomove)) {
-                    System.out.println("Cant move");
-                    System.out.println(stations.get(i));
-                    System.out.println(i);
                     canMove = false;
                 }
             }
         }
-
-
-        System.out.println(stations);
 
         if (canMove) {
             // method to move a cook from their current position to a station

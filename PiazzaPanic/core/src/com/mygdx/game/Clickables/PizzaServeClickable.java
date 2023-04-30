@@ -36,22 +36,16 @@ public class PizzaServeClickable {
                     for (int i=0;i<customers.get(customerCount).size(); i++) {
                         if (customers.get(customerCount).get(i).customerOrder.getName() == "pizza") {
                             if (!customers.get(customerCount).get(i).selfComplete == true) {
-                                System.out.println("Served pizza");
-                                System.out.println(cooks.get(selected).CookStack.elementAt(0));
                                 cooks.get(selected).CookStack.remove(pizzaBase);
                                 cooks.get(selected).CookStack.remove(lettuce);
 
                                 customers.get(customerCount).get(i).selfComplete = true;
-                                System.out.println("MONEY");
-                                System.out.println( screen.getMoney());
                                 screen.getMoney().addMoney(100);
                                 screen.hideServingScreen();
                                 cooks.get(selected).isBusy = false;
                                 return ;
                             }
                         } else {
-                            System.out.println(customers.get(customerCount).get(i).customerOrder.getName());
-
                         }
                     }
                 }

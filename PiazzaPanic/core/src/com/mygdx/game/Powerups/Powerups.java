@@ -54,7 +54,6 @@ public class Powerups {
             allPowerups.get("Speed").setInitialisedTime(System.currentTimeMillis());
             allPowerups.get("Speed").setValue(multiplier);
         } else {
-            System.out.println("Not enough money for this.");
         }
 
     }
@@ -74,7 +73,6 @@ public class Powerups {
             allPowerups.get("FastStations").setInitialisedTime(System.currentTimeMillis());
             allPowerups.get("FastStations").setValue(multiplier);
         } else {
-            System.out.println("Not enough money for this.");
         }
     }
 
@@ -83,9 +81,7 @@ public class Powerups {
             return false;
         }
         boolean bought = buyPowerup("ExtraTime");
-        if (!bought) {
-            System.out.println("invalid");
-        }
+
         for (ArrayList<Customer> customers : ((GameScreen) screen).getCustomers()) {
             for (Customer c : customers) {
                 c.customerOrder.setOrderTime(c.customerOrder.getOrderTime() + 10);
@@ -100,9 +96,6 @@ public class Powerups {
             return false;
         }
         boolean bought = buyPowerup("ExtraLife");
-        if (!bought) {
-            System.out.println("invalid");
-        }
 
         return bought;
     }

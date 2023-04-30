@@ -59,7 +59,6 @@ public class Customer {
             // if an order is complete, move the customer offscreen to the right
             body.setX(body.getX() + 50 * Gdx.graphics.getDeltaTime());
         } else {
-            System.out.println("ORder isnt complete...");
         }
     }
 
