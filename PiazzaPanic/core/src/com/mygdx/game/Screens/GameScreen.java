@@ -584,7 +584,7 @@ public class GameScreen implements Screen {
 
         for (int i = 0; i < cookCount; i++) {
             if (!cooks.get(i).isBusy) {
-                cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected, powerups);
+                cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected, powerups, selected);
             }
         }
         money.render();
