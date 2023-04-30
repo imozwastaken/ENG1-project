@@ -75,6 +75,7 @@ public class GameScreen implements Screen {
     private final Array<Cook> cooks;
     private final ArrayList<ArrayList<Customer>> customers;
     // sprite handling
+    public float[][] locations = {{0, 64}, {32, 64}, {64, 64}, {0, 32}, {48, 28}, {80, 48}};
     Sprite alex;
     Sprite amelia;
     Sprite adam;
@@ -203,6 +204,7 @@ public class GameScreen implements Screen {
     private float potatoBakingTime = 0;
     private float pizzaBakingTime = 0;
 
+    boolean isInitialMove = true;
     public GameScreen(PiazzaPanic game, FitViewport port, Boolean isEndless, Boolean isLoad, String Loadfile,
             JSONObject config) throws IOException {
 
@@ -582,11 +584,28 @@ public class GameScreen implements Screen {
         handlePizzaBaking(Gdx.graphics.getDeltaTime());
         handlePotatoBaking(Gdx.graphics.getDeltaTime());
 
+
         for (int i = 0; i < cookCount; i++) {
             if (!cooks.get(i).isBusy) {
-                cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected, powerups, selected);
+                System.out.println(isInitialMove);
+                cooks.get(i).move(stationSelected.get(i), cooks.get(i).CookBody, stationSelected, powerups, selected, isInitialMove);
+
+            }
+
+        }
+        if (isInitialMove) {
+            boolean anynot = false;
+            for (int i = 0; i<cookCount;i++) {
+                if (locations[stationSelected.get(i)][0] - cooks.get(i).CookBody.getX() > 1|| locations[stationSelected.get(i)][1] - cooks.get(i).CookBody.getY() > 1) {
+                    anynot = true;
+                }
+            }
+            if (!anynot) {
+                isInitialMove = false;
             }
         }
+
+
         money.render();
 
         // cooks.get(selected).doUserInput(cooks.get(selected));

@@ -27,51 +27,48 @@ public class Cook {
         this.moveable = false;
     }
 
-    public void move(int index, Actor cook, ArrayList<Integer> stations, Powerups powerups, int tomove) {
+    public void move(int index, Actor cook, ArrayList<Integer> stations, Powerups powerups, int tomove, boolean isAutoMove) {
         boolean canMove = true;
         if (moveable) {
             return;
         }
-
-        for (int i=0; i < stations.size(); i++) {
-            if ((stations.get(i) == index) && (i != tomove)) {
-                System.out.println("Cant move");
-                System.out.println(stations.get(i));
-                System.out.println(i);
-                canMove = false;
+        if (!isAutoMove) {
+            for (int i = 0; i < stations.size(); i++) {
+                if ((stations.get(i) == index) && (i != tomove)) {
+                    System.out.println("Cant move");
+                    System.out.println(stations.get(i));
+                    System.out.println(i);
+                    canMove = false;
+                }
             }
         }
+
 
         System.out.println(stations);
 
-        for (int station : stations) {
-            if (index != station && canMove) {
-                // method to move a cook from their current position to a station
-                if (cook.getX() != locations[index][0] || cook.getY() != locations[index][1]) {
-                    // calculate the difference between 2 points to move the sprite towards
-                    float pathX = locations[index][0] - cook.getX();
-                    float pathY = locations[index][1] - cook.getY();
-                    // use Pythagoras to find the distance between current position and final position
-                    float distance = (float) Math.sqrt(pathX * pathX + pathY * pathY);
-                    float directionX = pathX / distance;
-                    float directionY = pathY / distance;
-                    // stop cook from moving once close enough to the station
-                    float speed;
-                    if (distance < 1) {
-                        speed = 0f * powerups.getSpeedMultiplier();
-                    } else {
-                        speed = 50f * powerups.getSpeedMultiplier();
-                    }
-
-                    cook.setX(cook.getX() + directionX * (speed * Gdx.graphics.getDeltaTime()));
-                    cook.setY(cook.getY() + directionY * (speed * Gdx.graphics.getDeltaTime()));
-
+        if (canMove) {
+            // method to move a cook from their current position to a station
+            if (cook.getX() != locations[index][0] || cook.getY() != locations[index][1]) {
+                // calculate the difference between 2 points to move the sprite towards
+                float pathX = locations[index][0] - cook.getX();
+                float pathY = locations[index][1] - cook.getY();
+                // use Pythagoras to find the distance between current position and final position
+                float distance = (float) Math.sqrt(pathX * pathX + pathY * pathY);
+                float directionX = pathX / distance;
+                float directionY = pathY / distance;
+                // stop cook from moving once close enough to the station
+                float speed;
+                if (distance < 1) {
+                    speed = 0f * powerups.getSpeedMultiplier();
+                } else {
+                    speed = 50f * powerups.getSpeedMultiplier();
                 }
 
+                cook.setX(cook.getX() + directionX * (speed * Gdx.graphics.getDeltaTime()));
+                cook.setY(cook.getY() + directionY * (speed * Gdx.graphics.getDeltaTime()));
             }
         }
     }
-
     public void doUserInput(Cook cook) {
         //if (!moveable) {
         //    return;
