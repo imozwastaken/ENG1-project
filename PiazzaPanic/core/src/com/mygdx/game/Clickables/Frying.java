@@ -18,7 +18,7 @@ public class Frying {
     public Frying(PiazzaPanic _game, Utils utils, final GameScreen screen) {
         this.fryingClickable = utils.createImageClickable(32, 32);
 
-        // function exectutes when you press on the frying station on screen
+        // function executes when you press on the frying station on screen
         // it sets the frying station as the currently selected station - this moves the
         // cook to the frying station
 
@@ -37,7 +37,7 @@ public class Frying {
                 if ((Math.abs(screen.getCooks().get(screen.getSelected()).CookBody.getY() - 64f) < 2)
                         && (Math.abs(cooks.get(selected).CookBody.getX() - 32f) < 2)) {
                     if (!(screen.getCooks().get(screen.getSelected()).isBusy)) {
-                        // used to limit to preping only one ingredient per press
+                        // used to limit to preparing only one ingredient per press
                         boolean ingredientDone = false;
                         Ingredient selectedIngredient = null;
                         // preps the first vegetable in the current cook's stack after pressing the
