@@ -13,11 +13,13 @@ public class Order {
     ConfigHandler configHandler;
     //default order time, 40 seconds
     public Integer orderTime = 40;
-    
+
     public Order(String name,Texture orderTexture, Recipe orderRecipe) throws IOException {
         String difficulty;
         try {
-            ConfigHandler configHandler = new ConfigHandler();
+
+            configHandler = new ConfigHandler();
+
             difficulty = configHandler.getDifficulty();
         } catch (NoSuchFileException e) {
             difficulty = "Easy";
@@ -44,7 +46,7 @@ public class Order {
     public Recipe getRecipe(){
         return this.orderRecipe;
     }
-    
+
     public String getName(){
         return this.name;
     }

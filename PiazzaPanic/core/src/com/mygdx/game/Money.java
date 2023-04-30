@@ -15,7 +15,7 @@ public class Money {
 
     public Money(PiazzaPanic _game, String difficulty) {
         this.font = new BitmapFont();
-        font.setColor(new Color(0.52156866f, 0.73333335f, 0.39607844f, 1.0f));
+        font.setColor(new Color(0.0f, 1.0f, 0.39607844f, 1.0f));
         font.getData().setScale(0.45f);
         this.currentMoney = 0;
         this.game = _game;

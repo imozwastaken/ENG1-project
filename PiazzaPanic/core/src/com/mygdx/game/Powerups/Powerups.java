@@ -161,7 +161,7 @@ public class Powerups {
     }
 
     public void render() {
-        String message = "Powerups active : ";
+        String message = "POWERUPS ACTIVE : ";
         StringBuilder messageBuilder = new StringBuilder(message);
         for (String k : allPowerups.keySet()) {
             if (allPowerups.get(k).getInitialisedTime() != 0) {

@@ -8,7 +8,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(GdxTestRunner.class)
 public class ConfigHandlerTests {
@@ -45,14 +46,14 @@ public class ConfigHandlerTests {
         configHandler.setMuteMode(true);
         configHandler.setCustomersToServe(1337);
         assertEquals(1337, configHandler.getCustomersToServe());
-        assertEquals(true, configHandler.muteMode());
+        assertTrue(configHandler.muteMode());
 
         System.out.println("Both set successfully");
     }
 
     @Test
     public void testInitialValues() {
-        assertEquals(false, configHandler.muteMode());
+        assertFalse(configHandler.muteMode());
         assertEquals(5, configHandler.getCustomersToServe());
         System.out.println("Both initial values are correct");
     }
