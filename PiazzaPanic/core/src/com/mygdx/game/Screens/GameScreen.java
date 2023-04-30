@@ -192,6 +192,8 @@ public class GameScreen implements Screen {
     RepPowerup repPowerup;
     ExtratimePowerup extratimePowerup;
     ExtraChef extraChefPowerup;
+
+    DoubleMoneyPowerup doubleMoneyPowerup;
     Random rand = new Random();
 
     StationSpeedPowerup stationSpeedPowerup;
@@ -1116,6 +1118,10 @@ public class GameScreen implements Screen {
 
     public void controlBurning() {
 
+    }
+
+    public void incMoneyMult() {
+        money.addMultiplier();
     }
 
     @Override
