@@ -10,7 +10,17 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            codecov: true
+          - os: windows-latest
+            codecov: false
+          - os: macos-latest
+            codecov: false
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -18,18 +28,31 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+      - name: Test
+        run: ./gradlew clean test --info
+        working-directory: ./PiazzaPanic
+      - name: Build with Gradle
+        run: ./gradlew desktop:dist
+        working-directory: ./PiazzaPanic
+        env:
+          JAVA_HOME: ${{ steps.setup-jdk.outputs.path }}
 
-
-
+      - name: Upload test output
+        if: always() && matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: build/test-results/**/*.xml
       - name: Rename jar file
+        if: matrix.os == 'ubuntu-latest'
         run: |
           pwd
           ls -la
           cd PiazzaPanic/desktop/build/libs
           VER=`git rev-parse --short HEAD`
           mv desktop-1.0.jar team17-piazzaPanic.jar
-
       - name: Automatically release
+        if: matrix.os == 'ubuntu-latest'
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -39,4 +62,3 @@ jobs:
           prerelease: true
           files: |
             PiazzaPanic/desktop/build/libs/*.jar
-  
